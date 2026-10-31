@@ -36,6 +36,7 @@ Khun Mhee · หลังบ้าน</a>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
 <template data-sc="if" value="{{hasUnread}}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: 2px; right: 0; min-width: 16px; height: 16px; border-radius: 9999px; background: #C88193; color: #3A352F; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 4px; box-sizing: border-box">{{unread}}</span></template>
 </button>
+<template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="color: #F6F3EE; border: 1px solid #6B6258; border-radius: 8px; padding: 6px 10px; font-size: 12px">Google Sheets ↗</a></template>
 <span style="color: #EDE6D7">แอดมิน: {{meName}}</span>
 <button type="button" onClick="{{logout}}" style="background: transparent; border: 1px solid #6B6258; color: #F6F3EE; border-radius: 8px; padding: 6px 10px; font-size: 12px">ออกจากระบบ</button>
 </div>
@@ -51,6 +52,9 @@ Khun Mhee · หลังบ้าน</a>
 <a href="#notify" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">การแจ้งเตือน</a>
 <a href="#reminders" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">เตือนก่อนเช็คอิน</a>
 <a href="#bookings" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ข้อมูลลูกค้า</a>
+<a href="#stats" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">สถิติ</a>
+<a href="#pricing" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ราคาห้อง</a>
+<template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M4 9h16M4 15h16M10 3v18"></path></svg>เปิด Google Sheets<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 <a class="side-extra" href="index.html" style="padding: 10px 14px; border-radius: 8px; color: {{accent}}; margin-top: 16px">ดูหน้าเว็บไซต์ ›</a>
 </nav>
 
@@ -116,15 +120,13 @@ Khun Mhee · หลังบ้าน</a>
 <!-- Check-in reminders -->
 <section id="reminders" aria-labelledby="h-rem" style="flex: 2 1 320px; min-width: 0; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
 <h2 id="h-rem" style="margin: 0; font-size: 21px; font-weight: 600">เตือนกันลืม · ใกล้เช็คอิน</h2>
-<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ลูกค้าที่จะเช็คอินภายใน 3 วัน</p>
-<label style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #EDE6D7; border-radius: 11px; padding: 12px 14px; margin-top: 16px; font-size: 14px; cursor: pointer">
-<span>ส่งอีเมลเตือนอัตโนมัติ 1 วันก่อนเช็คอิน (ทุกวัน {{remHour}}:00 น.)</span>
-<button type="button" role="switch" aria-checked="{{auto}}" onClick="{{toggleAuto}}" style="{{autoTrack}}"><span style="{{autoKnob}}"></span></button>
-</label>
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #EDE6D7; border-radius: 11px; padding: 12px 14px; margin-top: 8px; font-size: 14px">
+<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ลูกค้าที่จะเช็คอินภายใน 1-3 วัน</p>
+<p style="margin: 4px 0 0; font-size: 12px; color: #7A6E63">{{autoNote}}</p>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #EDE6D7; border-radius: 11px; padding: 12px 14px; margin-top: 16px; font-size: 14px">
 <span style="display: flex; align-items: center; gap: 8px; flex: 1 1 200px"><span style="{{lineDot}}" aria-hidden="true"></span><span>แจ้งเตือน LINE: {{lineStatus}}</span></span>
 <button type="button" onClick="{{testLine}}" disabled="{{lineBtnDisabled}}" style="{{lineBtnStyle}}">ทดสอบส่ง LINE</button>
 </div>
+<template data-sc="if" value="{{autoOff}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; margin-top: 8px; font-size: 14px; color: #9A4E60"><span style="flex: 1 1 200px">ยังไม่ได้เปิดการแจ้งเตือนเช็คอินอัตโนมัติรายวัน</span><button type="button" onClick="{{enableAuto}}" style="flex: 0 0 auto; border-radius: 9999px; padding: 8px 14px; font-size: 13px; border: 0; background: #47413A; color: #F6F3EE">เปิดใช้งาน</button></div></template>
 <ul style="list-style: none; margin: 12px 0 0; padding: 0">
 <template data-sc="for" list="{{reminders}}" as="r" hint-placeholder-count="3">
 <li style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #E6DDCB">
@@ -207,7 +209,7 @@ Khun Mhee · หลังบ้าน</a>
 <th style="padding: 10px 12px; font-weight: 600">เช็คเอาท์</th>
 <th style="padding: 10px 12px; font-weight: 600">สัตว์เลี้ยง</th>
 <th style="padding: 10px 12px; font-weight: 600">ยอดรวม</th>
-<th style="padding: 10px 12px; font-weight: 600">สลิป</th>
+<th style="padding: 10px 12px; font-weight: 600">สลิป / ใบเสร็จ</th>
 <th style="padding: 10px 12px; font-weight: 600">สถานะ</th>
 <th style="padding: 10px 0 10px 12px; font-weight: 600">จัดการ</th>
 </tr>
@@ -223,7 +225,7 @@ Khun Mhee · หลังบ้าน</a>
 <td style="padding: 14px 12px">{{b.co}}</td>
 <td style="padding: 14px 12px">{{b.pets}}</td>
 <td style="padding: 14px 12px; font-variant-numeric: tabular-nums">{{b.total}}</td>
-<td style="padding: 14px 12px"><template data-sc="if" value="{{b.slipUrl}}" hint-placeholder-val="{{ false }}"><a href="{{b.slipUrl}}" target="_blank" rel="noopener" style="color: #3E6A9E; text-decoration: underline">ดูสลิป</a></template><template data-sc="if" value="{{b.noSlip}}" hint-placeholder-val="{{ true }}"><span style="color: #7A6E63">—</span></template></td>
+<td style="padding: 14px 12px"><template data-sc="if" value="{{b.slipUrl}}" hint-placeholder-val="{{ false }}"><a href="{{b.slipUrl}}" target="_blank" rel="noopener" style="color: #3E6A9E; text-decoration: underline">ดูสลิป</a></template><template data-sc="if" value="{{b.noSlip}}" hint-placeholder-val="{{ true }}"><span style="color: #7A6E63">—</span></template><template data-sc="if" value="{{b.receiptUrl}}" hint-placeholder-val="{{ false }}"><br><a href="{{b.receiptUrl}}" target="_blank" rel="noopener" style="color: #2F6B45; text-decoration: underline; font-size: 13px">ใบเสร็จ PDF</a></template></td>
 <td style="padding: 14px 12px"><span style="{{b.badge}}">{{b.statusName}}</span></td>
 <td style="padding: 14px 0 14px 12px"><div style="display: flex; gap: 6px"><template data-sc="for" list="{{b.actions}}" as="a" hint-placeholder-count="2"><button type="button" onClick="{{a.run}}" disabled="{{a.busy}}" style="{{a.style}}">{{a.label}}</button></template></div></td>
 </tr>
@@ -231,6 +233,230 @@ Khun Mhee · หลังบ้าน</a>
 </tbody>
 </table>
 <template data-sc="if" value="{{noRows}}" hint-placeholder-val="{{ false }}"><p style="margin: 24px 0; text-align: center; color: #7A6E63; font-size: 14px">ไม่พบการจองที่ตรงกับการค้นหา</p></template>
+</div>
+</section>
+
+<!-- Statistics -->
+<section id="stats" aria-labelledby="h-stats" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap">
+<div>
+<h2 id="h-stats" style="margin: 0; font-size: 21px; font-weight: 600">สถิติ</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">{{stRangeLabel}}</p>
+</div>
+<template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="color: #2F6B45; font-size: 14px; text-decoration: underline">ดูข้อมูลดิบใน Google Sheets ↗</a></template>
+</div>
+<div role="group" aria-label="เลือกช่วงเวลา" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
+<template data-sc="for" list="{{stChips}}" as="c" hint-placeholder-count="5"><button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="{{c.style}}">{{c.label}}</button></template>
+</div>
+<form onSubmit="{{stApply}}" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-top: 14px">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #5E554C">ตั้งแต่วันที่
+<input type="date" value="{{stFrom}}" onChange="{{setStFrom}}" max="{{stTo}}" style="{{fieldStyle}}"></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #5E554C">ถึงวันที่
+<input type="date" value="{{stTo}}" onChange="{{setStTo}}" min="{{stFrom}}" style="{{fieldStyle}}"></label>
+<button type="submit" disabled="{{stLoading}}" style="{{darkBtn}}">ดูช่วงวันที่นี้</button>
+</form>
+<template data-sc="if" value="{{stErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60">{{stErr}}</p></template>
+<template data-sc="if" value="{{stLoading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">กำลังคำนวณสถิติ…</p></template>
+<template data-sc="if" value="{{stHas}}" hint-placeholder-val="{{ true }}">
+<div class="kpis" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
+<template data-sc="for" list="{{stKpis}}" as="k" hint-placeholder-count="8">
+<div style="background: #EDE6D7; border-radius: 14px; padding: 16px 18px">
+<p style="margin: 0; font-size: 13px; color: #5E554C">{{k.label}}</p>
+<p style="margin: 6px 0 0; font-size: 28px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums">{{k.value}}<span style="font-size: 14px; font-weight: 400; color: #7A6E63">{{k.unit}}</span></p>
+<p style="margin: 6px 0 0; font-size: 12px; color: #7A6E63">{{k.sub}}</p>
+</div>
+</template>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px">
+<template data-sc="for" list="{{stFacts}}" as="f" hint-placeholder-count="4"><span style="background: #EFE9DD; border-radius: 9999px; padding: 6px 12px; font-size: 13px; color: #47413A">{{f}}</span></template>
+</div>
+
+<h3 style="margin: 28px 0 0; font-size: 17px; font-weight: 600">{{stChartTitle}}</h3>
+<p style="margin: 4px 0 0; font-size: 12px; color: #7A6E63">นับตามวันเช็คอิน เฉพาะการจองที่ยืนยันแล้ว · แตะหรือชี้ที่แท่งเพื่อดูตัวเลข</p>
+<div style="overflow-x: auto; margin-top: 8px">
+<div role="img" aria-label="{{stChartAria}}" style="{{stChartBox}}">
+<template data-sc="for" list="{{stBars}}" as="b" hint-placeholder-count="6">
+<div title="{{b.title}}" style="{{b.col}}">
+<span style="font-size: 11px; color: #47413A; white-space: nowrap; margin-bottom: 4px">{{b.v}}</span>
+<span style="{{b.bar}}"></span>
+<span style="font-size: 11px; color: #7A6E63; margin-top: 6px; white-space: nowrap">{{b.label}}</span>
+</div>
+</template>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; margin-top: 28px; align-items: flex-start">
+<div style="flex: 3 1 420px; min-width: 0">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">แยกตามห้อง</h3>
+<div style="overflow-x: auto; margin-top: 8px">
+<table style="min-width: 520px; font-size: 14px">
+<thead><tr style="color: #7A6E63; font-size: 12px">
+<th style="padding: 8px 12px 8px 0">ห้อง</th><th style="padding: 8px 12px; text-align: right">การจอง</th><th style="padding: 8px 12px; text-align: right">คืนที่ขายได้</th><th style="padding: 8px 12px">อัตราเข้าพัก</th><th style="padding: 8px 12px; text-align: right">รายได้</th><th style="padding: 8px 0 8px 12px; text-align: right">ยกเลิก</th>
+</tr></thead>
+<tbody>
+<template data-sc="for" list="{{stRooms}}" as="r" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #E6DDCB">
+<td style="padding: 10px 12px 10px 0; font-weight: 600">{{r.name}}</td>
+<td style="padding: 10px 12px; text-align: right; font-variant-numeric: tabular-nums">{{r.bookings}}</td>
+<td style="padding: 10px 12px; text-align: right; font-variant-numeric: tabular-nums">{{r.nights}}</td>
+<td style="padding: 10px 12px; min-width: 140px"><span style="display: flex; align-items: center; gap: 8px"><span style="flex: 1 1 auto; height: 8px; background: #E6DDCB; border-radius: 9999px; overflow: hidden"><span style="{{r.occBar}}"></span></span><span style="font-size: 13px; font-variant-numeric: tabular-nums; min-width: 38px; text-align: right">{{r.occ}}</span></span></td>
+<td style="padding: 10px 12px; text-align: right; font-variant-numeric: tabular-nums">{{r.revenue}}</td>
+<td style="padding: 10px 0 10px 12px; text-align: right; font-variant-numeric: tabular-nums; color: #B5443F">{{r.cancelled}}</td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+</div>
+<div style="flex: 2 1 280px; min-width: 0">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">วันเช็คอินที่นิยม</h3>
+<ul style="list-style: none; margin: 8px 0 0; padding: 0">
+<template data-sc="for" list="{{stWeek}}" as="w" hint-placeholder-count="7">
+<li style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 72px; gap: 10px; align-items: center; padding: 6px 0; font-size: 13px">
+<span>{{w.day}}</span>
+<span style="height: 12px; background: #E6DDCB; border-radius: 9999px; overflow: hidden"><span style="{{w.bar}}"></span></span>
+<span style="text-align: right; font-variant-numeric: tabular-nums">{{w.n}}</span>
+</li>
+</template>
+</ul>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; margin-top: 24px">
+<template data-sc="for" list="{{stLists}}" as="g" hint-placeholder-count="3">
+<div style="flex: 1 1 220px; min-width: 0; background: #EDE6D7; border-radius: 14px; padding: 16px 18px">
+<h3 style="margin: 0 0 8px; font-size: 15px; font-weight: 600">{{g.title}}</h3>
+<template data-sc="for" list="{{g.rows}}" as="r" hint-placeholder-count="3">
+<p style="margin: 0; display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px solid #DED4C1; font-size: 14px"><span style="display: flex; align-items: center; gap: 8px"><span style="{{r.dot}}"></span>{{r.label}}</span><b style="font-variant-numeric: tabular-nums">{{r.n}}</b></p>
+</template>
+</div>
+</template>
+</div>
+</template>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" aria-labelledby="h-price" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
+<h2 id="h-price" style="margin: 0; font-size: 21px; font-weight: 600">ราคาห้องและการปรับราคาอัตโนมัติ</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ราคาพื้นฐานใช้ทุกคืนที่ไม่มีกฎตรง กฎจะปรับราคาเองตามวัน ช่วงเทศกาล หรือการจองล่วงหน้า และมีผลกับการจองใหม่เท่านั้น</p>
+<template data-sc="if" value="{{prErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60">{{prErr}}</p></template>
+<template data-sc="if" value="{{prLoading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">กำลังโหลดราคาห้อง…</p></template>
+
+<h3 style="margin: 24px 0 0; font-size: 17px; font-weight: 600">ราคาพื้นฐานต่อคืน</h3>
+<div style="overflow-x: auto; margin-top: 8px">
+<table style="min-width: 640px; font-size: 14px">
+<thead><tr style="color: #7A6E63; font-size: 12px">
+<th style="padding: 8px 12px 8px 0">ห้อง</th><th style="padding: 8px 12px">ราคาต่อคืน (บาท)</th><th style="padding: 8px 12px">รับได้สูงสุด (คน)</th><th style="padding: 8px 12px">สถานะ</th><th style="padding: 8px 0 8px 12px"></th>
+</tr></thead>
+<tbody>
+<template data-sc="for" list="{{prRooms}}" as="r" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #E6DDCB">
+<td style="padding: 10px 12px 10px 0; font-weight: 600">{{r.label}}</td>
+<td style="padding: 10px 12px"><input type="number" min="0" step="50" inputmode="numeric" value="{{r.price}}" onInput="{{r.setPrice}}" aria-label="{{r.priceAria}}" style="{{r.priceStyle}}"></td>
+<td style="padding: 10px 12px"><input type="number" min="1" max="50" inputmode="numeric" value="{{r.cap}}" onInput="{{r.setCap}}" aria-label="{{r.capAria}}" style="{{r.capStyle}}"></td>
+<td style="padding: 10px 12px"><select value="{{r.status}}" onChange="{{r.setStatus}}" aria-label="{{r.statusAria}}" style="{{selectStyle}}"><option value="active">เปิดให้จอง</option><option value="inactive">ปิดชั่วคราว</option></select></td>
+<td style="padding: 10px 0 10px 12px"><button type="button" onClick="{{r.save}}" disabled="{{r.saveDisabled}}" style="{{r.saveStyle}}">{{r.saveLabel}}</button></td>
+</tr>
+</template>
+</tbody>
+</table>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 28px">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">กฎปรับราคาอัตโนมัติ</h3>
+<button type="button" onClick="{{newRule}}" style="{{darkBtn}}">+ เพิ่มกฎ</button>
+</div>
+<p style="margin: 6px 0 0; font-size: 13px; color: #7A6E63">{{prStackNote}}</p>
+<template data-sc="if" value="{{prNoRules}}" hint-placeholder-val="{{ false }}"><p style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">ยังไม่มีกฎ ทุกคืนใช้ราคาพื้นฐาน ลองเพิ่มกฎ เช่น "คืนวันศุกร์–เสาร์ +20%" หรือ "ปีใหม่ คืนละ 3,000 บาท"</p></template>
+<ul style="list-style: none; margin: 8px 0 0; padding: 0">
+<template data-sc="for" list="{{prRules}}" as="r" hint-placeholder-count="3">
+<li style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 14px 0; border-top: 1px solid #E6DDCB">
+<span style="{{r.adjStyle}}">{{r.adj}}</span>
+<div style="flex: 1 1 240px; min-width: 0">
+<p style="margin: 0; font-size: 15px; font-weight: 600">{{r.name}} <span style="{{r.badge}}">{{r.statusName}}</span></p>
+<p style="margin: 2px 0 0; font-size: 13px; color: #5E554C">{{r.when}}</p>
+<p style="margin: 2px 0 0; font-size: 12px; color: #7A6E63">ลำดับความสำคัญ {{r.priority}}</p>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<button type="button" onClick="{{r.edit}}" style="{{ghostBtn}}">แก้ไข</button>
+<button type="button" onClick="{{r.toggle}}" disabled="{{r.busy}}" style="{{ghostBtn}}">{{r.toggleLabel}}</button>
+<button type="button" onClick="{{r.del}}" disabled="{{r.busy}}" style="{{dangerBtn}}">ลบ</button>
+</div>
+</li>
+</template>
+</ul>
+
+<template data-sc="if" value="{{rfOpen}}" hint-placeholder-val="{{ false }}">
+<form id="rule-form" onSubmit="{{rfSave}}" aria-labelledby="h-rule" style="margin-top: 16px; background: #EDE6D7; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<h4 id="h-rule" style="margin: 0; font-size: 17px; font-weight: 600">{{rfTitle}}</h4>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ชื่อกฎ *
+<input type="text" value="{{rf.name}}" onInput="{{rfSetName}}" maxlength="60" placeholder="เช่น วันหยุดสุดสัปดาห์" style="{{fieldStyle}}"></label>
+
+<fieldset style="border: 0; margin: 0; padding: 0"><legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 6px">ใช้กับห้อง</legend>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><template data-sc="for" list="{{rfRooms}}" as="c" hint-placeholder-count="5"><button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="{{c.style}}">{{c.label}}</button></template></div>
+</fieldset>
+
+<fieldset style="border: 0; margin: 0; padding: 0"><legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 6px">คืนวัน (ไม่เลือก = ทุกวัน)</legend>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><template data-sc="for" list="{{rfDays}}" as="c" hint-placeholder-count="7"><button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="{{c.style}}">{{c.label}}</button></template></div>
+</fieldset>
+
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<label style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ตั้งแต่คืนวันที่ (ไม่บังคับ)
+<input type="date" value="{{rf.startDate}}" onChange="{{rfSetStart}}" style="{{fieldStyle}}"></label>
+<label style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ถึงคืนวันที่ (ไม่บังคับ)
+<input type="date" value="{{rf.endDate}}" onChange="{{rfSetEnd}}" min="{{rf.startDate}}" style="{{fieldStyle}}"></label>
+</div>
+
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<label style="flex: 2 1 220px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เงื่อนไขเวลาที่จอง
+<select value="{{rf.leadType}}" onChange="{{rfSetLead}}" style="{{selectStyle}}"><option value="">ไม่กำหนด</option><option value="advance">จองล่วงหน้าอย่างน้อย (Early bird)</option><option value="lastminute">จองก่อนเข้าพักไม่เกิน (Last minute)</option></select></label>
+<template data-sc="if" value="{{rf.leadType}}" hint-placeholder-val="{{ false }}"><label style="flex: 1 1 120px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">จำนวนวัน
+<input type="number" min="0" max="365" inputmode="numeric" value="{{rf.leadDays}}" onInput="{{rfSetLeadDays}}" style="{{fieldStyle}}"></label></template>
+</div>
+
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<label style="flex: 2 1 220px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ปรับราคาแบบ *
+<select value="{{rf.adjustType}}" onChange="{{rfSetAdj}}" style="{{selectStyle}}"><option value="percent">ขึ้น/ลดเป็น %</option><option value="fixed">บวก/ลบเป็นบาท</option><option value="set">กำหนดราคาต่อคืน (บาท)</option></select></label>
+<label style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">{{rfAmountLabel}}
+<input type="number" step="any" inputmode="decimal" value="{{rf.amount}}" onInput="{{rfSetAmount}}" style="{{fieldStyle}}"></label>
+<label style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ลำดับความสำคัญ
+<input type="number" step="1" inputmode="numeric" value="{{rf.priority}}" onInput="{{rfSetPriority}}" style="{{fieldStyle}}"></label>
+</div>
+<p style="margin: 0; font-size: 13px; color: #5E554C; background: #F6F3EE; border-radius: 11px; padding: 10px 12px">{{rfExample}}</p>
+
+<label style="display: flex; align-items: center; gap: 10px; font-size: 14px"><input type="checkbox" checked="{{rfActive}}" onChange="{{rfToggleActive}}" style="width: 20px; height: 20px; accent-color: #47413A">เปิดใช้กฎนี้</label>
+<template data-sc="if" value="{{rfErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; color: #9A4E60; font-size: 14px">{{rfErr}}</p></template>
+<div style="display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap">
+<button type="button" onClick="{{rfCancel}}" style="{{ghostBtn}}">ยกเลิก</button>
+<button type="submit" disabled="{{rfBusy}}" style="{{darkBtn}}">{{rfSaveLabel}}</button>
+</div>
+</form>
+</template>
+
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 28px">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">ตัวอย่างราคาที่ลูกค้าจะเห็น 14 คืน</h3>
+<div style="display: flex; align-items: center; gap: 8px">
+<button type="button" onClick="{{pvPrev}}" aria-label="ก่อนหน้า 14 วัน" style="{{pvNav}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<input type="date" value="{{pvFrom}}" onChange="{{pvSetFrom}}" aria-label="เริ่มตั้งแต่วันที่" style="{{fieldStyle}}">
+<button type="button" onClick="{{pvNext}}" aria-label="ถัดไป 14 วัน" style="{{pvNav}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+</div>
+</div>
+<p style="margin: 6px 0 0; font-size: 12px; color: #7A6E63">ช่องสีเหลืองคือคืนที่กฎปรับราคา ชี้ที่ช่องเพื่อดูชื่อกฎ (คิดเงื่อนไขจองล่วงหน้าจากวันนี้)</p>
+<div style="overflow-x: auto; margin-top: 8px">
+<table style="min-width: 980px; font-size: 13px">
+<thead><tr style="color: #7A6E63; font-size: 12px">
+<th style="padding: 8px 12px 8px 0">ห้อง</th>
+<template data-sc="for" list="{{pvDates}}" as="d" hint-placeholder-count="14"><th style="{{d.style}}">{{d.wd}}<br>{{d.dm}}</th></template>
+</tr></thead>
+<tbody>
+<template data-sc="for" list="{{pvRows}}" as="r" hint-placeholder-count="4">
+<tr style="border-top: 1px solid #E6DDCB">
+<td style="padding: 8px 12px 8px 0; font-weight: 600; white-space: nowrap">{{r.name}}</td>
+<template data-sc="for" list="{{r.cells}}" as="c" hint-placeholder-count="14"><td title="{{c.title}}" style="{{c.style}}">{{c.v}}</td></template>
+</tr>
+</template>
+</tbody>
+</table>
 </div>
 </section>
 
@@ -249,11 +475,15 @@ super(props);
 let seen = '';
 try { seen = localStorage.getItem('km_seen') || ''; } catch (e) {}
 this.state = { nf: 'all', bf: 'all', q: '', seen, monthOffset: 0, loading: true, loadErr: '', toast: '',
-dash: null, bookings: [], acting: '', updated: '', me: kmToken.getUser() };
+dash: null, bookings: [], acting: '', updated: '', me: kmToken.getUser(),
+stRange: '1m', stFrom: '', stTo: '', stats: null, stLoading: false, stErr: '',
+pr: null, prLoading: false, prErr: '', roomEdit: {}, rf: null, rfErr: '', pvFrom: '', pv: null };
 }
 componentDidMount() {
 if (!kmToken.get()) { location.replace('login.html'); return; }
 this.load();
+this.loadStats('1m');
+this.loadPricing();
 this.timer = setInterval(() => { if (!document.hidden) this.load(true); }, 120000);
 }
 fail(e) {
@@ -281,6 +511,37 @@ this.setState({ acting: id || 'x' });
 return promise.then((msg) => { this.setState({ acting: '' }); this.say(msg); return this.load(true); })
 .catch((e) => { if (!this.fail(e)) { this.setState({ acting: '' }); this.say(e.message); } });
 }
+today() { return (this.state.dash && this.state.dash.today) || (this.state.pr && this.state.pr.today) || new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10); }
+rangeOf(key) {
+const to = this.today();
+const days = { '1m': 30, '3m': 90, '6m': 180, '1y': 365 }[key];
+return key === 'all' ? { from: 'all', to: to } : { from: kmDate.add(to, -(days - 1)), to: to };
+}
+loadStats(key, from, to) {
+const t = kmToken.get();
+if (key) { const r = this.rangeOf(key); from = r.from; to = r.to; }
+this.setState({ stLoading: true, stErr: '', stRange: key || 'custom' });
+return kmApi('getStats', t, from, to)
+.then((st) => this.setState({ stats: st, stLoading: false, stFrom: st.from, stTo: st.to }))
+.catch((e) => { if (!this.fail(e)) this.setState({ stLoading: false, stErr: 'โหลดสถิติไม่สำเร็จ: ' + e.message }); });
+}
+loadPricing() {
+const t = kmToken.get();
+this.setState({ prLoading: !this.state.pr, prErr: '' });
+return Promise.all([kmApi('listPriceRules', t), kmApi('previewPrices', t, this.state.pvFrom || '', 14)])
+.then(([pr, pv]) => this.setState({ pr, pv, pvFrom: pv.from, prLoading: false }))
+.catch((e) => { if (!this.fail(e)) this.setState({ prLoading: false, prErr: 'โหลดราคาห้องไม่สำเร็จ: ' + e.message }); });
+}
+loadPreview(from) {
+this.setState({ pvFrom: from });
+return kmApi('previewPrices', kmToken.get(), from, 14).then((pv) => this.setState({ pv, pvFrom: pv.from }))
+.catch((e) => { if (!this.fail(e)) this.say(e.message); });
+}
+actPrice(promise, id) {
+this.setState({ acting: id });
+return promise.then((msg) => { this.setState({ acting: '' }); this.say(msg); return this.loadPricing(); })
+.catch((e) => { if (!this.fail(e)) { this.setState({ acting: '' }); this.say(e.message); } return Promise.reject(e); });
+}
 renderVals() {
 const s = this.state;
 const t = kmToken.get();
@@ -295,7 +556,7 @@ const ST = {
 confirmed: { bg: '#4F7A52', fg: '#F6F3EE', name: 'อนุมัติการจองแล้ว' },
 pending: { bg: '#E9C46A', fg: '#3A352F', name: 'รอยืนยันการจอง' },
 checked_in: { bg: '#8B5E3C', fg: '#F6F3EE', name: 'เช็คอินแล้ว' },
-soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'จะเช็คอินภายใน 3 วัน' },
+soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'จะเช็คอินภายใน 1-3 วัน' },
 checked_out: { bg: '#7A6E63', fg: '#F6F3EE', name: 'เช็คเอาท์แล้ว' },
 cancelled: { bg: '#B5443F', fg: '#FFF8F5', name: 'ยกเลิกการจอง' }
 };
@@ -343,8 +604,8 @@ this.setState({ seen: max });
 };
 
 const chip = (on) => 'border-radius: 9999px; padding: 8px 14px; font-size: 14px; border: 1px solid ' + (on ? '#47413A' : '#DED4C1') + '; background: ' + (on ? '#47413A' : '#F6F3EE') + '; color: ' + (on ? '#F6F3EE' : '#47413A') + ';';
-const nKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['checked_in', 'เช็คอิน/เอาท์'], ['soon', 'เช็คอินใน 3 วัน'], ['cancelled', 'ยกเลิก']];
-const bKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['soon', 'เช็คอินใน 3 วัน'], ['checked_in', 'เช็คอินแล้ว'], ['checked_out', 'เช็คเอาท์แล้ว'], ['cancelled', 'ยกเลิก']];
+const nKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['checked_in', 'เช็คอิน/เอาท์'], ['soon', 'เช็คอินใน 1-3 วัน'], ['cancelled', 'ยกเลิก']];
+const bKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['soon', 'เช็คอินใน 1-3 วัน'], ['checked_in', 'เช็คอินแล้ว'], ['checked_out', 'เช็คเอาท์แล้ว'], ['cancelled', 'ยกเลิก']];
 const nFilters = nKeys.map(([k, label]) => ({ label, on: s.nf === k, style: chip(s.nf === k), pick: () => this.setState({ nf: k }) }));
 const bFilters = bKeys.map(([k, label]) => ({ label: label + ' ' + (k === 'all' ? bookings.length : bookings.filter((b) => stOf(b) === k).length), on: s.bf === k, style: chip(s.bf === k), pick: () => this.setState({ bf: k }) }));
 
@@ -367,7 +628,7 @@ if (b.status === 'checked_in') actions.push({ label: 'เช็คเอาท�
 if (b.status === 'pending' || b.status === 'confirmed') actions.push({ label: 'ยกเลิก', style: btn('cancel'), run: setStatus(b, 'cancelled'), busy });
 return { code: b.code, name: b.guestName, phone: b.phone, room: rn(b.roomNo), pets: b.pets || '—',
 ci: kmDate.dm(b.checkIn), co: kmDate.dm(b.checkOut), total: b.totalPrice ? '฿' + kmMoney(b.totalPrice) : '—',
-slipUrl: b.slipUrl || '', noSlip: !b.slipUrl, statusName: ST[k].name, actions,
+slipUrl: b.slipUrl || '', noSlip: !b.slipUrl, receiptUrl: b.receiptUrl || '', statusName: ST[k].name, actions,
 badge: 'display: inline-block; border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';' + (k === 'cancelled' ? ' text-decoration: line-through;' : '') };
 });
 
@@ -427,6 +688,143 @@ weeks.push({ days: dayCells, bars });
 }
 const navBtn = (dis) => 'width: 36px; height: 36px; border-radius: 9999px; border: 1px solid #DED4C1; background: #F6F3EE; color: ' + (dis ? '#CFC3AC' : '#47413A') + '; display: flex; align-items: center; justify-content: center; padding: 0;';
 const legend = ['confirmed', 'pending', 'checked_in', 'soon', 'checked_out', 'cancelled'].map((k) => ({ name: ST[k].name, dot: 'width: 14px; height: 14px; border-radius: 4px; display: inline-block; background: ' + ST[k].bg + ';' }));
+// ===== สถิติ =====
+const TH_MS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+const WD = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+const WDS = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+const pct = (x) => Math.round((x || 0) * 1000) / 10 + '%';
+const baht = (n) => '฿' + kmMoney(Math.round(n || 0));
+const kfmt = (n) => n >= 1000000 ? (Math.round(n / 100000) / 10) + 'M' : n >= 1000 ? (Math.round(n / 100) / 10) + 'k' : String(Math.round(n));
+const fullDate = (d) => { const p = String(d).split('-').map(Number); return p[2] + ' ' + TH_MS[p[1] - 1] + ' ' + String(p[0] + 543).slice(-2); };
+const st = s.stats;
+const stChipDefs = [['1m', '1 เดือน'], ['3m', '3 เดือน'], ['6m', '6 เดือน'], ['1y', '1 ปี'], ['all', 'ทั้งหมดตั้งแต่เริ่ม']];
+const stChips = stChipDefs.map(([k, label]) => ({ label, on: s.stRange === k, style: chip(s.stRange === k), pick: () => this.loadStats(k) }));
+let stKpis = [], stFacts = [], stBars = [], stRooms = [], stWeek = [], stLists = [], stChartAria = '', stChartBox = '', stChartTitle = '';
+if (st) {
+const T = st.totals;
+stKpis = [
+{ label: 'รายได้', value: baht(T.revenue), unit: '', sub: T.paidBookings + ' การจองที่ยืนยันแล้ว' },
+{ label: 'อัตราเข้าพัก', value: pct(T.occupancy), unit: '', sub: T.nightsSold + ' จาก ' + T.capacity + ' ห้อง-คืน' },
+{ label: 'ราคาเฉลี่ยต่อคืน', value: baht(T.adr), unit: '', sub: 'รายได้ต่อห้องว่างทั้งหมด ' + baht(T.revpar) + '/คืน' },
+{ label: 'จำนวนการจอง', value: String(T.bookings), unit: ' รายการ', sub: 'พักเฉลี่ย ' + (Math.round(T.avgStay * 10) / 10) + ' คืน' },
+{ label: 'รอยืนยัน', value: String(T.pendingBookings), unit: ' รายการ', sub: 'มูลค่า ' + baht(T.pendingValue) },
+{ label: 'ยกเลิก', value: String(T.cancelled), unit: ' รายการ', sub: 'คิดเป็น ' + pct(T.cancelRate) + ' · มูลค่า ' + baht(T.lostValue) },
+{ label: 'ผู้เข้าพัก', value: String(T.guests), unit: ' คน', sub: 'มีสัตว์เลี้ยงมาด้วย ' + T.withPets + ' การจอง' },
+{ label: 'ลูกค้ากลับมาพักซ้ำ', value: String(T.returning), unit: ' การจอง', sub: 'ลูกค้าใหม่ ' + T.newGuests + ' การจอง' }
+];
+stFacts = ['จองล่วงหน้าเฉลี่ย ' + Math.round(T.avgLead) + ' วัน', 'ช่วงนี้มี ' + st.days + ' วัน'];
+const maxRev = Math.max(1, ...st.series.map((x) => x.revenue));
+const daily = st.granularity === 'day';
+const minW = daily ? 22 : 44;
+stBars = st.series.map((x) => {
+const label = daily ? String(Number(x.key.slice(8, 10))) : TH_MS[Number(x.key.slice(5, 7)) - 1] + ' ' + String(Number(x.key.slice(0, 4)) + 543).slice(-2);
+const h = Math.round(x.revenue / maxRev * 150);
+const now = daily ? x.key === today : x.key === today.slice(0, 7);
+return { label, v: x.revenue ? kfmt(x.revenue) : '',
+title: (daily ? fullDate(x.key) : label) + ': ' + baht(x.revenue) + ' · ' + x.bookings + ' การจอง' + (x.cancelled ? ' · ยกเลิก ' + x.cancelled : ''),
+col: 'flex: 1 1 0; min-width: ' + minW + 'px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;',
+bar: 'display: block; width: 70%; max-width: 40px; height: ' + Math.max(h, x.revenue ? 3 : 1) + 'px; border-radius: 6px 6px 0 0; background: ' + (now ? '#A1805D' : '#C9B79F') + ';' };
+});
+stChartBox = 'display: flex; align-items: flex-end; gap: 4px; height: 210px; min-width: ' + (stBars.length * (minW + 4)) + 'px; padding-top: 8px; box-sizing: border-box; border-bottom: 1px solid #DED4C1;';
+stChartTitle = daily ? 'รายได้รายวัน' : 'รายได้รายเดือน';
+stChartAria = stChartTitle + ' ' + st.series.filter((x) => x.revenue).map((x) => x.key + ' ' + x.revenue + ' บาท').join(', ');
+stRooms = st.byRoom.map((r) => ({ name: r.name || ('ห้อง ' + r.roomNo), bookings: String(r.bookings), nights: String(r.nights),
+occ: pct(r.occupancy), occBar: 'display: block; height: 100%; width: ' + Math.min(100, Math.round(r.occupancy * 100)) + '%; background: #3E6A9E;',
+revenue: baht(r.revenue), cancelled: r.cancelled ? String(r.cancelled) : '–' }));
+const maxW = Math.max(1, ...st.byWeekday.map((w) => w.bookings));
+stWeek = [1, 2, 3, 4, 5, 6, 0].map((d) => { const w = st.byWeekday[d]; return { day: WD[d], n: w.bookings + ' ครั้ง',
+bar: 'display: block; height: 100%; width: ' + Math.round(w.bookings / maxW * 100) + '%; background: #A1805D;' }; });
+const dot = (c) => 'width: 10px; height: 10px; border-radius: 9999px; display: inline-block; background: ' + c + ';';
+const SRC = { web: 'จองผ่านเว็บไซต์', admin: 'แอดมินบันทึกเอง', other: 'อื่น ๆ' };
+stLists = [
+{ title: 'สถานะการจอง', rows: ['pending', 'confirmed', 'checked_in', 'checked_out', 'cancelled'].map((k) => ({ label: ST[k].name, n: String(st.statusCounts[k] || 0), dot: dot(ST[k].bg) })) },
+{ title: 'ช่องทางการจอง', rows: Object.keys(st.bySource).map((k) => ({ label: SRC[k] || k, n: String(st.bySource[k]), dot: dot('#7A6E63') })) },
+{ title: 'วิธีชำระเงิน', rows: Object.keys(st.byPayMethod).map((k) => ({ label: (st.payMethods && st.payMethods[k]) || (k === 'other' ? 'ไม่ระบุ' : k), n: String(st.byPayMethod[k]), dot: dot('#3E6A9E') })) }
+].map((g) => g.rows.length ? g : Object.assign(g, { rows: [{ label: 'ยังไม่มีข้อมูล', n: '–', dot: dot('#DED4C1') }] }));
+}
+const stRangeLabel = st ? (s.stRange === 'all' ? 'ทั้งหมดตั้งแต่การจองแรก ' : '') + fullDate(st.from) + ' – ' + fullDate(st.to) + ' (นับตามวันเช็คอิน)' : 'เลือกช่วงเวลาที่ต้องการดู';
+
+// ===== ราคาห้อง =====
+const pr = s.pr;
+const fieldStyle = 'height: 44px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 12px; font-size: 15px; color: #47413A; background: #FFFDF9; box-sizing: border-box;';
+const selectStyle = fieldStyle + ' min-width: 140px;';
+const darkBtn = 'border-radius: 9999px; padding: 10px 18px; font-size: 14px; border: 0; background: #47413A; color: #F6F3EE; min-height: 44px;';
+const ghostBtn = 'border-radius: 9999px; padding: 8px 14px; font-size: 13px; border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A; min-height: 36px;';
+const dangerBtn = 'border-radius: 9999px; padding: 8px 14px; font-size: 13px; border: 1px solid #B5443F; background: transparent; color: #B5443F; min-height: 36px;';
+const roomsList = pr ? pr.rooms : [];
+const roomLbl = (r) => (r.name || 'ห้อง') + ' (' + r.roomNo + ')';
+const prRooms = roomsList.map((r) => {
+const e = s.roomEdit[r.roomNo] || {};
+const price = e.price !== undefined ? e.price : String(r.pricePerNight);
+const cap = e.cap !== undefined ? e.cap : String(r.capacity);
+const status = e.status !== undefined ? e.status : r.status;
+const dirty = price !== String(r.pricePerNight) || cap !== String(r.capacity) || status !== r.status;
+const busy = s.acting === 'room' + r.roomNo;
+const set = (k) => (ev) => this.setState({ roomEdit: Object.assign({}, this.state.roomEdit, { [r.roomNo]: Object.assign({}, this.state.roomEdit[r.roomNo], { [k]: ev.target.value }) }) });
+return { label: roomLbl(r), price, cap, status, priceAria: 'ราคาต่อคืน ' + roomLbl(r), capAria: 'จำนวนคนสูงสุด ' + roomLbl(r), statusAria: 'สถานะ ' + roomLbl(r),
+priceStyle: fieldStyle + ' width: 140px;', capStyle: fieldStyle + ' width: 90px;',
+setPrice: set('price'), setCap: set('cap'), setStatus: set('status'),
+saveDisabled: !dirty || busy, saveLabel: busy ? 'กำลังบันทึก…' : dirty ? 'บันทึก' : 'บันทึกแล้ว',
+saveStyle: dirty ? darkBtn : ghostBtn + ' color: #7A6E63;',
+save: () => this.actPrice(kmApi('updateRoom', t, r.roomNo, { pricePerNight: Number(price), capacity: Number(cap), status }), 'room' + r.roomNo)
+.then(() => { const re = Object.assign({}, this.state.roomEdit); delete re[r.roomNo]; this.setState({ roomEdit: re }); }, () => {}) };
+});
+const adjText = (r) => r.adjustType === 'set' ? '฿' + kmMoney(r.amount) + '/คืน' : r.adjustType === 'fixed' ? (r.amount >= 0 ? '+฿' : '−฿') + kmMoney(Math.abs(r.amount)) : (r.amount >= 0 ? '+' : '−') + Math.abs(r.amount) + '%';
+const whenText = (r) => {
+const parts = [];
+if (r.days.length) parts.push('คืนวัน' + r.days.slice().sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7)).map((d) => WD[d]).join(', '));
+if (r.startDate || r.endDate) parts.push((r.startDate ? fullDate(r.startDate) : 'ตั้งแต่ตอนนี้') + ' – ' + (r.endDate ? fullDate(r.endDate) : 'ไม่มีกำหนด'));
+if (r.leadType === 'advance') parts.push('จองล่วงหน้าอย่างน้อย ' + r.leadDays + ' วัน');
+if (r.leadType === 'lastminute') parts.push('จองก่อนเข้าพักไม่เกิน ' + r.leadDays + ' วัน');
+parts.push(r.rooms.length ? 'ห้อง ' + r.rooms.map((no) => { const x = roomsList.find((y) => y.roomNo === no); return x ? x.name || no : no; }).join(', ') : 'ทุกห้อง');
+return parts.join(' · ');
+};
+const blankRule = { id: '', name: '', rooms: [], days: [], startDate: '', endDate: '', leadType: '', leadDays: '', adjustType: 'percent', amount: '', priority: '0', status: 'active' };
+const openRule = (r) => {
+this.setState({ rfErr: '', rf: r ? { id: r.id, name: r.name, rooms: r.rooms.slice(), days: r.days.slice(), startDate: r.startDate, endDate: r.endDate,
+leadType: r.leadType, leadDays: r.leadType ? String(r.leadDays) : '', adjustType: r.adjustType, amount: String(r.amount), priority: String(r.priority), status: r.status } : Object.assign({}, blankRule) },
+() => { const f = document.getElementById('rule-form'); if (f) { f.scrollIntoView({ behavior: 'smooth', block: 'center' }); const i = f.querySelector('input'); if (i) i.focus({ preventScroll: true }); } });
+};
+const prRules = (pr ? pr.rules : []).map((r) => {
+const on = r.status === 'active';
+const busy = s.acting === 'rule' + r.id;
+const up = r.adjustType === 'set' || r.amount >= 0;
+return { name: r.name, when: whenText(r), priority: String(r.priority), adj: adjText(r),
+adjStyle: 'flex: 0 0 auto; min-width: 86px; text-align: center; border-radius: 11px; padding: 10px 8px; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; ' + (on ? (up ? 'background: #EFE2B4; color: #6B4E1E;' : 'background: #DCE8DD; color: #2F5A33;') : 'background: #EDE6D7; color: #7A6E63;'),
+statusName: on ? 'ใช้งานอยู่' : 'ปิดอยู่',
+badge: 'display: inline-block; margin-left: 6px; border-radius: 9999px; padding: 2px 8px; font-size: 11px; font-weight: 600; vertical-align: middle; ' + (on ? 'background: #4F7A52; color: #F6F3EE;' : 'background: #DED4C1; color: #47413A;'),
+busy, toggleLabel: on ? 'ปิดชั่วคราว' : 'เปิดใช้',
+edit: () => openRule(r),
+toggle: () => this.actPrice(kmApi('savePriceRule', t, Object.assign({}, r, { status: on ? 'inactive' : 'active' })), 'rule' + r.id).catch(() => {}),
+del: () => { if (window.confirm('ลบกฎ "' + r.name + '" ?')) this.actPrice(kmApi('deletePriceRule', t, r.id), 'rule' + r.id).catch(() => {}); } };
+});
+const rf = s.rf || blankRule;
+const setRf = (patch) => this.setState({ rf: Object.assign({}, this.state.rf, patch), rfErr: '' });
+const toggleIn = (arr, v) => arr.indexOf(v) >= 0 ? arr.filter((x) => x !== v) : arr.concat([v]);
+const rfRooms = [{ label: 'ทุกห้อง', on: !rf.rooms.length, style: chip(!rf.rooms.length), pick: () => setRf({ rooms: [] }) }]
+.concat(roomsList.map((r) => ({ label: r.name || ('ห้อง ' + r.roomNo), on: rf.rooms.indexOf(r.roomNo) >= 0, style: chip(rf.rooms.indexOf(r.roomNo) >= 0), pick: () => setRf({ rooms: toggleIn(this.state.rf.rooms, r.roomNo) }) })));
+const rfDays = [1, 2, 3, 4, 5, 6, 0].map((d) => ({ label: WD[d], on: rf.days.indexOf(d) >= 0, style: chip(rf.days.indexOf(d) >= 0), pick: () => setRf({ days: toggleIn(this.state.rf.days, d) }) }));
+const amt = Number(rf.amount);
+const sample = roomsList[0] ? roomsList[0].pricePerNight : 1500;
+const after = isFinite(amt) && rf.amount !== '' ? Math.max(0, Math.round(rf.adjustType === 'set' ? amt : rf.adjustType === 'fixed' ? sample + amt : sample * (1 + amt / 100))) : null;
+const rfExample = after === null ? (rf.adjustType === 'percent' ? 'ใส่ 20 = แพงขึ้น 20% · ใส่ -10 = ลด 10%' : rf.adjustType === 'fixed' ? 'ใส่ 300 = เพิ่มคืนละ 300 บาท · ใส่ -200 = ลดคืนละ 200 บาท' : 'ใส่ราคาต่อคืนที่ต้องการ เช่น 3000')
+: 'ตัวอย่าง: ห้องราคา ฿' + kmMoney(sample) + ' จะเป็น ฿' + kmMoney(after) + ' ในคืนที่ตรงเงื่อนไข';
+const rfSave = () => {
+const r = this.state.rf;
+if (!r.name.trim()) { this.setState({ rfErr: 'กรุณาตั้งชื่อกฎ' }); return; }
+if (r.amount === '' || !isFinite(Number(r.amount))) { this.setState({ rfErr: 'กรุณาใส่ตัวเลขที่จะปรับราคา' }); return; }
+this.actPrice(kmApi('savePriceRule', t, Object.assign({}, r, { amount: Number(r.amount), priority: Number(r.priority) || 0, leadDays: Number(r.leadDays) || 0 })), 'rf')
+.then(() => this.setState({ rf: null }), (e) => this.setState({ rfErr: e.message }));
+};
+
+// ตัวอย่างราคา 14 คืน
+const pv = s.pv;
+const pvDates = pv ? pv.dates.map((d) => { const wd = kmDate.weekday(d); return { wd: WDS[wd], dm: kmDate.dm(d),
+style: 'padding: 8px 6px; text-align: right; white-space: nowrap; font-weight: 600; ' + (wd === 0 || wd === 6 ? 'color: #8B5E3C;' : '') + (d === today ? ' text-decoration: underline;' : '') }; }) : [];
+const pvRows = pv ? pv.rooms.map((r) => ({ name: r.name || ('ห้อง ' + r.roomNo), cells: r.nights.map((n) => ({ v: kmMoney(n.price),
+title: fullDate(n.date) + ' · ฿' + kmMoney(n.price) + (n.rules.length ? ' · กฎ: ' + n.rules.join(', ') : ' · ราคาพื้นฐาน'),
+style: 'padding: 8px 6px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; ' + (n.price !== n.base ? 'background: #EFE2B4; font-weight: 600; ' + (n.price < n.base ? 'color: #2F5A33;' : 'color: #6B4E1E;') : 'color: #47413A;') })) })) : [];
+const pvNav = 'width: 36px; height: 36px; border-radius: 9999px; border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A; display: flex; align-items: center; justify-content: center; padding: 0;';
 const h = new Date().getHours();
 const me = s.me || {};
 return {
@@ -445,14 +843,36 @@ noRows: rows.length === 0, unread: String(unread), hasUnread: unread > 0,
 markAll: () => this.markSeen(),
 q: s.q, setQ: (e) => this.setState({ q: e.target.value }),
 remHour: String((dash && dash.reminder && dash.reminder.hour) || 9),
-auto: autoOn, toggleAuto: (e) => { if (e && e.preventDefault) e.preventDefault(); if (!s.acting) this.act(kmApi(autoOn ? 'disableReminders' : 'setupReminders', t), 'auto'); },
-autoTrack: 'flex: 0 0 auto; width: 44px; height: 26px; border-radius: 9999px; border: 0; padding: 3px; display: flex; justify-content: ' + (autoOn ? 'flex-end' : 'flex-start') + '; background: ' + (autoOn ? '#3E6A9E' : '#CFC3AC') + ';',
-autoKnob: 'width: 20px; height: 20px; border-radius: 9999px; background: #F6F3EE; display: block;',
+autoOff: !!dash && !autoOn, enableAuto: () => { if (!s.acting) this.act(kmApi('setupReminders', t), 'auto'); },
+autoNote: autoOn ? 'LINE แจ้งแอดมินอัตโนมัติทุกวัน ' + ((dash && dash.reminder && dash.reminder.hour) || 9) + ':00 น. · ลูกค้าที่เช็คอินวันเดียวกันรวมในแชทเดียว' : '',
+sheetUrl: (dash && dash.sheetUrl) || '',
 lineStatus: !lineInfo ? 'กำลังโหลด…' : !lineInfo.configured ? 'ยังไม่ได้ใส่ Channel access token' : !lineInfo.targets ? 'ยังไม่มีแอดมินลงทะเบียน (พิมพ์ "แอดมิน รหัส" ในแชท OA)' : 'เชื่อมแล้ว ' + lineInfo.targets + ' ปลายทาง',
 lineDot: 'width: 10px; height: 10px; border-radius: 9999px; flex: 0 0 10px; background: ' + (lineOk ? '#06C755' : '#C88193') + ';',
 lineBtnDisabled: !lineOk || s.acting === 'line',
 lineBtnStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 8px 14px; font-size: 13px; border: ' + (lineOk ? '0' : '1px solid #DED4C1') + '; background: ' + (lineOk ? '#06C755' : '#F6F3EE') + '; color: ' + (lineOk ? '#FFFFFF' : '#7A6E63') + ';',
-testLine: () => this.act(kmApi('sendTestLine', t), 'line')
+testLine: () => this.act(kmApi('sendTestLine', t), 'line'),
+// สถิติ
+stChips, stKpis, stFacts, stBars, stRooms, stWeek, stLists, stChartAria, stChartBox, stChartTitle, stRangeLabel,
+stHas: !!st && !s.stLoading, stLoading: s.stLoading, stErr: s.stErr, stFrom: s.stFrom, stTo: s.stTo,
+setStFrom: (e) => this.setState({ stFrom: e.target.value }), setStTo: (e) => this.setState({ stTo: e.target.value }),
+stApply: () => { if (s.stFrom && s.stTo) this.loadStats(null, s.stFrom, s.stTo); },
+fieldStyle, selectStyle, darkBtn, ghostBtn, dangerBtn,
+// ราคา
+prLoading: s.prLoading, prErr: s.prErr, prRooms, prRules, prNoRules: !!pr && !pr.rules.length,
+prStackNote: 'ถ้าหลายกฎตรงกับคืนเดียวกัน ระบบใช้กฎที่ลำดับความสำคัญสูงสุดกฎเดียว เช่น ปีใหม่ (10) ชนะ สุดสัปดาห์ (1)',
+newRule: () => openRule(null),
+rfOpen: !!s.rf, rf, rfTitle: rf.id ? 'แก้ไขกฎ' : 'เพิ่มกฎใหม่', rfErr: s.rfErr, rfBusy: s.acting === 'rf', rfSaveLabel: s.acting === 'rf' ? 'กำลังบันทึก…' : 'บันทึกกฎ',
+rfRooms, rfDays, rfExample, rfActive: rf.status === 'active', rfSave,
+rfAmountLabel: rf.adjustType === 'percent' ? 'กี่ % *' : rf.adjustType === 'fixed' ? 'กี่บาท *' : 'ราคาต่อคืน *',
+rfSetName: (e) => setRf({ name: e.target.value }), rfSetStart: (e) => setRf({ startDate: e.target.value }), rfSetEnd: (e) => setRf({ endDate: e.target.value }),
+rfSetLead: (e) => setRf({ leadType: e.target.value }), rfSetLeadDays: (e) => setRf({ leadDays: e.target.value }),
+rfSetAdj: (e) => setRf({ adjustType: e.target.value }), rfSetAmount: (e) => setRf({ amount: e.target.value }), rfSetPriority: (e) => setRf({ priority: e.target.value }),
+rfToggleActive: (e) => setRf({ status: e.target.checked ? 'active' : 'inactive' }),
+rfCancel: () => this.setState({ rf: null, rfErr: '' }),
+pvFrom: s.pvFrom, pvDates, pvRows, pvNav,
+pvSetFrom: (e) => { if (e.target.value) this.loadPreview(e.target.value); },
+pvPrev: () => this.loadPreview(kmDate.add(s.pvFrom || today, -14)),
+pvNext: () => this.loadPreview(kmDate.add(s.pvFrom || today, 14))
 };
 }
 }

@@ -543,6 +543,18 @@ const free = (a, b) => { for (let d = a; d < b; d = kmDate.add(d, 1)) if (this.d
 const price = room ? Number(room.pricePerNight) || 0 : 0;
 const nights = s.ci && s.co ? kmDate.diff(s.ci, s.co) : 0;
 const money = kmMoney;
+// ราคาจริงจากระบบ (คิดตามกฎปรับราคาของแต่ละคืน) แทนการคูณราคาพื้นฐานเอง
+const qKey = room && nights > 0 ? s.room + '|' + s.ci + '|' + s.co : '';
+if (qKey && s.quoteKey !== qKey && this._qReq !== qKey) {
+this._qReq = qKey;
+kmApi('publicQuote', s.room, s.ci, s.co)
+.then((q) => { if (this._qReq === qKey) this.setState({ quoteKey: qKey, quote: q }); })
+.catch(() => { if (this._qReq === qKey) this.setState({ quoteKey: qKey, quote: null }); });
+}
+const quoteReady = !!qKey && s.quoteKey === qKey;
+const quoted = quoteReady && s.quote ? Number(s.quote.totalPrice) || 0 : null;
+const nightly = quoteReady && s.quote ? (s.quote.nightly || []) : [];
+const variesByNight = nightly.some((n) => n.price !== price);
 const sv = s.saved;
 const view = s.step >= 4 && sv;
 
@@ -624,8 +636,8 @@ const left = s.holdUntil ? Math.max(0, Math.ceil((s.holdUntil - s.now) / 1000)) 
 const holdActive = inHoldStep && !!s.holdId && left > 0;
 const holdExpired = inHoldStep && (!s.holdId || left <= 0);
 const P = cfg.payment || {};
-const total = view ? Number(sv.total) || 0 : price * nights;
-const totalLabel = (view ? sv.nights : nights) ? (total > 0 ? '฿' + money(total) : 'แจ้งยอดหลังยืนยัน') : '—';
+const total = view ? Number(sv.total) || 0 : (quoted !== null ? quoted : price * nights);
+const totalLabel = (view ? sv.nights : nights) ? (!view && qKey && !quoteReady ? 'กำลังคำนวณราคา…' : total > 0 ? '฿' + money(total) : 'แจ้งยอดหลังยืนยัน') : '—';
 const code = sv ? sv.code : '';
 const payName = view ? sv.payName : ((cfg.payMethods || {})[s.pay] || '');
 const R = s.receipt;
@@ -743,7 +755,9 @@ priceNote: total > 0 ? 'ยอดชำระ ฿' + money(total) : 'ราค�
 } : {
 room: room ? room.name : (s.loading ? 'กำลังโหลด…' : 'ยังไม่ได้เลือกห้อง'), img: room ? kmRoomImage(room.roomNo) : (window.KM_CONFIG || {}).DEFAULT_ROOM_IMAGE,
 ci: s.ci ? kmDate.short(s.ci) : '—', co: s.co ? kmDate.short(s.co) : '—', nights: nights ? nights + ' คืน' : '—', guests: guests + ' ท่าน',
-priceNote: price > 0 ? '฿' + money(price) + ' ต่อคืน' : 'ราคาจะแจ้งหลังยืนยัน'
+priceNote: variesByNight
+? 'ราคาตามวัน: ' + nightly.map((n) => kmDate.dm(n.date) + ' ฿' + money(n.price)).join(', ')
+: price > 0 ? '฿' + money(price) + ' ต่อคืน' : 'ราคาจะแจ้งหลังยืนยัน'
 }
 };
 }
