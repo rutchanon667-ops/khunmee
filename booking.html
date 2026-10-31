@@ -288,7 +288,7 @@ Khun Mhee</a>
 <div style="display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid #E6DDCB; padding-top: 20px">
 <a class="pill" href="index.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 17px">กลับหน้าแรก</a>
 <a class="pill" href="index.html#contact" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 10px 22px; font-size: 17px">ติดต่อที่พัก</a>
-<template data-sc="if" value="{{isCancelled}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{reset}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 10px 22px; font-size: 17px">จองห้องใหม่</button></template>
+<template data-sc="if" value="{{canReset}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{reset}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 10px 22px; font-size: 17px">จองห้องใหม่</button></template>
 <template data-sc="if" value="{{isWaiting}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{checkStatus}}" disabled="{{checking}}" style="margin-left: auto; background: #3E6A9E; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 11px 22px; font-size: 15px">{{checkLabel}}</button></template>
 </div>
 <template data-sc="if" value="{{statusMsg}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: #47413A; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">{{statusMsg}}</p></template>
@@ -401,7 +401,7 @@ componentDidMount() {
 let saved = null;
 try { saved = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch (e) {}
 if (saved && saved.code && saved.phone) {
-this.setState({ saved, step: saved.status === 'confirmed' ? 5 : 4, bkStatus: saved.status || 'pending',
+this.setState({ saved, step: saved.status === 'confirmed' ? 5 : 4, bkStatus: saved.status || 'pending', receipt: saved.receipt || null,
 f: Object.assign({}, this.state.f, { first: saved.first || '', email: saved.email || '', phone: saved.phone, pets: saved.pets || '' }) });
 setTimeout(() => this.checkStatus(true), 0);
 }
@@ -470,16 +470,17 @@ kmApi('publicGetBookingStatus', sv.code, sv.phone).then((b) => {
 const d = new Date();
 const lastCheck = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
 if (['confirmed', 'checked_in', 'checked_out'].indexOf(b.status) >= 0) {
-const saved = Object.assign({}, sv, { status: 'confirmed' });
+const saved = Object.assign({}, sv, { status: 'confirmed', receipt: b.receipt || sv.receipt || null });
 this.saveLocal(saved);
 if (this.state.step !== 5) window.scrollTo(0, 0);
-return this.setState({ checking: false, step: 5, bkStatus: 'confirmed', saved, receipt: b.receipt || null, lastCheck, statusMsg: '' });
+return this.setState({ checking: false, step: 5, bkStatus: 'confirmed', saved, receipt: saved.receipt, lastCheck, statusMsg: '', notFound: false });
 }
-if (b.status === 'cancelled') return this.setState({ checking: false, step: 4, bkStatus: 'cancelled', lastCheck, statusMsg: '' });
-this.setState({ checking: false, step: 4, bkStatus: 'pending', lastCheck, statusMsg: quiet ? '' : 'ยังรอแอดมินตรวจสอบสลิปอยู่ ระบบจะเปลี่ยนหน้าให้เองเมื่ออนุมัติ' });
+if (b.status === 'cancelled') { this.saveLocal(Object.assign({}, sv, { status: 'cancelled', receipt: null })); return this.setState({ checking: false, step: 4, bkStatus: 'cancelled', lastCheck, statusMsg: '', notFound: false }); }
+this.setState({ checking: false, step: 4, bkStatus: 'pending', lastCheck, notFound: false, statusMsg: quiet ? '' : 'ยังรอแอดมินตรวจสอบสลิปอยู่ ระบบจะเปลี่ยนหน้าให้เองเมื่ออนุมัติ' });
 }).catch((e) => {
-if (/ไม่พบการจอง/.test(e.message)) { this.saveLocal(null); return this.setState({ checking: false, step: 1, saved: null, statusMsg: '' }); }
-this.setState({ checking: false, statusMsg: quiet ? '' : e.message });
+// ไม่ล้างการจองที่บันทึกไว้และไม่เด้งกลับหน้าเลือกห้อง: อยู่หน้าเดิมแล้วบอกลูกค้า (ลูกค้ากด "จองห้องใหม่" เองได้)
+if (/ไม่พบการจอง/.test(e.message)) return this.setState({ checking: false, notFound: true, statusMsg: 'ยังตรวจสอบสถานะการจอง ' + sv.code + ' ไม่ได้ ระบบจะลองใหม่อัตโนมัติ หากยังขึ้นข้อความนี้ กรุณาติดต่อที่พักพร้อมแจ้งหมายเลขการจอง' });
+this.setState({ checking: false, statusMsg: quiet ? this.state.statusMsg : e.message });
 });
 }
 readSlip(file) {
@@ -622,10 +623,10 @@ const err = { first: s.tried && !f.first.trim(), last: s.tried && !f.last.trim()
 const inp = (bad) => 'height: 48px; border: 1px solid ' + (bad ? '#9E4F63' : '#CFC3AC') + '; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #F6F3EE';
 const payCard = (on) => 'display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: #F6F3EE; cursor: pointer; border: ' + (on ? '2px solid ' + accent : '1px solid #DED4C1') + '; margin: ' + (on ? '0' : '1px') + ';';
 
-const stepNames = ['เลือกห้องและวันที่', 'ข้อมูลผู้เข้าพัก', 'ชำระเงิน', 'รออนุมัติ'];
-const curStep = Math.min(s.step, 4);
+const stepNames = ['เลือกห้องและวันที่', 'ข้อมูลผู้เข้าพัก', 'ชำระเงิน', 'รออนุมัติ', 'อนุมัติแล้ว'];
+const curStep = s.step;
 const steps = stepNames.map((label, i) => {
-const on = curStep === i + 1, done = curStep > i + 1 || s.step === 5;
+const on = curStep === i + 1, done = curStep > i + 1;
 return { n: String(i + 1), label,
 style: 'display: flex; align-items: center; gap: 8px; padding: 8px 16px 8px 8px; border-radius: 9999px; font-size: 14px; background: ' + (on ? '#F6F3EE' : 'transparent') + '; color: ' + (on || done ? '#47413A' : '#7A6E63') + '; font-weight: ' + (on ? '600' : '400') + ';',
 dot: 'width: 24px; height: 24px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; background: ' + (on || done ? accent : '#CFC3AC') + '; color: #F6F3EE;' };
@@ -721,7 +722,7 @@ this.refreshBooked(); window.scrollTo(0, 0);
 code,
 emailNote: view && sv.email ? ' และเราจะส่งอีเมลยืนยันไปที่ ' + sv.email : '',
 hasEmail: !!(view && sv.email),
-isWaiting: st !== 'cancelled', isCancelled: st === 'cancelled',
+isWaiting: st !== 'cancelled', isCancelled: st === 'cancelled', canReset: st === 'cancelled' || !!s.notFound,
 liveDot: 'width: 8px; height: 8px; border-radius: 9999px; display: inline-block; background: ' + (s.checking ? '#E9C46A' : '#4F7A52') + ';',
 autoLabel: s.checking ? 'กำลังตรวจสอบสถานะ…' : 'ตรวจสอบสถานะอัตโนมัติทุก 15 วินาที' + (s.lastCheck ? ' · ล่าสุด ' + s.lastCheck + ' น.' : ''),
 checking: s.checking, checkLabel: s.checking ? 'กำลังตรวจสอบ…' : 'ตรวจสอบสถานะล่าสุด', statusMsg: s.statusMsg,
@@ -747,7 +748,7 @@ roomName: R.roomName, price: R.pricePerNight ? '฿' + money(R.pricePerNight) : 
 } : {},
 pdfBusy: s.pdfBusy || !R, pdfLabel: s.pdfBusy ? 'กำลังสร้าง PDF…' : 'ดาวน์โหลดใบเสร็จ (PDF)', pdfErr: s.pdfErr,
 downloadPdf: () => this.downloadPdf(),
-reset: () => { this.saveLocal(null); this.release(); this.setState({ step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '',
+reset: () => { this.saveLocal(null); this.release(); this.setState({ notFound: false, step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '',
 f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' } }); this.refreshBooked(); window.scrollTo(0, 0); },
 sum: view ? {
 room: sv.roomName, img: kmRoomImage(sv.roomNo), ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
