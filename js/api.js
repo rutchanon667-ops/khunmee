@@ -28,6 +28,18 @@
       });
   };
 
+  /* ส่งแบบไม่รอผล ใช้ตอนปิดหน้า (เช่น ปล่อยห้องที่กันไว้) */
+  window.kmApiBeacon = function (action) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    var url = cfg.API_URL || '';
+    if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(url)) return;
+    var body = JSON.stringify({ action: action, args: args });
+    try {
+      if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], { type: 'text/plain;charset=utf-8' }))) return;
+    } catch (e) {}
+    try { fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body, keepalive: true, mode: 'no-cors' }); } catch (e) {}
+  };
+
   window.kmToken = {
     get: function () { try { return sessionStorage.getItem('km_token'); } catch (e) { return null; } },
     set: function (t) { try { t ? sessionStorage.setItem('km_token', t) : sessionStorage.removeItem('km_token'); } catch (e) {} },

@@ -140,9 +140,9 @@
   window.DCLogic = DCLogic;
 
   window.DC = {
-    mount: function (Component, props) {
-      var tpl = document.getElementById('view');
-      var root = document.getElementById('app');
+    mount: function (Component, props, opts) {
+      var tpl = (opts && opts.tpl) || document.getElementById('view');
+      var root = (opts && opts.root) || document.getElementById('app');
       var inst = new Component(props || {});
       var pending = false;
       var callbacks = [];
