@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khun Mhee – Booking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed}
+button:active:not(:disabled),.pill:active{transform:scale(0.95)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #A1805D;outline-offset:2px}
+input,select,textarea{font-family:inherit}
+@media (max-width:833px){
+ .navlinks{display:none !important}
+ .rooms4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+ .months{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .fields2{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .page-h{font-size:34px !important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="view">
+<div style="width: 100%; min-width: 0; background: #EDE6D7; min-height: 100vh">
+
+<header style="background: #3A352F; color: #F6F3EE; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box">
+<nav aria-label="เมนูหลัก" style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px">
+<a href="index.html" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DCC881" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
+Khun Mhee</a>
+<div class="navlinks" style="display: flex; gap: 32px">
+<a href="index.html" style="color: #EDE6D7">ห้องพัก</a>
+<a href="index.html" style="color: #EDE6D7">พื้นที่ส่วนกลาง</a>
+<a href="index.html" style="color: #EDE6D7">สำหรับสัตว์เลี้ยง</a>
+<a href="index.html" style="color: #EDE6D7">ติดต่อเรา</a>
+</div>
+<a href="login.html" style="color: #EDE6D7">แอดมิน</a>
+</nav>
+</header>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box">
+<a href="index.html" style="font-size: 14px; color: {{accent}}">‹ กลับหน้าแรก</a>
+<h1 class="page-h" style="margin: 12px 0 0; font-size: 48px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px">จองห้องพัก</h1>
+<p style="margin: 8px 0 0; font-size: 21px; color: #5E554C">เลือกห้องและวันที่ แล้วกรอกข้อมูลผู้เข้าพัก ใช้เวลาไม่ถึง 2 นาที</p>
+
+<!-- Stepper -->
+<ol aria-label="ขั้นตอนการจอง" style="list-style: none; margin: 32px 0 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap">
+<template data-sc="for" list="{{steps}}" as="s" hint-placeholder-count="3">
+<li style="{{s.style}}"><span style="{{s.dot}}">{{s.n}}</span>{{s.label}}</li>
+</template>
+</ol>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; margin-top: 24px; align-items: flex-start">
+
+<!-- Main column -->
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+
+<template data-sc="if" value="{{isStep1}}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="h-room" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-room" style="margin: 0; font-size: 24px; font-weight: 600">1. เลือกห้องพัก</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ทุกห้องพาสัตว์เลี้ยงเข้าพักได้ มีห้องน้ำในตัว</p>
+<template data-sc="if" value="{{loading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 20px 0 0; font-size: 15px; color: #5E554C">กำลังโหลดห้องพักและวันว่าง…</p></template>
+<template data-sc="if" value="{{loadErr}}" hint-placeholder-val="{{ false }}"><div role="alert" style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60"><span style="flex: 1 1 240px">{{loadErr}}</span><button type="button" onClick="{{reload}}" style="background: #47413A; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 8px 16px; font-size: 14px">ลองอีกครั้ง</button></div></template>
+<div class="rooms4" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
+<template data-sc="for" list="{{rooms}}" as="r" hint-placeholder-count="4">
+<button type="button" onClick="{{r.pick}}" aria-pressed="{{r.selected}}" style="{{r.style}}">
+<img src="{{r.img}}" alt="" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block">
+<span style="display: block; margin-top: 10px; font-size: 17px; font-weight: 600; color: #47413A">{{r.name}}</span>
+<span style="display: block; margin-top: 2px; font-size: 14px; color: #7A6E63">{{r.priceLabel}}</span>
+</button>
+</template>
+</div>
+</section>
+
+<section aria-labelledby="h-date" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap">
+<h2 id="h-date" style="margin: 0; font-size: 24px; font-weight: 600">2. เลือกวันเข้าพัก</h2>
+<div style="display: flex; align-items: center; gap: 8px">
+<button type="button" onClick="{{prevMonths}}" disabled="{{noPrev}}" aria-label="เดือนก่อนหน้า" style="{{prevStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<button type="button" onClick="{{nextMonths}}" disabled="{{noNext}}" aria-label="เดือนถัดไป" style="{{nextStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+<button type="button" onClick="{{clearDates}}" style="background: transparent; border: 0; color: {{accent}}; font-size: 14px; padding: 8px 4px">ล้างวันที่</button>
+</div>
+</div>
+<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">{{dateHint}}</p>
+<div class="months" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-top: 24px">
+<template data-sc="for" list="{{months}}" as="m" hint-placeholder-count="2">
+<div>
+<h3 style="margin: 0 0 12px; font-size: 17px; font-weight: 600; text-align: center">{{m.title}}</h3>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; text-align: center; font-size: 12px; color: #7A6E63; margin-bottom: 6px">
+<span>อา</span><span>จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px">
+<template data-sc="for" list="{{m.cells}}" as="c" hint-placeholder-count="35">
+<template data-sc="if" value="{{c.blank}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true"></span></template>
+<template data-sc="if" value="{{c.real}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{c.pick}}" disabled="{{c.disabled}}" aria-label="{{c.aria}}" style="{{c.style}}">{{c.label}}</button>
+</template>
+</template>
+</div>
+</div>
+</template>
+</div>
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; font-size: 12px; color: #5E554C">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: {{accent}}"></span>วันที่เลือก</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: #EFE2B4"></span>ช่วงเข้าพัก</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: #E6DDCB; text-decoration: line-through"></span>ไม่ว่าง</span>
+</div>
+</section>
+
+<div style="display: flex; justify-content: flex-end">
+<button type="button" onClick="{{goStep2}}" disabled="{{next1Disabled}}" style="{{next1Style}}">ถัดไป: ข้อมูลผู้เข้าพัก</button>
+</div>
+</template>
+
+<template data-sc="if" value="{{isStep2}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-guest" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-guest" style="margin: 0; font-size: 24px; font-weight: 600">ข้อมูลผู้เข้าพัก</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ช่องที่มี * จำเป็นต้องกรอก ใช้เบอร์โทรนี้ตรวจสอบสถานะการจองภายหลัง</p>
+<div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 24px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ชื่อ *
+<input type="text" value="{{f.first}}" onInput="{{setFirst}}" autocomplete="given-name" placeholder="เช่น สมใจ" style="{{fs.first}}">
+<template data-sc="if" value="{{err.first}}" hint-placeholder-val="{{ false }}"><span style="font-weight: 400; color: #9E4F63; font-size: 12px">กรุณากรอกชื่อ</span></template>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">นามสกุล *
+<input type="text" value="{{f.last}}" onInput="{{setLast}}" autocomplete="family-name" placeholder="เช่น ใจดี" style="{{fs.last}}">
+<template data-sc="if" value="{{err.last}}" hint-placeholder-val="{{ false }}"><span style="font-weight: 400; color: #9E4F63; font-size: 12px">กรุณากรอกนามสกุล</span></template>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ *
+<input type="tel" value="{{f.phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="{{fs.phone}}">
+<template data-sc="if" value="{{err.phone}}" hint-placeholder-val="{{ false }}"><span style="font-weight: 400; color: #9E4F63; font-size: 12px">กรุณากรอกเบอร์โทร 9–10 หลัก</span></template>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">อีเมล (แนะนำ)
+<input type="email" value="{{f.email}}" onInput="{{setEmail}}" autocomplete="email" placeholder="you@example.com" style="height: 48px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #F6F3EE">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">จำนวนผู้เข้าพัก
+<select onChange="{{setGuests}}" value="{{f.guests}}" style="height: 48px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #F6F3EE">
+<template data-sc="for" list="{{guestOpts}}" as="g" hint-placeholder-count="2"><option value="{{g.v}}">{{g.label}}</option></template>
+</select>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">สัตว์เลี้ยงที่มาด้วย
+<select onChange="{{setPets}}" value="{{f.pets}}" style="height: 48px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #F6F3EE">
+<option value="สุนัข 1 ตัว">สุนัข 1 ตัว</option><option value="สุนัข 2 ตัว">สุนัข 2 ตัว</option><option value="แมว 1 ตัว">แมว 1 ตัว</option><option value="แมว 2 ตัว">แมว 2 ตัว</option><option value="สุนัข 1 + แมว 1">สุนัข 1 + แมว 1</option><option value="ไม่มี">ไม่มีสัตว์เลี้ยง</option>
+</select>
+</label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; margin-top: 20px">คำขอเพิ่มเติม
+<textarea rows="3" value="{{f.note}}" onInput="{{setNote}}" placeholder="เช่น น้องแพ้อาหารบางชนิด หรือจะเช็คอินดึก" style="border: 1px solid #CFC3AC; border-radius: 11px; padding: 12px 14px; font-size: 17px; font-weight: 400; color: #47413A; resize: vertical"></textarea>
+</label>
+<p style="margin: 20px 0 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.6; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 18px; margin-top: 3px"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg><span>ถ้ากรอกอีเมล เราจะส่งอีเมลยืนยันเมื่ออนุมัติการจอง และอีเมลเตือน 1 วันก่อนเช็คอิน</span></p>
+<template data-sc="if" value="{{err.email}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; color: #9E4F63; font-size: 13px">รูปแบบอีเมลไม่ถูกต้อง</p></template>
+</section>
+<div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<button type="button" onClick="{{goStep1}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 11px 22px; font-size: 17px">‹ ย้อนกลับ</button>
+<button type="button" onClick="{{confirm}}" style="background: {{accent}}; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300">ถัดไป: ชำระเงิน</button>
+</div>
+</template>
+
+<template data-sc="if" value="{{isStep3}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-pay" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-pay" style="margin: 0; font-size: 24px; font-weight: 600">เลือกวิธีชำระเงิน</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">กรุณาชำระภายใน {{pay.hours}} ชั่วโมง เพื่อกันห้องไว้ให้คุณ · ยอดชำระ {{totalLabel}}</p>
+<div role="radiogroup" aria-label="วิธีชำระเงิน" class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
+<button type="button" role="radio" aria-checked="{{isBank}}" onClick="{{pickBank}}" style="{{bankStyle}}">
+<span style="width: 44px; height: 44px; flex: 0 0 44px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6"></path><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"></path><path d="M3 21h18"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px; text-align: left"><span style="font-size: 17px; font-weight: 600; color: #47413A">โอนผ่านบัญชีธนาคาร</span><span style="font-size: 13px; color: #7A6E63">โอนจากแอปธนาคารแล้วแนบสลิป</span></span>
+</button>
+<button type="button" role="radio" aria-checked="{{isQr}}" onClick="{{pickQr}}" style="{{qrStyle}}">
+<span style="width: 44px; height: 44px; flex: 0 0 44px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3M21 14v.01M14 21h3M21 18v3h-1"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 2px; text-align: left"><span style="font-size: 17px; font-weight: 600; color: #47413A">สแกน QR พร้อมเพย์</span><span style="font-size: 13px; color: #7A6E63">สแกนจ่ายได้ทุกธนาคาร</span></span>
+</button>
+</div>
+
+<template data-sc="if" value="{{isBank}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 20px; background: #EDE6D7; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 15px"><span style="color: #5E554C">ธนาคาร</span><span style="font-weight: 600">{{pay.bankName}}</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 15px"><span style="color: #5E554C">ชื่อบัญชี</span><span style="font-weight: 600">{{pay.accountName}}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid #DED4C1; padding-top: 14px">
+<span style="display: flex; flex-direction: column"><span style="font-size: 13px; color: #5E554C">เลขที่บัญชี</span><span style="font-size: 26px; font-weight: 600; letter-spacing: 1px; font-variant-numeric: tabular-nums">{{pay.accountNo}}</span></span>
+<button type="button" onClick="{{copyAcc}}" style="background: #F6F3EE; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 8px 16px; font-size: 14px">{{copyLabel}}</button>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px; border-top: 1px solid #DED4C1; padding-top: 14px"><span style="color: #5E554C">ยอดที่ต้องโอน</span><span style="font-size: 21px; font-weight: 600">{{totalLabel}}</span></div>
+</div>
+</template>
+
+<template data-sc="if" value="{{isQr}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 20px; background: #EDE6D7; border-radius: 18px; padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center">
+<template data-sc="if" value="{{pay.hasQr}}" hint-placeholder-val="{{ false }}"><img src="{{pay.qrUrl}}" alt="QR พร้อมเพย์สำหรับชำระเงิน" style="width: 200px; height: 200px; flex: 0 0 200px; object-fit: contain; background: #FFFFFF; border-radius: 18px; padding: 8px; box-sizing: border-box; display: block"></template>
+<template data-sc="if" value="{{pay.noQr}}" hint-placeholder-val="{{ true }}"><div role="img" aria-label="พื้นที่สำหรับ QR พร้อมเพย์ของที่พัก" style="width: 200px; height: 200px; flex: 0 0 200px; background: #FFFFFF; border: 2px dashed #A1805D; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #7A6E63; font-size: 13px; text-align: center; box-sizing: border-box; padding: 16px">
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#A1805D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3M21 14v.01M14 21h3M21 18v3h-1"></path></svg>
+ยังไม่ได้ใส่รูป QR
+</div></template>
+<div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; font-size: 13px; color: #5E554C">ชื่อผู้รับเงิน</p>
+<p style="margin: 0; font-size: 17px; font-weight: 600">{{pay.promptpayName}}</p>
+<p style="margin: 6px 0 0; font-size: 13px; color: #5E554C">ยอดที่ต้องชำระ</p>
+<p style="margin: 0; font-size: 26px; font-weight: 600">{{totalLabel}}</p>
+<ol style="margin: 6px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.7; color: #5E554C">
+<li>เปิดแอปธนาคาร แล้วเลือก "สแกน QR"</li>
+<li>ตรวจสอบชื่อผู้รับและยอดเงิน</li>
+<li>บันทึกสลิป แล้วแนบด้านล่าง</li>
+</ol>
+</div>
+</div>
+</template>
+
+<div style="margin-top: 24px; border-top: 1px solid #E6DDCB; padding-top: 24px">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">แนบสลิปการโอน *</h3>
+<p style="margin: 4px 0 0; font-size: 13px; color: #7A6E63">ไฟล์ JPG, PNG หรือ PDF ไม่เกิน 5 MB แอดมินจะใช้สลิปนี้ตรวจสอบการชำระเงิน</p>
+<label style="{{slipBox}}">
+<input type="file" accept="image/*,application/pdf" onChange="{{setSlip}}" style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="M7 9l5-5 5 5"></path><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"></path></svg>
+<span style="font-size: 15px; font-weight: 600">{{slipLabel}}</span>
+<span style="font-size: 13px; color: #7A6E63">{{slipSub}}</span>
+</label>
+<template data-sc="if" value="{{slipErr}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; color: #9E4F63; font-size: 13px">{{slipErrText}}</p></template>
+</div>
+</section>
+<div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<button type="button" onClick="{{goStep2}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 11px 22px; font-size: 17px">‹ ย้อนกลับ</button>
+<button type="button" onClick="{{submitPay}}" disabled="{{busy}}" style="background: {{accent}}; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300">{{submitLabel}}</button>
+</div>
+<template data-sc="if" value="{{submitErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{submitErr}}</p></template>
+</template>
+
+<template data-sc="if" value="{{isStep4}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-wait" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+<span style="width: 72px; height: 72px; border-radius: 9999px; background: #E9C46A; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3A352F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></span>
+<span style="font-size: 13px; font-weight: 600; background: #E9C46A; color: #3A352F; border-radius: 9999px; padding: 4px 12px">รอยืนยันการจอง</span>
+<h2 id="h-wait" style="margin: 0; font-size: 34px; font-weight: 600">ได้รับการแจ้งชำระเงินแล้ว</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C; max-width: 540px">แอดมินกำลังตรวจสอบสลิปของคุณ{{f.first}} กดปุ่ม "ตรวจสอบสถานะล่าสุด" ด้านล่างได้ตลอด{{emailNote}}</p>
+<p style="margin: 0; font-size: 17px; color: #5E554C">หมายเลขการจอง <strong style="color: #47413A">{{code}}</strong></p>
+</section>
+
+<section aria-labelledby="h-track" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-track" style="margin: 0 0 20px; font-size: 21px; font-weight: 600">สถานะการจอง</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<template data-sc="for" list="{{track}}" as="t" hint-placeholder-count="4">
+<li style="display: flex; gap: 16px">
+<div style="display: flex; flex-direction: column; align-items: center; flex: 0 0 32px">
+<span style="{{t.dot}}">{{t.mark}}</span>
+<span style="{{t.line}}"></span>
+</div>
+<div style="padding-bottom: 22px">
+<p style="margin: 4px 0 0; font-size: 17px; font-weight: 600; color: {{t.color}}">{{t.title}}</p>
+<p style="margin: 2px 0 0; font-size: 14px; color: #7A6E63">{{t.sub}}</p>
+</div>
+</li>
+</template>
+</ol>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid #E6DDCB; padding-top: 20px">
+<a class="pill" href="index.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 17px">กลับหน้าแรก</a>
+<a class="pill" href="index.html#contact" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 10px 22px; font-size: 17px">ติดต่อที่พัก</a>
+<button type="button" onClick="{{checkStatus}}" disabled="{{checking}}" style="margin-left: auto; background: #3E6A9E; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 11px 22px; font-size: 15px">{{checkLabel}}</button>
+</div>
+<template data-sc="if" value="{{statusMsg}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: #47413A; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">{{statusMsg}}</p></template>
+</section>
+</template>
+
+<template data-sc="if" value="{{isStep5}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-done" style="background: #F6F3EE; border-radius: 18px; padding: 48px 32px; box-sizing: border-box; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
+<span style="width: 72px; height: 72px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<span style="font-size: 13px; font-weight: 600; background: #4F7A52; color: #F6F3EE; border-radius: 9999px; padding: 4px 12px">อนุมัติการจองแล้ว</span>
+<h2 id="h-done" style="margin: 0; font-size: 34px; font-weight: 600">การจองของคุณได้รับการยืนยัน</h2>
+<p style="margin: 0; font-size: 17px; color: #5E554C">หมายเลขการจอง <strong>{{code}}</strong></p>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C; max-width: 520px">ขอบคุณคุณ{{f.first}} แอดมินตรวจสลิปและยืนยันห้องให้แล้ว {{sum.room}} · {{sum.ci}} ถึง {{sum.co}}</p>
+<template data-sc="if" value="{{hasEmail}}" hint-placeholder-val="{{ true }}">
+<p style="margin: 8px 0 0; font-size: 14px; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 16px; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>ระบบจะส่งอีเมลเตือนไปที่ {{f.email}} 1 วันก่อนเช็คอิน</p>
+</template>
+<div style="display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; justify-content: center">
+<a class="pill" href="index.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 17px">กลับหน้าแรก</a>
+<button type="button" onClick="{{reset}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 11px 22px; font-size: 17px">จองอีกห้อง</button>
+</div>
+</section>
+</template>
+
+</div>
+
+<!-- Summary -->
+<aside aria-label="สรุปการจอง" style="flex: 1 1 320px; min-width: 0; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<img src="{{sum.img}}" alt="{{sum.room}}" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block">
+<div>
+<p style="margin: 0; font-size: 12px; color: #7A6E63">ห้องที่เลือก</p>
+<p style="margin: 2px 0 0; font-size: 21px; font-weight: 600">{{sum.room}}</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border-top: 1px solid #E6DDCB; padding-top: 16px">
+<div><p style="margin: 0; font-size: 12px; color: #7A6E63">เช็คอิน</p><p style="margin: 2px 0 0; font-size: 17px; font-weight: 600">{{sum.ci}}</p></div>
+<div><p style="margin: 0; font-size: 12px; color: #7A6E63">เช็คเอาท์</p><p style="margin: 2px 0 0; font-size: 17px; font-weight: 600">{{sum.co}}</p></div>
+</div>
+<div style="border-top: 1px solid #E6DDCB; padding-top: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<div style="display: flex; justify-content: space-between"><span style="color: #5E554C">จำนวนคืน</span><span style="font-weight: 600">{{sum.nights}}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5E554C">ผู้เข้าพัก</span><span>{{sum.guests}}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5E554C">สัตว์เลี้ยง</span><span>{{f.pets}}</span></div>
+</div>
+<div style="border-top: 1px solid #E6DDCB; padding-top: 16px; display: flex; justify-content: space-between; align-items: baseline">
+<span style="font-size: 17px; font-weight: 600">ยอดรวม</span>
+<span style="font-size: 21px; font-weight: 600">{{totalLabel}}</span>
+</div>
+<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #7A6E63">{{sum.priceNote}} · ชำระผ่านโอนบัญชีหรือ QR พร้อมเพย์ ห้องจะยืนยันหลังแอดมินตรวจสลิป</p>
+</aside>
+
+</div>
+</div>
+</div>
+</template>
+<script src="js/morphdom.min.js"></script>
+<script src="js/runtime.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = {
+step: 1, loading: true, loadErr: '', cfg: null, rooms: [], booked: {},
+room: null, ci: null, co: null, viewY: 0, viewM: 0, tried: false,
+f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' },
+pay: 'bank', copied: false, slip: null, slipTried: false, slipErrText: '', slipReading: false,
+busy: false, submitErr: '', result: null, checking: false, statusMsg: ''
+};
+}
+componentDidMount() { this.load(); }
+load() {
+this.setState({ loading: true, loadErr: '' });
+Promise.all([kmApi('publicGetConfig'), kmApi('publicListRooms')])
+.then(([cfg, rooms]) => kmApi('publicGetBookedDates', cfg.today, kmDate.add(cfg.today, 400)).then((booked) => {
+const p = cfg.today.split('-').map(Number);
+const q = new URLSearchParams(location.search);
+let ci = q.get('in'), co = q.get('out');
+if (!(ci && co && ci >= cfg.today && co > ci)) { ci = null; co = null; }
+const keep = this.state.room && rooms.some((r) => r.roomNo === this.state.room);
+const freeFor = (no) => !ci || !((booked[no] || []).some((x) => ci < x[1] && co > x[0]));
+let room = keep ? this.state.room : null;
+if (!room) { const fr = rooms.find((r) => freeFor(r.roomNo)); room = fr ? fr.roomNo : (rooms[0] ? rooms[0].roomNo : null); }
+if (ci && !freeFor(room)) { ci = null; co = null; }
+if (ci) { const cp = ci.split('-').map(Number); p[0] = cp[0]; p[1] = cp[1]; }
+this.setState({
+loading: false, cfg, rooms, booked, room,
+viewY: this.state.viewY || p[0], viewM: this.state.viewM || p[1],
+ci: this.state.ci || ci, co: this.state.co || co
+});
+}))
+.catch((e) => this.setState({ loading: false, loadErr: 'โหลดข้อมูลห้องพักไม่สำเร็จ: ' + e.message }));
+}
+refreshBooked() {
+const t = this.state.cfg && this.state.cfg.today;
+if (!t) return Promise.resolve();
+return kmApi('publicGetBookedDates', t, kmDate.add(t, 400)).then((booked) => this.setState({ booked })).catch(() => {});
+}
+setF(k, v) { this.setState({ f: Object.assign({}, this.state.f, { [k]: v }) }); }
+blockedFn(roomNo) {
+const ranges = (this.state.booked || {})[roomNo] || [];
+return (d) => ranges.some((r) => d >= r[0] && d < r[1]);
+}
+readSlip(file) {
+const MAX = 5 * 1024 * 1024;
+const done = (mimeType, dataUrl, size) => this.setState({ slipReading: false, slipTried: false, slipErrText: '', submitErr: '',
+slip: { name: file.name, mimeType, base64: dataUrl.replace(/^data:[^,]*,/, ''), size } });
+const fail = (msg) => this.setState({ slipReading: false, slip: null, slipTried: true, slipErrText: msg });
+const asIs = () => {
+if (file.size > MAX) return fail('ไฟล์ใหญ่เกิน 5 MB กรุณาเลือกไฟล์ที่เล็กกว่านี้');
+const rd = new FileReader();
+rd.onload = () => done(file.type || 'application/octet-stream', rd.result, file.size);
+rd.onerror = () => fail('อ่านไฟล์ไม่สำเร็จ ลองเลือกไฟล์ใหม่');
+rd.readAsDataURL(file);
+};
+if (!/^image\/|^application\/pdf$/.test(file.type)) return fail('กรุณาเลือกไฟล์รูปภาพ (JPG, PNG) หรือ PDF');
+this.setState({ slipReading: true });
+if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return asIs();
+const url = URL.createObjectURL(file);
+const img = new Image();
+img.onload = () => {
+const scale = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+const c = document.createElement('canvas');
+c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+URL.revokeObjectURL(url);
+const out = c.toDataURL('image/jpeg', 0.85);
+done('image/jpeg', out, Math.round(out.length * 0.75));
+};
+img.onerror = () => { URL.revokeObjectURL(url); asIs(); };
+img.src = url;
+}
+renderVals() {
+const accent = this.props.accent ?? '#47413A';
+const s = this.state;
+const cfg = s.cfg || { today: '2000-01-01', payment: {}, maxNights: 60 };
+const today = cfg.today;
+const f = s.f;
+const room = s.rooms.find((r) => r.roomNo === s.room) || null;
+const blocked = this.blockedFn(s.room);
+const free = (a, b) => { for (let d = a; d < b; d = kmDate.add(d, 1)) if (blocked(d)) return false; return true; };
+const price = room ? Number(room.pricePerNight) || 0 : 0;
+const nights = s.ci && s.co ? kmDate.diff(s.ci, s.co) : 0;
+const money = kmMoney;
+
+const rooms = s.rooms.map((r) => ({
+name: r.name || ('ห้อง ' + r.roomNo), img: kmRoomImage(r.roomNo), selected: r.roomNo === s.room,
+priceLabel: (Number(r.pricePerNight) > 0 ? '฿' + money(r.pricePerNight) + ' / คืน' : 'สอบถามราคา') + ' · ' + r.capacity + ' ท่าน',
+style: 'text-align: left; background: #F6F3EE; border-radius: 18px; padding: 10px 10px 14px; border: ' + (r.roomNo === s.room ? '2px solid ' + accent : '1px solid #DED4C1') + '; margin: ' + (r.roomNo === s.room ? '0' : '1px') + ';',
+pick: () => {
+const bl = this.blockedFn(r.roomNo);
+let ok = !!(s.ci && s.co);
+if (ok) for (let d = s.ci; d < s.co; d = kmDate.add(d, 1)) if (bl(d)) { ok = false; break; }
+this.setState(ok ? { room: r.roomNo } : { room: r.roomNo, ci: null, co: null });
+}
+}));
+
+const pickingOut = !!(s.ci && !s.co);
+const pick = (d) => {
+if (!s.ci || s.co || d <= s.ci) { if (!blocked(d)) this.setState({ ci: d, co: null }); return; }
+if (kmDate.diff(s.ci, d) <= cfg.maxNights && free(s.ci, d)) return this.setState({ co: d });
+if (!blocked(d)) this.setState({ ci: d, co: null });
+};
+const mkMonth = (y, m) => {
+const first = kmDate.monthStart(y, m);
+const cells = [];
+for (let i = 0; i < kmDate.weekday(first); i++) cells.push({ blank: true, real: false });
+const n = kmDate.daysIn(y, m);
+for (let i = 1; i <= n; i++) {
+const d = kmDate.add(first, i - 1);
+const isEnd = d === s.ci || d === s.co;
+const inRange = s.ci && s.co && d > s.ci && d < s.co;
+const canBeOut = pickingOut && d > s.ci && kmDate.diff(s.ci, d) <= cfg.maxNights && free(s.ci, d);
+const dis = !isEnd && (d < today || (blocked(d) && !canBeOut));
+let st = 'height: 44px; width: 100%; border: 0; border-radius: 9999px; font-size: 15px; font-family: inherit; ';
+if (isEnd) st += 'background: ' + accent + '; color: #F6F3EE; font-weight: 600;';
+else if (inRange) st += 'background: #EFE2B4; color: #47413A; border-radius: 8px;';
+else if (dis) st += 'background: transparent; color: #B5AA97;' + (d >= today ? ' text-decoration: line-through;' : '');
+else st += 'background: transparent; color: #47413A;';
+cells.push({ blank: false, real: true, label: String(i), disabled: dis, style: st,
+aria: kmDate.short(d) + (dis ? (d < today ? ' ผ่านมาแล้ว' : ' ไม่ว่าง') : ''), pick: () => pick(d) });
+}
+return { title: kmDate.monthTitle(y, m), cells };
+};
+const vy = s.viewY || 2000, vm = s.viewM || 1;
+const ny = vm === 12 ? vy + 1 : vy, nm = vm === 12 ? 1 : vm + 1;
+const months = s.cfg ? [mkMonth(vy, vm), mkMonth(ny, nm)] : [];
+const tp = today.split('-').map(Number);
+const viewIdx = vy * 12 + vm, todayIdx = tp[0] * 12 + tp[1];
+const noPrev = viewIdx <= todayIdx, noNext = viewIdx >= todayIdx + 11;
+const navBtn = (dis) => 'width: 36px; height: 36px; border-radius: 9999px; border: 1px solid #DED4C1; background: #F6F3EE; color: ' + (dis ? '#CFC3AC' : '#47413A') + '; display: flex; align-items: center; justify-content: center; padding: 0;';
+const shift = (k) => { let t = viewIdx + k - 1; this.setState({ viewY: Math.floor(t / 12), viewM: (t % 12) + 1 }); };
+
+const ready1 = !!(room && s.ci && s.co);
+const cap = room ? Math.max(1, Number(room.capacity) || 1) : 2;
+const guests = String(Math.min(Number(f.guests) || 1, cap));
+const guestOpts = []; for (let i = 1; i <= cap; i++) guestOpts.push({ v: String(i), label: i + ' ท่าน' });
+const phoneOk = /^0\d{8,9}$/.test((f.phone || '').replace(/[-\s]/g, ''));
+const emailOk = !f.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim());
+const err = { first: s.tried && !f.first.trim(), last: s.tried && !f.last.trim(), phone: s.tried && !phoneOk, email: s.tried && !emailOk };
+const inp = (bad) => 'height: 48px; border: 1px solid ' + (bad ? '#9E4F63' : '#CFC3AC') + '; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #F6F3EE';
+const payCard = (on) => 'display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: #F6F3EE; cursor: pointer; border: ' + (on ? '2px solid ' + accent : '1px solid #DED4C1') + '; margin: ' + (on ? '0' : '1px') + ';';
+
+const stepNames = ['เลือกห้องและวันที่', 'ข้อมูลผู้เข้าพัก', 'ชำระเงิน', 'รออนุมัติ'];
+const curStep = Math.min(s.step, 4);
+const steps = stepNames.map((label, i) => {
+const on = curStep === i + 1, done = curStep > i + 1 || s.step === 5;
+return { n: String(i + 1), label,
+style: 'display: flex; align-items: center; gap: 8px; padding: 8px 16px 8px 8px; border-radius: 9999px; font-size: 14px; background: ' + (on ? '#F6F3EE' : 'transparent') + '; color: ' + (on || done ? '#47413A' : '#7A6E63') + '; font-weight: ' + (on ? '600' : '400') + ';',
+dot: 'width: 24px; height: 24px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; background: ' + (on || done ? accent : '#CFC3AC') + '; color: #F6F3EE;' };
+});
+
+const P = cfg.payment || {};
+const total = (s.result && s.result.totalPrice) || price * nights;
+const totalLabel = nights ? (total > 0 ? '฿' + money(total) : 'แจ้งยอดหลังยืนยัน') : '—';
+const code = s.result ? s.result.code : '';
+const payName = (cfg.payMethods || {})[s.pay] || '';
+
+return {
+accent, rooms, months, steps, guestOpts, loading: s.loading, loadErr: s.loadErr, reload: () => this.load(),
+isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
+dateHint: s.loading ? 'กำลังโหลดวันว่าง…' : !s.ci ? 'แตะวันที่เพื่อเลือกวันเช็คอิน (วันที่ขีดฆ่าคือไม่ว่าง)' : !s.co ? 'เช็คอิน ' + kmDate.short(s.ci) + ' แตะวันเช็คเอาท์' : 'เข้าพัก ' + nights + ' คืน · ' + kmDate.short(s.ci) + ' ถึง ' + kmDate.short(s.co),
+clearDates: () => this.setState({ ci: null, co: null }),
+prevMonths: () => shift(-1), nextMonths: () => shift(1), noPrev, noNext, prevStyle: navBtn(noPrev), nextStyle: navBtn(noNext),
+next1Disabled: !ready1,
+next1Style: 'border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300; color: #F6F3EE; background: ' + (ready1 ? accent : '#CFC3AC') + ';',
+goStep2: () => this.setState({ step: 2, submitErr: '' }),
+goStep1: () => this.setState({ step: 1 }),
+f: Object.assign({}, f, { guests }), err,
+fs: { first: inp(err.first), last: inp(err.last), phone: inp(err.phone) },
+setFirst: (e) => this.setF('first', e.target.value),
+setLast: (e) => this.setF('last', e.target.value),
+setPhone: (e) => this.setF('phone', e.target.value),
+setEmail: (e) => this.setF('email', e.target.value),
+setGuests: (e) => this.setF('guests', e.target.value),
+setPets: (e) => this.setF('pets', e.target.value),
+setNote: (e) => this.setF('note', e.target.value),
+confirm: () => {
+if (!f.first.trim() || !f.last.trim() || !phoneOk || !emailOk) return this.setState({ tried: true });
+this.setState({ step: 3, tried: false });
+},
+isBank: s.pay === 'bank', isQr: s.pay === 'qr',
+pickBank: () => this.setState({ pay: 'bank' }), pickQr: () => this.setState({ pay: 'qr' }),
+bankStyle: payCard(s.pay === 'bank'), qrStyle: payCard(s.pay === 'qr'),
+pay: {
+hours: String(P.payWithinHours || 24),
+bankName: P.bankName || '[ชื่อธนาคาร]', accountName: P.accountName || '[ชื่อบัญชี]',
+accountNo: P.accountNo || '[เลขที่บัญชี]', promptpayName: P.promptpayName || P.accountName || '[ชื่อผู้รับเงิน]',
+qrUrl: P.promptpayQrUrl || '', hasQr: !!P.promptpayQrUrl, noQr: !P.promptpayQrUrl
+},
+totalLabel,
+copyLabel: s.copied ? 'คัดลอกแล้ว' : 'คัดลอกเลขบัญชี',
+copyAcc: () => {
+const t = String(P.accountNo || '').replace(/[^0-9]/g, '');
+if (t && navigator.clipboard) navigator.clipboard.writeText(t).catch(() => {});
+this.setState({ copied: true });
+},
+slipLabel: s.slipReading ? 'กำลังเตรียมไฟล์…' : s.slip ? 'แนบสลิปแล้ว: ' + s.slip.name : 'แตะเพื่อเลือกไฟล์สลิป',
+slipSub: s.slip ? 'แตะเพื่อเปลี่ยนไฟล์' : 'หรือถ่ายรูปสลิปจากมือถือ',
+slipBox: 'position: relative; margin-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px; border-radius: 18px; cursor: pointer; text-align: center; border: 2px dashed ' + (s.slip ? '#4F7A52' : (s.slipTried ? '#9E4F63' : '#CFC3AC')) + '; background: ' + (s.slip ? '#E7EFE4' : '#EDE6D7') + ';',
+slipErr: !!s.slipTried && !s.slip, slipErrText: s.slipErrText || 'กรุณาแนบสลิปก่อนแจ้งชำระเงิน',
+setSlip: (e) => { const fl = e.target.files && e.target.files[0]; if (fl) this.readSlip(fl); },
+busy: s.busy || s.slipReading, submitLabel: s.busy ? 'กำลังส่งข้อมูล…' : 'แจ้งชำระเงิน', submitErr: s.submitErr,
+submitPay: () => {
+if (s.busy || s.slipReading) return;
+if (!s.slip) return this.setState({ slipTried: true, slipErrText: '' });
+this.setState({ busy: true, submitErr: '' });
+kmApi('publicCreateBooking', {
+roomNo: s.room, checkIn: s.ci, checkOut: s.co, guests: Number(guests),
+guestName: (f.first.trim() + ' ' + f.last.trim()).trim(), phone: f.phone.trim(), email: f.email.trim(),
+pets: f.pets, note: f.note.trim(), payMethod: s.pay,
+slip: { name: s.slip.name, mimeType: s.slip.mimeType, base64: s.slip.base64 }
+})
+.then((r) => { this.setState({ busy: false, result: r, step: 4, statusMsg: '' }); this.refreshBooked(); window.scrollTo(0, 0); })
+.catch((e) => { this.setState({ busy: false, submitErr: e.message }); if (/ถูกจอง|ไม่ว่าง/.test(e.message)) this.refreshBooked(); });
+},
+code,
+emailNote: f.email.trim() ? ' และเราจะส่งอีเมลยืนยันไปที่ ' + f.email.trim() + ' เมื่ออนุมัติแล้ว' : '',
+hasEmail: !!f.email.trim(),
+checking: s.checking, checkLabel: s.checking ? 'กำลังตรวจสอบ…' : 'ตรวจสอบสถานะล่าสุด', statusMsg: s.statusMsg,
+checkStatus: () => {
+if (s.checking || !code) return;
+this.setState({ checking: true, statusMsg: '' });
+kmApi('publicGetBookingStatus', code, f.phone).then((b) => {
+if (['confirmed', 'checked_in', 'checked_out'].indexOf(b.status) >= 0) return this.setState({ checking: false, step: 5 });
+if (b.status === 'cancelled') return this.setState({ checking: false, statusMsg: 'การจองนี้ถูกยกเลิกแล้ว หากมีข้อสงสัยกรุณาติดต่อที่พัก' });
+this.setState({ checking: false, statusMsg: 'ยังรอแอดมินตรวจสอบสลิปอยู่ (อัปเดตล่าสุด ' + (b.updatedAt || '-') + ') ลองกดตรวจสอบอีกครั้งภายหลัง' });
+}).catch((e) => this.setState({ checking: false, statusMsg: e.message }));
+},
+track: [
+{ title: 'จองห้องพัก', sub: (room ? room.name : '') + ' · ' + (s.ci ? kmDate.short(s.ci) : '') + (nights ? ' · ' + nights + ' คืน' : ''), state: 'done' },
+{ title: 'แจ้งชำระเงินแล้ว', sub: payName + (s.slip ? ' · ' + s.slip.name : ''), state: 'done' },
+{ title: 'รอแอดมินตรวจสอบ', sub: 'แอดมินได้รับแจ้งเตือนแล้ว', state: 'now' },
+{ title: 'ยืนยันการจอง', sub: f.email.trim() ? 'รับอีเมลยืนยันที่ ' + f.email.trim() : 'กดตรวจสอบสถานะล่าสุดเพื่อดูผล', state: 'next' }
+].map((t, i, arr) => ({ title: t.title, sub: t.sub,
+mark: t.state === 'done' ? '✓' : String(i + 1),
+color: t.state === 'next' ? '#7A6E63' : '#47413A',
+dot: 'width: 32px; height: 32px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; box-sizing: border-box; ' + (t.state === 'done' ? 'background: #4F7A52; color: #F6F3EE;' : t.state === 'now' ? 'background: #E9C46A; color: #3A352F;' : 'background: #F6F3EE; color: #7A6E63; border: 2px solid #CFC3AC;'),
+line: 'flex: 1 1 auto; width: 2px; min-height: 20px; ' + (i === arr.length - 1 ? 'background: transparent;' : t.state === 'done' ? 'background: #4F7A52;' : 'background: #DED4C1;') })),
+reset: () => this.setState({ step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, result: null, statusMsg: '', submitErr: '',
+f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' } }),
+sum: {
+room: room ? room.name : (s.loading ? 'กำลังโหลด…' : 'ยังไม่ได้เลือกห้อง'), img: room ? kmRoomImage(room.roomNo) : (window.KM_CONFIG || {}).DEFAULT_ROOM_IMAGE,
+ci: s.ci ? kmDate.short(s.ci) : '—', co: s.co ? kmDate.short(s.co) : '—', nights: nights ? nights + ' คืน' : '—', guests: guests + ' ท่าน',
+priceNote: price > 0 ? '฿' + money(price) + ' ต่อคืน' : 'ราคาจะแจ้งหลังยืนยัน'
+}
+};
+}
+}
+DC.mount(Component, {"accent": "#47413A"});
+</script>
+</body>
+</html>

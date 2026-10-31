@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khun Mhee – Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F3EE;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
+.pill:active,.btn:active{transform:scale(0.95)}
+.pill:hover{text-decoration:none}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #A1805D;outline-offset:2px}
+@media (max-width:833px){
+ .navlinks{display:none !important}
+ .subnav-links{display:none !important}
+ .hero-h{font-size:34px !important}
+ .tile{padding:56px 20px !important}
+ .two-col{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .grid4{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .grid3{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .finder{flex-direction:column !important;border-radius:18px !important;align-items:stretch !important}
+ .finder-sep{display:none !important}
+ .foot-cols{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+ .display{font-size:30px !important}
+}
+@media (min-width:834px) and (max-width:1068px){
+ .grid4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+ .hero-h{font-size:44px !important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="view">
+<div style="width: 100%; min-width: 0; background: #F6F3EE">
+
+<!-- Global nav -->
+<header style="background: #3A352F; color: #F6F3EE; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box; position: sticky; top: 0; z-index: 10">
+<nav aria-label="เมนูหลัก" style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px; letter-spacing: -0.12px">
+<a href="#top" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DCC881" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
+Khun Mhee</a>
+<div class="navlinks" style="display: flex; gap: 32px; align-items: center">
+<a href="#rooms" style="color: #EDE6D7">ห้องพัก</a>
+<a href="#living" style="color: #EDE6D7">พื้นที่ส่วนกลาง</a>
+<a href="#pets" style="color: #EDE6D7">สำหรับสัตว์เลี้ยง</a>
+<a href="#stay" style="color: #EDE6D7">ข้อมูลการเข้าพัก</a>
+<a href="#contact" style="color: #EDE6D7">ติดต่อเรา</a>
+</div>
+<a href="login.html" style="color: #EDE6D7; display: flex; align-items: center; gap: 6px">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EDE6D7" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+แอดมิน</a>
+</nav>
+</header>
+
+<!-- Sub nav frosted -->
+<div style="position: sticky; top: 44px; z-index: 9; background: rgba(237,230,215,0.82); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0,0,0,0.08); height: 52px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box">
+<div style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<span style="font-size: 21px; font-weight: 600; letter-spacing: 0.231px">Pet Friendly House</span>
+<div style="display: flex; align-items: center; gap: 24px">
+<div class="subnav-links" style="display: flex; gap: 24px; font-size: 14px; letter-spacing: -0.224px">
+<a href="#rooms" style="color: #5E554C">ภาพรวม</a>
+<a href="#rooms" style="color: #5E554C">เปรียบเทียบห้อง</a>
+<a href="#pets" style="color: #5E554C">กติกาสัตว์เลี้ยง</a>
+</div>
+<a class="pill" href="booking.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 6px 16px; font-size: 14px; display: inline-block">จองเลย</a>
+</div>
+</div>
+</div>
+
+<!-- Hero -->
+
+
+<!-- Availability finder -->
+
+
+<!-- Dark tile: night -->
+<section id="top" class="tile" style="padding: 80px 20px 0; text-align: center; display: flex; flex-direction: column; align-items: center; background-color: #f6f3ee">
+<p style="margin: 0 0 12px; font-size: 21px; font-weight: 600; letter-spacing: 0.231px; color: #A1805D; width: 469px; height: 32px">ที่พักสไตล์ญี่ปุ่น · เป็นมิตรกับสัตว์เลี้ยง</p>
+<h1 class="hero-h" style="margin: 0; font-family: -apple-system,'SF Pro Display','Inter','Noto Sans Thai',sans-serif; font-size: 56px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px; max-width: 880px; color: #3a352f">บ้านที่น้องหมาน้องแมว<br>ก็คือแขกคนสำคัญ</h1><img src="images/exterior-day.jpg" alt="ภาพด้านหน้าอาคาร Pet Friendly House ยามกลางวัน" style="display: block; width: 100%; max-width: 1440px; aspect-ratio: 16 / 8; object-fit: cover; object-position: center 62%; margin-top: 56px">
+<p style="margin: 16px 0 0; font-size: 24px; font-weight: 300; line-height: 1.5; color: #47413a; max-width: 640px; width: 446px; height: 78px; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px"><b>พักผ่อนอย่างอบอุ่นในบ้านไม้โทนญี่ปุ่น พร้อมพาสมาชิกสี่ขาของคุณมาด้วยได้ทุกห้อง</b></p>
+<form aria-label="ค้นหาห้องว่าง" class="finder" style="width: 1153px; max-width: 980px; display: flex; align-items: center; gap: 0; border: 1px solid #DED4C1; border-radius: 9999px; padding: 8px 8px 8px 28px; box-sizing: border-box; background: #F6F3EE; text-align: start; height: 75px; border-width: 3px; border-style: solid">
+<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
+<span style="font-size: 12px; font-weight: 600; color: #5E554C">เช็คอิน</span>
+<input type="date" name="in" value="{{fIn}}" onChange="{{setIn}}" min="{{todayIso}}" style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
+</label>
+<span class="finder-sep" style="width: 1px; height: 36px; background: #DED4C1"></span>
+<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
+<span style="font-size: 12px; font-weight: 600; color: #5E554C">เช็คเอาท์</span>
+<input type="date" name="out" value="{{fOut}}" onChange="{{setOut}}" min="{{fIn}}" style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
+</label>
+<span class="finder-sep" style="width: 1px; height: 36px; background: #DED4C1"></span>
+<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
+<span style="font-size: 12px; font-weight: 600; color: #5E554C">ผู้เข้าพัก</span>
+<select style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
+<option>2 ท่าน</option><option>1 ท่าน</option><option>3 ท่าน</option>
+</select>
+</label>
+<span class="finder-sep" style="width: 1px; height: 36px; background: #DED4C1"></span>
+<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
+<span style="font-size: 12px; font-weight: 600; color: #5E554C">สัตว์เลี้ยง</span>
+<select style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
+<option>สุนัข 1 ตัว</option><option>แมว 1 ตัว</option><option>2 ตัว</option><option>ไม่มี</option>
+</select>
+</label>
+<a class="pill" href="{{findHref}}" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300; white-space: nowrap; text-align: center">ค้นหาห้องว่าง</a>
+</form><section class="tile" style="background: #F6F3EE; padding: 56px 20px; display: flex; justify-content: center; text-align: start">
+
+</section><section id="pets" class="tile" style="padding: 80px 20px; display: flex; flex-direction: column; align-items: center; background-color: #ede6d7; text-align: start; width: 1383px; height: 579px">
+<div style="width: 100%; max-width: 1200px">
+<h2 class="display" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.2; text-align: center">ออกแบบมาเพื่อสี่ขา</h2>
+<p style="margin: 12px auto 0; font-size: 17px; line-height: 1.6; color: #5E554C; text-align: center; max-width: 640px">สิ่งที่เตรียมไว้ให้น้อง ๆ และกติกาง่าย ๆ เพื่อให้ทุกคนพักได้สบายใจ</p>
+<div class="grid3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 48px">
+<div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h20"></path><path d="M4 12l1.6 6.4A2 2 0 0 0 7.5 20h9a2 2 0 0 0 1.9-1.6L20 12"></path><circle cx="8.5" cy="8.5" r="1.3"></circle><circle cx="12" cy="7" r="1.3"></circle><circle cx="15.5" cy="8.5" r="1.3"></circle></svg></span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">เบาะนอนและชามน้ำ</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">ทุกห้องมีที่นอนสัตว์เลี้ยง ชามอาหาร และชามน้ำเตรียมไว้ให้</p>
+</div>
+<div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 21h20"></path><path d="M12 21v-6"></path><path d="M12 15a5 5 0 0 0 5-5 5 5 0 0 0-5-7 5 5 0 0 0-5 7 5 5 0 0 0 5 5z"></path><path d="M4 21v-3M6 21v-2M18 21v-2M20 21v-3"></path></svg></span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">สนามหญ้าหน้าบ้าน</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">ลานหญ้ากว้างให้น้องได้วิ่งเล่นยามเช้าและเย็น</p>
+</div>
+<div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18v2a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6z"></path><path d="M6 20l-1 2M18 20l1 2"></path><path d="M6 12V5.5a2.5 2.5 0 0 1 4.5-1.5"></path><path d="M14 6v1M17 5v1M15.5 8.5v1"></path></svg></span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">จุดอาบน้ำน้อง</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">ล้างเท้าหลังเดินเล่น พร้อมผ้าเช็ดตัวสำหรับสัตว์เลี้ยง</p>
+</div>
+<div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"></circle><path d="M10.7 12.3L21 2"></path><path d="M16 7l3 3"></path><path d="M18.5 4.5l2 2"></path></svg></span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">เช็คอิน [เวลา] · เช็คเอาท์ [เวลา]</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">เราจะส่งข้อความเตือนก่อนวันเข้าพัก พร้อมเส้นทางและรหัสประตู</p>
+</div>
+<div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2l4 4"></path><path d="M17 7l3-3"></path><path d="M19 9L8.7 19.3a2.4 2.4 0 0 1-3.4 0l-.6-.6a2.4 2.4 0 0 1 0-3.4L15 5"></path><path d="M9 11l4 4"></path><path d="M5 19l-3 3"></path><path d="M14 4l6 6"></path></svg></span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">สมุดวัคซีนของน้อง</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">กรุณาแสดงหลักฐานการฉีดวัคซีนที่เป็นปัจจุบันในวันเช็คอิน</p>
+</div>
+<div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg></span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">สูงสุด [จำนวน] ตัวต่อห้อง</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">ทั้งน้องหมาและน้องแมว แจ้งจำนวนไว้ตอนจองเพื่อให้เราเตรียมของได้ครบ</p>
+</div>
+</div>
+</div>
+</section><section id="rooms" class="tile" style="padding: 80px 20px; display: flex; flex-direction: column; align-items: center; background-color: #f6f3ee; text-align: start">
+<div style="width: 100%; max-width: 1200px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px">
+<div>
+<h2 class="display" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.2">ห้องพักทั้ง 4 ห้อง</h2>
+<p style="margin: 8px 0 0; font-size: 17px; line-height: 1.6; color: #5E554C">ไม้ธรรมชาติ แสงอุ่น และพื้นที่ให้น้อง ๆ ได้นอนข้างคุณ ทุกห้องมีห้องน้ำในตัวพร้อมเรนชาวเวอร์</p>
+</div>
+<a href="booking.html" style="color: {{accent}}; font-size: 17px">เช็คห้องว่าง ›</a>
+</div>
+<div class="grid4" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+<template data-sc="for" list="{{rooms}}" as="room" hint-placeholder-count="4">
+<article style="background: #F6F3EE; border: 1px solid #DED4C1; border-radius: 18px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+<img src="{{room.img}}" alt="{{room.alt}}" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block">
+<div style="padding: 4px 8px 0; display: flex; flex-direction: column; gap: 6px; flex: 1 1 auto">
+<span style="font-size: 12px; color: #7A6E63; letter-spacing: 0.4px">{{room.code}}</span>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600; line-height: 1.25">{{room.name}}</h3>
+<p style="margin: 0; font-size: 14px; line-height: 1.6; color: #5E554C; flex: 1 1 auto">{{room.desc}}</p>
+<p style="margin: 8px 0 0; font-size: 17px"><span style="font-weight: 600">{{room.price}}</span> <span style="color: #7A6E63; font-size: 14px">{{room.per}}</span></p>
+<div style="display: flex; gap: 16px; align-items: center; margin-top: 8px">
+<a class="pill" href="booking.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 8px 18px; font-size: 14px">จองห้องนี้</a>
+<a href="#rooms" style="color: {{accent}}; font-size: 14px">รายละเอียด ›</a>
+</div>
+</div>
+</article>
+</template>
+</div>
+</div>
+</section>
+
+</section><section id="living" class="tile" style="padding: 80px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #FFFFFF">
+<p style="margin: 0 0 8px; font-size: 21px; font-weight: 600; color: #A1805D">Reception &amp; Living Area</p>
+<h2 class="display" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.2">ห้องนั่งเล่นที่ทุกคนใช้ร่วมกัน</h2>
+<p style="margin: 12px 0 0; font-size: 24px; font-weight: 300; line-height: 1.5; color: #5E554C; max-width: 720px">ครัวเคาน์เตอร์ไม้ มุมนั่งเล่นโซฟาผ้าลินิน และบล็อกแก้วที่ให้แสงธรรมชาติตลอดวัน</p>
+<img src="images/reception-1.jpg" alt="โถงต้อนรับผนังหินขัดกรอบไม้ กระจกทรงอิสระ น้องแมวนอนบนเก้าอี้ และเคาน์เตอร์ครัวไม้" style="width: 100%; max-width: 1200px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 18px; display: block; margin-top: 48px">
+<div class="grid3" style="width: 100%; max-width: 1200px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 20px">
+<img src="images/reception-2.jpg" alt="มุมรับรองแขกพร้อมเก้าอี้ไม้และครัวด้านหลัง" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block">
+<img src="images/reception-3.jpg" alt="เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block">
+<img src="images/reception-4.jpg" alt="พื้นที่นั่งเล่นใต้บันได มีเก้าอี้ไม้และน้องแมว" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block">
+</div>
+</section><section class="tile" style="background: #47413A; color: #F6F3EE; padding: 80px 20px 0; text-align: center; display: flex; flex-direction: column; align-items: center">
+<h2 class="display" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.2">ทุกห้อง พาน้องมาด้วยได้</h2>
+<p style="margin: 12px 0 0; font-size: 28px; font-weight: 400; line-height: 1.3; letter-spacing: 0.196px; color: #EDE6D7; max-width: 720px">ไม่มีห้องพิเศษ ไม่มีโซนแยก — เพราะเราออกแบบทั้งบ้านมาเพื่อคุณและสัตว์เลี้ยงตั้งแต่แรก</p>
+<div style="display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; justify-content: center">
+<a href="#pets" style="color: #DCC881; font-size: 17px">ดูกติกาการพาสัตว์เลี้ยงเข้าพัก ›</a>
+</div>
+<img src="images/exterior-night.jpg" alt="ภาพด้านหน้าอาคารยามค่ำคืน แสงไฟอบอุ่นจากหน้าต่างไม้ระแนง" style="display: block; width: 100%; max-width: 1440px; aspect-ratio: 16 / 8; object-fit: cover; object-position: center 62%; margin-top: 56px">
+</section>
+
+<!-- Rooms grid -->
+
+
+<!-- Two-column feature tiles -->
+<section class="two-col" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; background: #F6F3EE">
+<div style="background: #7A6E63; color: #F6F3EE; text-align: center; padding: 56px 24px 0; display: flex; flex-direction: column; align-items: center; overflow: hidden">
+<h3 style="margin: 0; font-size: 34px; font-weight: 600; line-height: 1.3">ห้องยาเนะ</h3>
+<p style="margin: 8px 0 0; font-size: 21px; color: #EDE6D7">เพดานทรงจั่วสูงโปร่ง นอนสบายทั้งคนและน้อง</p>
+<div style="display: flex; gap: 16px; margin-top: 20px">
+<a class="pill" href="booking.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 8px 18px; font-size: 14px">จองห้องนี้</a>
+<a href="#rooms" style="color: #DCC881; font-size: 14px; padding: 8px 0">ดูเพิ่มเติม ›</a>
+</div>
+<img src="images/room-yane-2.jpg" alt="ห้องยาเนะ เตียงคู่ ผนังไม้ระแนง มีน้องหมานอนบนพรม" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; margin-top: 40px; display: block">
+</div>
+<div style="background: #EDE6D7; color: #47413A; text-align: center; padding: 56px 24px 0; display: flex; flex-direction: column; align-items: center; overflow: hidden">
+<h3 style="margin: 0; font-size: 34px; font-weight: 600; line-height: 1.3">ห้องน้ำในตัวทุกห้อง</h3>
+<p style="margin: 8px 0 0; font-size: 21px; color: #5E554C">โทนครีมไม้ เรนชาวเวอร์ อ่างล้างหน้าหินขัด</p>
+<div style="display: flex; gap: 16px; margin-top: 20px">
+<a href="#stay" style="color: {{accent}}; font-size: 14px; padding: 8px 0">สิ่งอำนวยความสะดวก ›</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: 100%; margin-top: 40px">
+<img src="images/bathroom-1.jpg" alt="ห้องน้ำพร้อมเรนชาวเวอร์และกระจกส่องหน้า" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block">
+<img src="images/bathroom-2.jpg" alt="ห้องน้ำพร้อมอ่างล้างหน้าทรงกลมและไฟซ่อนหลังกระจก" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block">
+</div>
+</div>
+</section>
+
+<!-- Living area -->
+
+
+<!-- Pets -->
+
+
+<!-- Editorial dark quote -->
+<section class="two-col" style="background: #47413A; color: #F6F3EE; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+<img src="images/room-yane-3.webp" alt="ห้องพักทรงจั่ว แสงไฟอุ่น และน้องแมวบนพรม" style="width: 100%; height: 100%; min-height: 360px; object-fit: cover; display: block; position: static; padding-top: 1px; padding-right: 1px; padding-bottom: 1px; padding-left: 1px; object-position: 100% 50%">
+<div style="padding: 80px 56px; display: flex; flex-direction: column; justify-content: center; gap: 20px">
+<p style="margin: 0; font-size: 34px; font-weight: 600; line-height: 1.4">“เราอยากให้ที่นี่เป็นเหมือนบ้านต่างจังหวัดของเพื่อน — ที่พาน้องมาด้วยได้โดยไม่ต้องขอโทษใคร”</p>
+<p style="margin: 0; font-size: 17px; color: #EDE6D7">— คุณหมี, เจ้าของบ้าน</p>
+<a class="pill" href="booking.html" style="align-self: flex-start; background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 17px">เลือกวันเข้าพัก</a>
+</div>
+</section>
+
+<!-- Footer -->
+<footer id="contact" style="background: #EDE6D7; color: #5E554C; padding: 64px 20px 40px; display: flex; justify-content: center">
+<div style="width: 100%; max-width: 1024px">
+<div class="foot-cols" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; padding-bottom: 32px; border-bottom: 1px solid #DED4C1">
+<div>
+<h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #47413A">ห้องพัก</h4>
+<div style="display: flex; flex-direction: column; font-size: 14px; line-height: 2.2">
+<a href="#rooms" style="color: #5E554C">ห้องโชจิ</a><a href="#rooms" style="color: #5E554C">ห้องฮิโนกิ</a><a href="#rooms" style="color: #5E554C">ห้องยาเนะ</a><a href="#rooms" style="color: #5E554C">ห้องโคโมเรบิ</a>
+</div>
+</div>
+<div>
+<h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #47413A">การจอง</h4>
+<div style="display: flex; flex-direction: column; font-size: 14px; line-height: 2.2">
+<a href="booking.html" style="color: #5E554C">จองห้องพัก</a><a href="booking.html" style="color: #5E554C">ตรวจสอบการจอง</a><a href="booking.html" style="color: #5E554C">ยกเลิกการจอง</a>
+</div>
+</div>
+<div>
+<h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #47413A">ข้อมูลการเข้าพัก</h4>
+<div id="stay" style="display: flex; flex-direction: column; font-size: 14px; line-height: 2.2">
+<a href="#pets" style="color: #5E554C">กติกาสัตว์เลี้ยง</a><a href="#pets" style="color: #5E554C">เวลาเช็คอิน/เอาท์</a><a href="#living" style="color: #5E554C">พื้นที่ส่วนกลาง</a>
+</div>
+</div>
+<div>
+<h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #47413A">ติดต่อเรา</h4>
+<div style="display: flex; flex-direction: column; font-size: 14px; line-height: 2.2">
+<span>โทร [เบอร์โทรศัพท์]</span><span>LINE [@ไลน์ไอดี]</span><span>[ที่อยู่]</span>
+</div>
+</div>
+</div>
+<p style="margin: 20px 0 0; font-size: 12px; color: #7A6E63">© 2026 Khun Mhee · Pet Friendly House สงวนลิขสิทธิ์</p>
+</div>
+</footer>
+
+</div>
+</template>
+<script src="js/morphdom.min.js"></script>
+<script src="js/runtime.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+class Component extends DCLogic {
+componentDidMount() {
+kmApi('publicListRooms').then((rooms) => {
+const prices = {};
+rooms.forEach((r) => { prices[String(r.roomNo)] = Number(r.pricePerNight) || 0; });
+this.setState({ prices });
+}).catch(() => {});
+}
+priceOf(no) {
+const p = (this.state.prices || {})[no];
+return p ? { price: '฿' + kmMoney(p), per: '/ คืน' } : { price: 'สอบถามราคา', per: '' };
+}
+renderVals() {
+const now = new Date();
+const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const todayIso = iso(now);
+const fIn = this.state.fIn || kmDate.add(todayIso, 1);
+let fOut = this.state.fOut || kmDate.add(fIn, 1);
+if (fOut <= fIn) fOut = kmDate.add(fIn, 1);
+return {
+todayIso, fIn, fOut,
+setIn: (e) => this.setState({ fIn: e.target.value }),
+setOut: (e) => this.setState({ fOut: e.target.value }),
+findHref: 'booking.html?in=' + fIn + '&out=' + fOut,
+accent: this.props.accent ?? '#47413A',
+rooms: [
+{ code: 'ROOM 01', name: 'ห้องโชจิ', img: 'images/room-shoji.jpg', alt: 'ห้องโชจิ หัวเตียงลายตารางแบบประตูโชจิ', desc: 'หัวเตียงลายตารางแบบบานโชจิ ม้านั่งปลายเตียง และมุมเก้าอี้อ่านหนังสือ' },
+{ code: 'ROOM 02', name: 'ห้องฮิโนกิ', img: 'images/room-hinoki.jpg', alt: 'ห้องฮิโนกิ ผนังไม้และไฟหัวเตียง', desc: 'ผนังไม้ระแนงพร้อมไฟหัวเตียงอุ่น ๆ และโต๊ะทำงานติดหน้าต่าง' },
+{ code: 'ROOM 03', name: 'ห้องยาเนะ', img: 'images/room-yane-1.jpg', alt: 'ห้องยาเนะ เพดานทรงจั่ว', desc: 'เพดานทรงจั่วสูงโปร่ง ผนังไม้ระแนง และโต๊ะเครื่องแป้งริมหน้าต่าง' },
+{ code: 'ROOM 04', name: 'ห้องโคโมเรบิ', img: 'images/room-komorebi.jpg', alt: 'ห้องโคโมเรบิ หัวเตียงบุผ้าและกระจกทรงกลม', desc: 'หัวเตียงบุผ้านุ่ม กระจกทรงกลม ตู้เสื้อผ้า และทีวีสำหรับคืนสบาย ๆ' }
+].map((r, i) => Object.assign(r, this.priceOf(String(i + 1))))
+};
+}
+}
+DC.mount(Component, {"accent": "#47413A"});
+</script>
+</body>
+</html>
