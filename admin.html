@@ -55,6 +55,8 @@ Khun Mhee · หลังบ้าน</a>
 <a href="#stats" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">สถิติ</a>
 <a href="#pricing" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ราคาห้อง</a>
 <template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M4 9h16M4 15h16M10 3v18"></path></svg>เปิด Google Sheets<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
+<template data-sc="if" value="{{slipFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{slipFolderUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #335A88; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>โฟลเดอร์สลิป (Drive)<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
+<template data-sc="if" value="{{receiptFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{receiptFolderUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>โฟลเดอร์ใบเสร็จ (Drive)<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 <a class="side-extra" href="index.html" style="padding: 10px 14px; border-radius: 8px; color: {{accent}}; margin-top: 16px">ดูหน้าเว็บไซต์ ›</a>
 </nav>
 
@@ -185,7 +187,10 @@ Khun Mhee · หลังบ้าน</a>
 <!-- Bookings table -->
 <section id="bookings" aria-labelledby="h-book" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
 <h2 id="h-book" style="margin: 0; font-size: 21px; font-weight: 600">ข้อมูลการจองและผู้เข้าพัก</h2>
+<template data-sc="if" value="{{slipFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{slipFolderUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: 9999px; border: 1px solid #DED4C1; background: #FFFDF9; color: #335A88; font-size: 13px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>เปิดโฟลเดอร์สลิปใน Drive<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
+</div>
 <label style="display: flex; align-items: center; gap: 8px; border: 1px solid rgba(0,0,0,0.08); border-radius: 9999px; padding: 0 16px; height: 40px; min-width: 240px; box-sizing: border-box">
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A6E63" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
 <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ค้นหาชื่อหรือเบอร์โทร</span>
@@ -846,6 +851,8 @@ remHour: String((dash && dash.reminder && dash.reminder.hour) || 9),
 autoOff: !!dash && !autoOn, enableAuto: () => { if (!s.acting) this.act(kmApi('setupReminders', t), 'auto'); },
 autoNote: autoOn ? 'LINE แจ้งแอดมินอัตโนมัติทุกวัน ' + ((dash && dash.reminder && dash.reminder.hour) || 9) + ':00 น. · ลูกค้าที่เช็คอินวันเดียวกันรวมในแชทเดียว' : '',
 sheetUrl: (dash && dash.sheetUrl) || '',
+slipFolderUrl: (dash && dash.driveFolders && dash.driveFolders.slip) || '',
+receiptFolderUrl: (dash && dash.driveFolders && dash.driveFolders.receipt) || '',
 lineStatus: !lineInfo ? 'กำลังโหลด…' : !lineInfo.configured ? 'ยังไม่ได้ใส่ Channel access token' : !lineInfo.targets ? 'ยังไม่มีแอดมินลงทะเบียน (พิมพ์ "แอดมิน รหัส" ในแชท OA)' : 'เชื่อมแล้ว ' + lineInfo.targets + ' ปลายทาง',
 lineDot: 'width: 10px; height: 10px; border-radius: 9999px; flex: 0 0 10px; background: ' + (lineOk ? '#06C755' : '#C88193') + ';',
 lineBtnDisabled: !lineOk || s.acting === 'line',
