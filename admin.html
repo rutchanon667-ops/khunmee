@@ -667,11 +667,17 @@ const ST = {
 confirmed: { bg: '#4F7A52', fg: '#F6F3EE', name: 'อนุมัติการจองแล้ว' },
 pending: { bg: '#E9C46A', fg: '#3A352F', name: 'รอยืนยันการจอง' },
 checked_in: { bg: '#8B5E3C', fg: '#F6F3EE', name: 'เช็คอินแล้ว' },
-soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'จะเช็คอินภายใน 1-3 วัน' },
+soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'นับถอยหลังเช็คอิน' },
 checked_out: { bg: '#7A6E63', fg: '#F6F3EE', name: 'เช็คเอาท์แล้ว' },
 cancelled: { bg: '#B5443F', fg: '#FFF8F5', name: 'ยกเลิกการจอง' }
 };
-const stOf = (b) => (b.status === 'confirmed' && b.checkIn >= today && b.checkIn <= in3) ? 'soon' : (ST[b.status] ? b.status : 'pending');
+// จองวันเดียวกับวันเช็คอิน (walk-in / จองหน้างาน) ไม่ต้องนับถอยหลัง
+const sameDay = (b) => String(b.createdAt || '').slice(0, 10) === b.checkIn;
+const isSoon = (b) => b.checkIn >= today && b.checkIn <= in3 && !sameDay(b);
+const stOf = (b) => (b.status === 'confirmed' && isSoon(b)) ? 'soon' : (ST[b.status] ? b.status : 'pending');
+// ป้ายสีฟ้า: นับถอยหลังเป็นวัน เช่น "อีก 3 วันเช็คอิน" "พรุ่งนี้เช็คอิน" "เช็คอินวันนี้"
+const countdown = (b) => { const n = kmDate.diff(today, b.checkIn); return n <= 0 ? 'เช็คอินวันนี้' : n === 1 ? 'พรุ่งนี้เช็คอิน' : 'อีก ' + n + ' วันเช็คอิน'; };
+const stName = (b, k) => k === 'soon' ? countdown(b) : ST[k].name;
 const bookings = s.bookings;
 const live = bookings.filter((b) => b.status !== 'cancelled');
 
@@ -702,7 +708,7 @@ const events = bookings.slice().sort((a, b) => String(b.updatedAt).localeCompare
 .map((b) => { const key = b.id + '|' + b.status + '|' + b.updatedAt;
 return { key, b, date: b.checkIn, k: b.status, ts: b.updatedAt, text: (eventText[b.status] || eventText.pending)(b),
 unread: (!s.seen || b.updatedAt > s.seen) && !s.readKeys[key] }; });
-const soonEvents = live.filter((b) => ['pending', 'confirmed'].indexOf(b.status) >= 0 && b.checkIn > today && b.checkIn <= in3)
+const soonEvents = live.filter((b) => ['pending', 'confirmed'].indexOf(b.status) >= 0 && b.checkIn > today && isSoon(b))
 .map((b) => { const n = kmDate.diff(today, b.checkIn); const key = 'soon|' + b.id + '|' + b.checkIn + '|' + n;
 return { key, b, date: b.checkIn, k: 'soon', ts: '', time: n === 1 ? 'พรุ่งนี้' : 'อีก ' + n + ' วัน', text: (n === 1 ? 'พรุ่งนี้ ' : 'อีก ' + n + ' วัน ') + b.guestName + ' เช็คอิน' + rn(b.roomNo) + (b.reminderSent ? ' ส่งอีเมลเตือนแล้ว' : ''), unread: false }; });
 const allNotes = soonEvents.concat(events).filter((n) => !s.dismissed[n.key]);
@@ -721,7 +727,7 @@ this.saveSet('km_dismiss', dm);
 this.setState({ dismissed: dm });
 };
 const notes = shown.map((n) => ({
-kind: ST[n.k].name, time: n.time || when(n.ts), text: n.text, unread: n.unread,
+kind: n.k === 'soon' ? countdown(n.b) : ST[n.k].name, time: n.time || when(n.ts), text: n.text, unread: n.unread,
 isNew: n.k === 'confirmed', isPending: n.k === 'pending', isCancel: n.k === 'cancelled', isCheckin: n.k === 'checked_in' || n.k === 'checked_out', isRemind: n.k === 'soon',
 iconStyle: iconBase + 'background: ' + ST[n.k].bg + '; color: ' + ST[n.k].fg + ';',
 liStyle: 'display: flex; gap: 4px; align-items: stretch; border-top: 1px solid #E6DDCB; border-radius: 12px; margin: 2px 0; ' + (n.unread ? 'background: #FFF1D0; box-shadow: inset 0 0 0 2px #E9B949;' : 'background: transparent;'),
@@ -745,8 +751,8 @@ dismiss(shown.map((n) => n.key));
 };
 
 const chip = (on) => 'border-radius: 9999px; padding: 8px 14px; font-size: 14px; border: 1px solid ' + (on ? '#47413A' : '#DED4C1') + '; background: ' + (on ? '#47413A' : '#F6F3EE') + '; color: ' + (on ? '#F6F3EE' : '#47413A') + ';';
-const nKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['checked_in', 'เช็คอิน/เอาท์'], ['soon', 'เช็คอินใน 1-3 วัน'], ['cancelled', 'ยกเลิก']];
-const bKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['soon', 'เช็คอินใน 1-3 วัน'], ['checked_in', 'เช็คอินแล้ว'], ['checked_out', 'เช็คเอาท์แล้ว'], ['cancelled', 'ยกเลิก']];
+const nKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['checked_in', 'เช็คอิน/เอาท์'], ['soon', 'นับถอยหลังเช็คอิน'], ['cancelled', 'ยกเลิก']];
+const bKeys = [['all', 'ทั้งหมด'], ['pending', 'รอยืนยัน'], ['confirmed', 'อนุมัติแล้ว'], ['soon', 'นับถอยหลังเช็คอิน'], ['checked_in', 'เช็คอินแล้ว'], ['checked_out', 'เช็คเอาท์แล้ว'], ['cancelled', 'ยกเลิก']];
 const nFilters = nKeys.map(([k, label]) => ({ label, on: s.nf === k, style: chip(s.nf === k), pick: () => this.setState({ nf: k }) }));
 const bFilters = bKeys.map(([k, label]) => ({ label: label + ' ' + (k === 'all' ? bookings.length : bookings.filter((b) => stOf(b) === k).length), on: s.bf === k, style: chip(s.bf === k), pick: () => this.setState({ bf: k }) }));
 
@@ -778,7 +784,7 @@ if (b.status === 'checked_in') actions.push({ label: 'เช็คเอาท�
 if (b.status === 'pending' || b.status === 'confirmed') actions.push({ label: 'ยกเลิก', style: btn('cancel'), run: setStatus(b, 'cancelled'), busy });
 return { code: b.code, name: b.guestName, phone: b.phone, room: rn(b.roomNo), pets: b.pets || '—',
 ci: kmDate.dm(b.checkIn), co: kmDate.dm(b.checkOut), total: b.totalPrice ? '฿' + kmMoney(b.totalPrice) : '—',
-slipUrl: b.slipUrl || '', noSlip: !b.slipUrl, receiptUrl: b.receiptUrl || '', statusName: ST[k].name, actions,
+slipUrl: b.slipUrl || '', noSlip: !b.slipUrl, receiptUrl: b.receiptUrl || '', statusName: stName(b, k), actions,
 isNew: isNewRow, ack: () => ackBooking(b.id),
 trStyle: 'border-top: 1px solid #E6DDCB; cursor: ' + (isNewRow ? 'pointer' : 'default') + ';' + (isNewRow ? ' background: #FFE9B0;' : ''),
 codeStyle: 'padding: 14px 12px 14px 12px; font-variant-numeric: tabular-nums; ' + (isNewRow ? 'color: #47413A; font-weight: 700;' : 'color: #7A6E63;'),
@@ -786,7 +792,7 @@ badge: 'display: inline-block; border-radius: 9999px; padding: 4px 10px; font-si
 });
 
 const guestDays = (dash && dash.reminder && dash.reminder.guestDays) || 1;
-const remList = live.filter((b) => ['pending', 'confirmed'].indexOf(b.status) >= 0 && b.checkIn > today && b.checkIn <= in3).sort((a, b) => a.checkIn.localeCompare(b.checkIn));
+const remList = live.filter((b) => ['pending', 'confirmed'].indexOf(b.status) >= 0 && b.checkIn > today && isSoon(b)).sort((a, b) => a.checkIn.localeCompare(b.checkIn));
 const reminders = remList.map((b) => {
 const n = kmDate.diff(today, b.checkIn);
 const hasEmail = /@/.test(b.email || '');
@@ -837,8 +843,8 @@ const k = stOf(b);
 const contL = from > b.checkIn, contR = to < lastNight;
 const rad = (contL ? '0' : '9px') + ' ' + (contR ? '0' : '9px') + ' ' + (contR ? '0' : '9px') + ' ' + (contL ? '0' : '9px');
 const picked = s.pop && s.pop.id === b.id;
-bars.push({ label: (contL ? '… ' : '') + short(rn(b.roomNo)) + ' · ' + String(b.guestName).split(' ')[0] + ' · ' + b.nights + ' คืน',
-title: b.guestName + ' · ' + rn(b.roomNo) + ' · ' + kmDate.dm(b.checkIn) + '–' + kmDate.dm(b.checkOut) + ' (' + b.nights + ' คืน) · ' + ST[k].name,
+bars.push({ label: (contL ? '… ' : '') + (k === 'soon' ? countdown(b) + ' · ' : '') + short(rn(b.roomNo)) + ' · ' + String(b.guestName).split(' ')[0] + ' · ' + b.nights + ' คืน',
+title: b.guestName + ' · ' + rn(b.roomNo) + ' · ' + kmDate.dm(b.checkIn) + '–' + kmDate.dm(b.checkOut) + ' (' + b.nights + ' คืน) · ' + stName(b, k),
 aria: 'ดูรายละเอียดการจอง ' + b.code + ' ' + b.guestName + ' ' + rn(b.roomNo) + ' ' + kmDate.dm(b.checkIn) + ' ถึง ' + kmDate.dm(b.checkOut),
 expanded: picked ? 'true' : 'false',
 open: (e) => { if (this.state.pop && this.state.pop.id === b.id) this.setState({ pop: null }); else this.openPop(b.id, e); },
@@ -864,7 +870,7 @@ const rowsP = [
 ['ชำระ', PAYN[popB.payMethod] || popB.payMethod || '—']
 ];
 if (popB.note) rowsP.push(['หมายเหตุ', popB.note]);
-pop = { name: popB.guestName, code: popB.code, statusName: ST[k].name, rows: rowsP.map(([l, v]) => ({ l, v })),
+pop = { name: popB.guestName, code: popB.code, statusName: stName(popB, k), rows: rowsP.map(([l, v]) => ({ l, v })),
 tel: popB.phone ? 'tel:' + String(popB.phone).replace(/[^0-9+]/g, '') : '',
 slipUrl: popB.slipUrl || '', receiptUrl: popB.receiptUrl || '',
 badge: 'display: inline-block; border-radius: 9999px; padding: 3px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';',
