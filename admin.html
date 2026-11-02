@@ -32,6 +32,9 @@ th{font-weight:600;text-align:left}
 .km-sticky th{white-space:nowrap;position:sticky;top:0;z-index:2;background:#F6F3EE;box-shadow:inset 0 -1px 0 #E6DDCB}
 #notify button:disabled{cursor:default;opacity:.45}
 @media (prefers-reduced-motion:reduce){.km-badge{animation:none}}
+.km-dlg{animation:kmPop .16s ease-out}
+@keyframes kmPop{from{transform:scale(.96);opacity:.6}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.km-dlg{animation:none}}
 </style>
 </head>
 <body>
@@ -210,6 +213,9 @@ Khun Mhee · หลังบ้าน</a>
 <template data-sc="for" list="{{pop.rows}}" as="r" hint-placeholder-count="6"><dt style="color: #7A6E63">{{r.l}}</dt><dd style="margin: 0; overflow-wrap: anywhere">{{r.v}}</dd></template>
 </dl>
 <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px">
+<template data-sc="if" value="{{pop.canCheckIn}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{pop.checkIn}}" disabled="{{pop.ciBusy}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #8B5E3C; color: #F6F3EE; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>{{pop.ciLabel}}</button></template>
+<template data-sc="if" value="{{pop.needApprove}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #6B4E1E; background: #F3E3B0; border-radius: 9px; padding: 8px 10px">ต้องอนุมัติสลิปก่อน จึงจะเช็คอินได้ (ปุ่มอนุมัติอยู่ในตารางการจอง)</p></template>
+<template data-sc="if" value="{{pop.isIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #4A3320; background: #EADBCB; border-radius: 9px; padding: 8px 10px">เช็คอินแล้ว · ระบบจะเช็คเอาท์ให้อัตโนมัติ 12:00 น. วันเช็คเอาท์</p></template>
 <template data-sc="if" value="{{pop.tel}}" hint-placeholder-val="{{ true }}"><a href="{{pop.tel}}" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; background: #47413A; color: #F6F3EE; font-size: 13px; text-decoration: none">โทรหาลูกค้า</a></template>
 <template data-sc="if" value="{{pop.slipUrl}}" hint-placeholder-val="{{ true }}"><a href="{{pop.slipUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; border: 1px solid #DED4C1; color: #335A88; font-size: 13px; text-decoration: none">ดูสลิป ↗</a></template>
 <template data-sc="if" value="{{pop.receiptUrl}}" hint-placeholder-val="{{ false }}"><a href="{{pop.receiptUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; border: 1px solid #DED4C1; color: #2F6B45; font-size: 13px; text-decoration: none">ใบเสร็จ PDF ↗</a></template>
@@ -503,6 +509,24 @@ Khun Mhee · หลังบ้าน</a>
 </main>
 </div>
 </div>
+<template data-sc="if" value="{{hasDlg}}" hint-placeholder-val="{{ false }}">
+<div id="km-dlg-back" onClick="{{dlgBackdrop}}" style="position: fixed; inset: 0; z-index: 80; background: rgba(58,53,47,.55); display: flex; align-items: center; justify-content: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); box-sizing: border-box">
+<div role="alertdialog" aria-modal="true" aria-labelledby="km-dlg-h" aria-describedby="km-dlg-d" class="km-dlg" style="width: 100%; max-width: 420px; background: #FFFDF9; color: #47413A; border-radius: 18px; box-shadow: 0 20px 48px rgba(58,53,47,.35); padding: 22px 22px 18px; box-sizing: border-box">
+<h2 id="km-dlg-h" style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.4">{{dlg.title}}</h2>
+<div id="km-dlg-d">
+<template data-sc="if" value="{{dlg.text}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: #5E554C">{{dlg.text}}</p></template>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 14px; color: #5E554C">
+<template data-sc="for" list="{{dlg.lines}}" as="l" hint-placeholder-count="3"><li>{{l.x}}</li></template>
+</ul>
+<template data-sc="if" value="{{dlg.warn}}" hint-placeholder-val="{{ true }}"><p style="margin: 12px 0 0; font-size: 13px; line-height: 1.5; background: #FBE3DF; color: #8A2F2A; border-radius: 10px; padding: 9px 12px">{{dlg.warn}}</p></template>
+</div>
+<div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 18px">
+<button type="button" onClick="{{dlgCancel}}" style="min-height: 44px; padding: 0 18px; border: 1px solid #DED4C1; border-radius: 9999px; background: #F6F3EE; color: #47413A; font-size: 15px">{{dlg.cancelLabel}}</button>
+<button type="button" id="km-dlg-ok" onClick="{{dlgOk}}" style="{{dlg.okStyle}}">{{dlg.okLabel}}</button>
+</div>
+</div>
+</div>
+</template>
 </template>
 <script src="js/morphdom.min.js"></script>
 <script src="js/runtime.js"></script>
@@ -520,7 +544,17 @@ stRange: '1m', stFrom: '', stTo: '', stats: null, stLoading: false, stErr: '',
 pr: null, prLoading: false, prErr: '', roomEdit: {}, rf: null, rfErr: '', pvFrom: '', pv: null,
 // แจ้งเตือน: อ่านแล้ว/ลบแล้ว (เก็บในเบราว์เซอร์นี้) · ตารางการจอง: การจองใหม่ที่ยังไม่ได้แตะ
 readKeys: this.loadSet('km_read'), dismissed: this.loadSet('km_dismiss'), bkAck: this.loadSet('km_bk_ack'), bkInit: this.hasKey('km_bk_ack'),
-calFlash: '', pop: null, notifyMax: '', bookMax: '' };
+calFlash: '', pop: null, notifyMax: '', bookMax: '', dlg: null };
+}
+/* กล่องถามยืนยันในหน้า (ใช้แทน window.confirm กันเผลอคลิก) */
+ask(opts) {
+this.lastFocus = document.activeElement;
+this.setState({ dlg: opts }, () => { const b = document.getElementById('km-dlg-ok'); if (b) b.focus(); });
+}
+closeDlg(ok) {
+const d = this.state.dlg;
+this.setState({ dlg: null }, () => { if (this.lastFocus && this.lastFocus.focus && document.contains(this.lastFocus)) this.lastFocus.focus({ preventScroll: true }); });
+if (ok && d && d.onOk) d.onOk();
 }
 toLogin() {
 if (typeof window.kmGo === 'function') window.kmGo('login'); else location.replace('login.html');
@@ -584,6 +618,7 @@ if (p) { const r = p.getBoundingClientRect(); if (r.bottom > window.innerHeight)
 componentDidMount() {
 if (!kmToken.get()) { this.toLogin(); return; }
 window.addEventListener('resize', () => this.scheduleFit());
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.state.dlg) this.closeDlg(false); });
 this.load();
 this.loadStats('1m');
 this.loadPricing();
@@ -745,9 +780,9 @@ this.setState({ seen: max });
 };
 const clearAll = () => {
 if (!shown.length) return;
-const ask = 'ลบแจ้งเตือน' + (s.nf === 'all' ? 'ทั้งหมด' : 'ในหมวดนี้') + ' ' + shown.length + ' รายการ ?';
-if (!(window.kmConfirm ? window.kmConfirm(ask) : window.confirm(ask))) return;
-dismiss(shown.map((n) => n.key));
+const keys = shown.map((n) => n.key);
+this.ask({ kind: 'danger', title: 'ลบแจ้งเตือน' + (s.nf === 'all' ? 'ทั้งหมด' : 'ในหมวดนี้') + ' ?', text: 'ลบ ' + keys.length + ' รายการออกจากรายการแจ้งเตือนในเครื่องนี้ ข้อมูลการจองไม่ถูกลบ',
+okLabel: 'ลบแจ้งเตือน', cancelLabel: 'ไม่ลบ', onOk: () => dismiss(keys) });
 };
 
 const chip = (on) => 'border-radius: 9999px; padding: 8px 14px; font-size: 14px; border: 1px solid ' + (on ? '#47413A' : '#DED4C1') + '; background: ' + (on ? '#47413A' : '#F6F3EE') + '; color: ' + (on ? '#F6F3EE' : '#47413A') + ';';
@@ -762,12 +797,24 @@ const ack = Object.assign({}, this.state.bkAck, { [id]: 1 });
 this.saveSet('km_bk_ack', ack);
 this.setState({ bkAck: ack });
 };
-const setStatus = (b, st, label) => () => {
-ackBooking(b.id);
-const ask = 'ยืนยันการยกเลิกการจอง ' + b.code + ' (' + b.guestName + ') ?';
-if (st === 'cancelled' && !(window.kmConfirm ? window.kmConfirm(ask) : window.confirm(ask))) return;
-this.act(kmApi('setBookingStatus', t, b.id, st), b.id);
+// ถามยืนยันก่อน เช็คอิน / เช็คเอาท์ / ยกเลิก (อนุมัติกดได้ทันที)
+const confirmStatus = (b, st) => {
+const go = () => this.act(kmApi('setBookingStatus', t, b.id, st), b.id);
+if (st === 'confirmed') return go();
+const stay = kmDate.short(b.checkIn) + ' – ' + kmDate.short(b.checkOut) + ' (' + b.nights + ' คืน)';
+const who = [b.code, rn(b.roomNo), stay, b.pets ? 'สัตว์เลี้ยง: ' + b.pets : ''].filter(Boolean);
+const dIn = kmDate.diff(today, b.checkIn), dOut = kmDate.diff(today, b.checkOut);
+const D = {
+checked_in: { kind: 'in', title: 'ยืนยันเช็คอิน ' + b.guestName + ' ?', okLabel: 'เช็คอิน',
+warn: dIn > 0 ? 'ยังไม่ถึงวันเช็คอิน กำหนดเช็คอิน ' + kmDate.short(b.checkIn) + ' (อีก ' + dIn + ' วัน)' : '' },
+checked_out: { kind: 'out', title: 'ยืนยันเช็คเอาท์ ' + b.guestName + ' ?', okLabel: 'เช็คเอาท์',
+warn: dOut > 0 ? 'เช็คเอาท์ก่อนกำหนด กำหนดเช็คเอาท์ ' + kmDate.short(b.checkOut) + ' (อีก ' + dOut + ' วัน)' : '' },
+cancelled: { kind: 'danger', title: 'ยืนยันยกเลิกการจองของ ' + b.guestName + ' ?', okLabel: 'ยกเลิกการจอง', cancelLabel: 'ไม่ยกเลิก',
+warn: 'ยกเลิกแล้วย้อนกลับไม่ได้ ห้องจะกลับมาว่างให้คนอื่นจองทันที' }
+}[st];
+this.ask(Object.assign({ lines: who, onOk: go }, D));
 };
+const setStatus = (b, st, label) => () => { ackBooking(b.id); confirmStatus(b, st); };
 const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #8B5E3C; color: #F6F3EE;' : kind === 'out' ? 'border: 0; background: #47413A; color: #F6F3EE;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
 const q = s.q.trim().toLowerCase().replace(/-/g, '');
 const rows = bookings.filter((b) => (s.bf === 'all' || stOf(b) === s.bf) &&
@@ -870,7 +917,10 @@ const rowsP = [
 ['ชำระ', PAYN[popB.payMethod] || popB.payMethod || '—']
 ];
 if (popB.note) rowsP.push(['หมายเหตุ', popB.note]);
-pop = { name: popB.guestName, code: popB.code, statusName: stName(popB, k), rows: rowsP.map(([l, v]) => ({ l, v })),
+const ciBusy = s.acting === popB.id;
+const ciDays = kmDate.diff(today, popB.checkIn);
+const doCheckIn = () => confirmStatus(popB, 'checked_in');
+pop = { name: popB.guestName, code: popB.code, statusName: stName(popB, k), canCheckIn: popB.status === 'confirmed', checkIn: doCheckIn, ciBusy, ciLabel: ciBusy ? 'กำลังเช็คอิน…' : 'เช็คอิน', needApprove: popB.status === 'pending', isIn: popB.status === 'checked_in', rows: rowsP.map(([l, v]) => ({ l, v })),
 tel: popB.phone ? 'tel:' + String(popB.phone).replace(/[^0-9+]/g, '') : '',
 slipUrl: popB.slipUrl || '', receiptUrl: popB.receiptUrl || '',
 badge: 'display: inline-block; border-radius: 9999px; padding: 3px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';',
@@ -987,7 +1037,8 @@ badge: 'display: inline-block; margin-left: 6px; border-radius: 9999px; padding:
 busy, toggleLabel: on ? 'ปิดชั่วคราว' : 'เปิดใช้',
 edit: () => openRule(r),
 toggle: () => this.actPrice(kmApi('savePriceRule', t, Object.assign({}, r, { status: on ? 'inactive' : 'active' })), 'rule' + r.id).catch(() => {}),
-del: () => { if (window.kmConfirm ? window.kmConfirm('ลบกฎ "' + r.name + '" ?') : window.confirm('ลบกฎ "' + r.name + '" ?')) this.actPrice(kmApi('deletePriceRule', t, r.id), 'rule' + r.id).catch(() => {}); } };
+del: () => this.ask({ kind: 'danger', title: 'ลบกฎ "' + r.name + '" ?', text: 'ราคาคืนที่ใช้กฎนี้จะกลับไปใช้ราคาพื้นฐาน (การจองเดิมไม่เปลี่ยนราคา)', okLabel: 'ลบกฎ', cancelLabel: 'ไม่ลบ',
+onOk: () => this.actPrice(kmApi('deletePriceRule', t, r.id), 'rule' + r.id).catch(() => {}) }) };
 });
 const rf = s.rf || blankRule;
 const setRf = (patch) => this.setState({ rf: Object.assign({}, this.state.rf, patch), rfErr: '' });
@@ -1031,6 +1082,11 @@ prevStyle: navBtn(s.monthOffset <= -24), nextStyle: navBtn(s.monthOffset >= 24),
 prevMonth: () => this.setState({ monthOffset: Math.max(-24, s.monthOffset - 1), pop: null }),
 nextMonth: () => this.setState({ monthOffset: Math.min(24, s.monthOffset + 1), pop: null }),
 pop, hasPop: !!pop, closePop: () => this.setState({ pop: null }),
+hasDlg: !!s.dlg, dlg: s.dlg ? { title: s.dlg.title, text: s.dlg.text || '', warn: s.dlg.warn || '', lines: (s.dlg.lines || []).map((x) => ({ x })),
+okLabel: s.dlg.okLabel || 'ยืนยัน', cancelLabel: s.dlg.cancelLabel || 'ไม่ใช่ กลับไป',
+okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#8B5E3C', out: '#47413A', danger: '#B5443F' }[s.dlg.kind] || '#47413A') + ';' } : null,
+dlgOk: () => this.closeDlg(true), dlgCancel: () => this.closeDlg(false),
+dlgBackdrop: (e) => { if (e.target === e.currentTarget || (e.target && e.target.id === 'km-dlg-back')) this.closeDlg(false); },
 noNotes: !notes.length, hasNotes: !!notes.length, clearAll, clearLabel: s.nf === 'all' ? 'ลบทั้งหมด' : 'ลบทั้งหมดในหมวดนี้',
 notifyCount: notes.length > 10 ? 'แสดง 10 รายการล่าสุด เลื่อนลงเพื่อดูอีก ' + (notes.length - 10) + ' รายการ' : '',
 notifyBox: 'list-style: none; margin: 16px 0 0; padding: 0 4px 0 0; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;' + (s.notifyMax ? ' max-height: ' + s.notifyMax + ';' : ''),
