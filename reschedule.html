@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khun Mhee – เลื่อนวันพัก</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed}
+button:active:not(:disabled),.pill:active{transform:scale(0.95)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #A1805D;outline-offset:2px}
+input,select,textarea{font-family:inherit}
+@media (max-width:833px){
+ .navlinks{display:none !important}
+ .months{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .fields2{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .page-h{font-size:34px !important}
+ .rs-lead{font-size:19px !important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="view">
+<div style="width: 100%; min-width: 0; background: #EDE6D7; min-height: 100vh">
+
+<header style="background: #3A352F; color: #F6F3EE; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box">
+<nav aria-label="เมนูหลัก" style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px">
+<a href="index.html" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DCC881" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
+Khun Mhee</a>
+<div class="navlinks" style="display: flex; gap: 32px">
+<a href="index.html" style="color: #EDE6D7">ห้องพัก</a>
+<a href="booking.html" style="color: #EDE6D7">จองห้องพัก</a>
+<a href="index.html" style="color: #EDE6D7">สำหรับสัตว์เลี้ยง</a>
+<a href="index.html" style="color: #EDE6D7">ติดต่อเรา</a>
+</div>
+<a href="login.html" style="color: #EDE6D7">แอดมิน</a>
+</nav>
+</header>
+
+<main style="max-width: 920px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<div>
+<a href="index.html" style="font-size: 14px; color: #47413A">‹ กลับหน้าแรก</a>
+<h1 class="page-h" style="margin: 12px 0 0; font-size: 48px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px">เลื่อนวันพัก</h1>
+</div>
+
+<!-- ข้อความหลักของหน้า -->
+<div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #EEEAF5; border: 2px solid #5B4B8A; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
+<span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #5B4B8A; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path><path d="M9 15.5h6M13 13.5l2 2-2 2"></path></svg></span>
+<p class="rs-lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #46386E">กรอกรหัสการจองและเบอร์โทรที่ใช้ตอนจอง เลื่อนวันได้ 1 ครั้งต่อการจอง ห้องเดิม จำนวนคืนเท่าเดิม</p>
+</div>
+
+<!-- 1. ค้นหาการจอง -->
+<template data-sc="if" value="{{showFind}}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="h-find" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-find" style="margin: 0; font-size: 24px; font-weight: 600">ค้นหาการจองของคุณ</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รหัสการจองอยู่ในหน้ายืนยันการจองและอีเมลยืนยัน เช่น KM261103ABCD</p>
+<form onSubmit="{{find}}" style="margin-top: 24px">
+<div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">รหัสการจอง *
+<input id="rs-code" type="text" value="{{code}}" onInput="{{setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="เช่น KM261103ABCD" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ที่ใช้ตอนจอง *
+<input type="tel" value="{{phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
+</label>
+</div>
+<template data-sc="if" value="{{findErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{findErr}}</p></template>
+<div style="display: flex; justify-content: flex-end; margin-top: 24px">
+<button type="submit" disabled="{{busy}}" style="background: #5B4B8A; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 32px; font-size: 18px; font-weight: 600">{{findLabel}}</button>
+</div>
+</form>
+</section>
+</template>
+
+<!-- 2. การจองที่พบ -->
+<template data-sc="if" value="{{hasInfo}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-bk" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<div style="flex: 1 1 280px; min-width: 0">
+<p style="margin: 0; font-size: 13px; color: #7A6E63">การจอง {{bk.code}}</p>
+<h2 id="h-bk" style="margin: 2px 0 0; font-size: 22px; font-weight: 600">{{bk.room}}</h2>
+<p style="margin: 4px 0 0; font-size: 16px">{{bk.dates}}</p>
+</div>
+<span style="{{bk.chipStyle}}">{{bk.chip}}</span>
+<button type="button" onClick="{{again}}" style="background: transparent; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 9px 18px; font-size: 14px">ค้นหาการจองอื่น</button>
+</section>
+</template>
+
+<!-- เลื่อนไม่ได้ / เลื่อนแล้ว -->
+<template data-sc="if" value="{{blockedMsg}}" hint-placeholder-val="{{ false }}">
+<section style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<template data-sc="if" value="{{usedRange}}" hint-placeholder-val="{{ false }}">
+<div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; background: #EDE6D7; border-radius: 14px; padding: 14px 16px">
+<div><p style="margin: 0; font-size: 12px; color: #5E554C">วันเข้าพักเดิม</p><p style="margin: 2px 0 0; font-size: 15px; color: #5E554C; text-decoration: line-through">{{usedRange.prev}}</p></div>
+<div><p style="margin: 0; font-size: 12px; color: #5E554C">วันเข้าพักปัจจุบัน</p><p style="margin: 2px 0 0; font-size: 15px; font-weight: 600">{{usedRange.now}}</p></div>
+</div>
+</template>
+<p role="status" style="margin: 0; font-size: 16px; line-height: 1.6; color: #47413A">{{blockedMsg}}</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<a class="pill" href="index.html#contact" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 16px">ติดต่อที่พัก</a>
+<template data-sc="if" value="{{canView}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{viewBooking}}" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">ดูสถานะการจอง</button></template>
+</div>
+</section>
+</template>
+
+<!-- 3. เลือกวันใหม่ -->
+<template data-sc="if" value="{{canPick}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-pick" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap">
+<h2 id="h-pick" tabindex="-1" style="margin: 0; font-size: 24px; font-weight: 600">เลือกวันเข้าพักใหม่</h2>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{prevM}}" disabled="{{noPrev}}" aria-label="เดือนก่อนหน้า" style="{{prevStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<button type="button" onClick="{{nextM}}" disabled="{{noNext}}" aria-label="เดือนถัดไป" style="{{nextStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+</div>
+</div>
+<p role="status" style="margin: 6px 0 0; font-size: 15px; color: #47413A">{{hint}}</p>
+<div class="months" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-top: 24px">
+<template data-sc="for" list="{{months}}" as="m" hint-placeholder-count="2">
+<div>
+<h3 style="margin: 0 0 12px; font-size: 17px; font-weight: 600; text-align: center">{{m.title}}</h3>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; text-align: center; font-size: 12px; color: #7A6E63; margin-bottom: 6px"><span>อา</span><span>จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span></div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px">
+<template data-sc="for" list="{{m.cells}}" as="c" hint-placeholder-count="35">
+<template data-sc="if" value="{{c.blank}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true"></span></template>
+<template data-sc="if" value="{{c.real}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{c.pick}}" disabled="{{c.disabled}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" title="{{c.title}}" style="{{c.style}}"><span>{{c.label}}</span><span style="{{c.subStyle}}">{{c.sub}}</span></button></template>
+</template>
+</div>
+</div>
+</template>
+</div>
+<div style="display: flex; gap: 10px 18px; flex-wrap: wrap; margin-top: 20px; font-size: 13px; color: #47413A">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: #47413A"></span>วันใหม่ที่เลือก</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 4px; background: #EEEAF5; border: 2px dashed #5B4B8A; box-sizing: border-box"></span>วันเข้าพักเดิม</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 4px; background: #F3D6DD; border: 1px solid #C88193; box-sizing: border-box"></span>เต็ม</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 4px; background: repeating-linear-gradient(135deg, #F4E7BD 0 4px, #FBF5E4 4px 8px); border: 1px solid #D9B65C; box-sizing: border-box"></span>รอชำระ</span>
+</div>
+<div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; background: #EDE6D7; border-radius: 14px; padding: 16px 18px">
+<div><p style="margin: 0; font-size: 12px; color: #5E554C">วันเข้าพักเดิม</p><p style="margin: 2px 0 0; font-size: 16px">{{oldRange}}</p></div>
+<div><p style="margin: 0; font-size: 12px; color: #5E554C">วันเข้าพักใหม่</p><p style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{newRange}}</p></div>
+<p style="margin: 0; grid-column: 1 / -1; font-size: 13px; color: #5E554C">{{priceNote}}</p>
+</div>
+<template data-sc="if" value="{{confirming}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="margin-top: 20px; background: #EEEAF5; color: #46386E; border: 1px solid #B9AED6; border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.6">
+<strong>เลื่อนวันพักได้ครั้งเดียวเท่านั้น</strong> ยืนยันแล้วจะเปลี่ยนวันผ่านหน้าเว็บอีกไม่ได้ ตรวจสอบวันที่ให้ถูกต้องก่อนกดยืนยัน
+</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 20px">
+<button type="button" onClick="{{back}}" disabled="{{busy}}" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">‹ เลือกวันใหม่</button>
+<button type="button" onClick="{{submit}}" disabled="{{busy}}" style="background: #5B4B8A; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">{{submitLabel}}</button>
+</div>
+</template>
+<template data-sc="if" value="{{picking}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; justify-content: flex-end; margin-top: 20px">
+<button type="button" onClick="{{next}}" disabled="{{nextDisabled}}" style="{{nextBtn}}">ถัดไป: ยืนยันวันใหม่</button>
+</div>
+</template>
+<template data-sc="if" value="{{pickErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{pickErr}}</p></template>
+</section>
+</template>
+
+<!-- 4. เลื่อนสำเร็จ -->
+<template data-sc="if" value="{{done}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-done" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+<span style="width: 72px; height: 72px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<h2 id="h-done" tabindex="-1" style="margin: 0; font-size: 32px; font-weight: 600">เลื่อนวันพักเรียบร้อย</h2>
+<div class="fields2" style="width: 100%; max-width: 560px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; background: #EDE6D7; border-radius: 14px; padding: 16px 18px; text-align: left; box-sizing: border-box">
+<div><p style="margin: 0; font-size: 12px; color: #5E554C">วันเข้าพักเดิม</p><p style="margin: 2px 0 0; font-size: 15px; color: #5E554C; text-decoration: line-through">{{done.prev}}</p></div>
+<div><p style="margin: 0; font-size: 12px; color: #5E554C">วันเข้าพักใหม่</p><p style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{done.now}}</p></div>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5E554C; max-width: 560px">{{done.note}}</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px">
+<a class="pill" href="index.html" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 16px">กลับหน้าแรก</a>
+<button type="button" onClick="{{viewBooking}}" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">ดูสถานะการจอง</button>
+</div>
+</section>
+</template>
+
+</main>
+</div>
+</template>
+<script src="js/morphdom.min.js"></script>
+<script src="js/runtime.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/reschedule.js"></script>
+<script>
+/* หน้าเลื่อนวันพัก: ค้นหาการจองด้วยรหัส + เบอร์โทร แล้วเลือกวันเช็คอินใหม่ (เลื่อนได้ 1 ครั้ง)
+ * ใช้ปฏิทินจาก js/reschedule.js (window.kmRsCalendar) และคำสั่งใน Reschedule.gs */
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+let sv = null;
+try { sv = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch (e) {}
+const q = new URLSearchParams(window.__kmQuery || location.search);
+this.state = { code: (q.get('code') || (sv && sv.code) || '').toUpperCase(), phone: q.get('phone') || (sv && sv.phone) || '',
+busy: false, findErr: '', info: null, pick: null, confirm: false, view: null, pickErr: '', done: null };
+}
+componentDidMount() {
+const i = document.getElementById('rs-code');
+if (i && !this.state.code) i.focus({ preventScroll: true });
+}
+focus(id) { setTimeout(() => { const el = document.getElementById(id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.focus({ preventScroll: true }); } }, 0); }
+find() {
+const s = this.state;
+if (s.busy) return;
+const code = String(s.code || '').trim().toUpperCase(), phone = String(s.phone || '').trim();
+if (!code || !phone) return this.setState({ findErr: 'กรุณากรอกทั้งรหัสการจองและเบอร์โทรศัพท์' });
+this.setState({ busy: true, findErr: '', code });
+kmApi('publicRescheduleInfo', code, phone)
+.then((info) => { this.setState({ busy: false, info, pick: null, confirm: false, view: null, pickErr: '', done: null }); if (info.can && !info.used) this.focus('h-pick'); })
+.catch((e) => {
+const m = String((e && e.message) || e);
+this.setState({ busy: false, findErr: /ไม่รู้จักคำสั่ง/.test(m) ? 'ระบบเลื่อนวันพักยังไม่เปิดใช้งาน กรุณาติดต่อที่พัก' : m.replace(/^BUSY:\s*/, '') });
+});
+}
+/* เก็บการจองไว้ในเครื่อง เพื่อให้หน้า "จองห้องพัก" แสดงสถานะการจองนี้ได้ */
+remember(info) {
+let cur = null;
+try { cur = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch (e) {}
+const same = cur && String(cur.code).toUpperCase() === info.code;
+const base = same ? cur : { first: info.firstName || '', email: info.email || '', pets: info.pets || '', guests: String(info.guests || ''), payName: '', slipName: '' };
+const saved = Object.assign({}, base, { code: info.code, phone: this.state.phone.trim(), roomNo: info.roomNo, roomName: info.roomName,
+ci: info.checkIn, co: info.checkOut, nights: info.nights, total: info.totalPrice, status: info.status === 'pending' ? 'pending' : 'confirmed' });
+try { localStorage.setItem('km_booking', JSON.stringify(saved)); } catch (e) {}
+}
+submit() {
+const s = this.state;
+if (s.busy || !s.pick || !s.info) return;
+const prev = { ci: s.info.checkIn, co: s.info.checkOut };
+this.setState({ busy: true, pickErr: '' });
+kmApi('publicRescheduleBooking', s.info.code, s.phone.trim(), s.pick)
+.then((r) => {
+this.remember(r.info);
+this.setState({ busy: false, info: r.info, pick: null, confirm: false, done: { prev, email: r.info.email || '' } });
+this.focus('h-done');
+})
+.catch((e) => {
+const msg = String((e && e.message) || e).replace(/^BUSY:\s*/, '');
+this.setState({ busy: false, confirm: false, pickErr: msg });
+// ห้องเพิ่งไม่ว่าง: โหลดวันว่างล่าสุดให้เลือกใหม่
+if (/ไม่ว่าง|กำลังจอง/.test(msg)) kmApi('publicRescheduleInfo', s.info.code, s.phone.trim()).then((info) => this.setState({ info, pick: null })).catch(() => {});
+});
+}
+renderVals() {
+const s = this.state;
+const info = s.info;
+const C = window.KM_RS_COLORS || { purple: '#5B4B8A', soft: '#EEEAF5', ink: '#46386E' };
+const range = (a, b) => kmDate.short(a) + ' – ' + kmDate.short(b);
+const used = !!(info && info.used);
+const can = !!(info && info.can && !used);
+const out = {
+code: s.code, phone: s.phone, busy: s.busy, findErr: s.findErr,
+findLabel: s.busy && !info ? 'กำลังค้นหา…' : 'ค้นหาการจอง',
+setCode: (e) => this.setState({ code: e.target.value, findErr: '' }),
+setPhone: (e) => this.setState({ phone: e.target.value, findErr: '' }),
+find: () => this.find(),
+showFind: !info, hasInfo: !!info,
+again: () => { this.setState({ info: null, pick: null, confirm: false, done: null, pickErr: '' }); setTimeout(() => { const i = document.getElementById('rs-code'); if (i) i.focus(); }, 0); },
+viewBooking: () => { if (info) this.remember(info); if (typeof window.kmGo === 'function') window.kmGo('booking'); else location.href = 'booking.html'; },
+canPick: false, done: null, blockedMsg: '', usedRange: null, canView: false, months: []
+};
+if (!info) return out;
+
+const nights = Number(info.nights) || 1;
+out.bk = {
+code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + nights + ' คืน)',
+chip: used ? 'ใช้สิทธิ์เลื่อนแล้ว 1/1' : can ? 'เลื่อนได้ 1 ครั้ง' : 'เลื่อนไม่ได้',
+chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; ' +
+(used ? 'background: #E6DDCB; color: #47413A;' : can ? 'background: ' + C.soft + '; color: ' + C.ink + ';' : 'background: #EDE6D7; color: #5E554C;')
+};
+
+if (s.done) {
+out.done = { prev: range(s.done.prev.ci, s.done.prev.co), now: range(info.checkIn, info.checkOut) + ' (' + nights + ' คืน)',
+note: 'การจองนี้ใช้สิทธิ์เลื่อนวันพักครบ 1 ครั้งแล้ว' + (s.done.email ? ' เราส่งอีเมลยืนยันไปที่ ' + s.done.email + ' แล้ว' : '') + ' แสดงรหัสการจองในวันเช็คอินได้เลย' };
+return out;
+}
+if (!can) {
+out.blockedMsg = used ? 'การจองนี้เลื่อนวันพักไปแล้ว ใช้สิทธิ์ครบ 1 ครั้ง หากต้องการเปลี่ยนอีก กรุณาติดต่อที่พัก' : info.reason;
+out.usedRange = used && info.prevCheckIn ? { prev: range(info.prevCheckIn, info.prevCheckOut), now: range(info.checkIn, info.checkOut) } : null;
+out.canView = ['pending', 'confirmed', 'checked_in'].indexOf(info.status) >= 0;
+return out;
+}
+
+// ปฏิทินเลือกวันใหม่ 2 เดือน
+const cal = window.kmRsCalendar({ info, nights, pick: s.pick, red: false, cellH: 52,
+onPick: (d) => this.setState({ pick: d, confirm: false, pickErr: '' }) });
+const nav = window.kmRsNavStyle;
+let v = s.view == null ? Math.max(cal.minIdx, cal.idxOf(info.checkIn)) : s.view;
+v = Math.max(cal.minIdx, Math.min(v, Math.max(cal.minIdx, cal.maxIdx - 1)));
+const noPrev = v <= cal.minIdx, noNext = v + 1 >= cal.maxIdx;
+Object.assign(out, {
+canPick: true,
+months: [cal.month(v)].concat(v + 1 <= cal.maxIdx ? [cal.month(v + 1)] : []),
+noPrev, noNext, prevStyle: nav(noPrev), nextStyle: nav(noNext),
+prevM: () => this.setState({ view: v - 1 }), nextM: () => this.setState({ view: v + 1 }),
+hint: s.pick ? 'วันใหม่: ' + range(s.pick, cal.pickOut) + ' (' + nights + ' คืน)' : 'แตะวันเช็คอินใหม่ ระบบเลือกวันเช็คเอาท์ให้ ' + nights + ' คืนเท่าเดิม',
+oldRange: range(info.checkIn, info.checkOut),
+newRange: s.pick ? range(s.pick, cal.pickOut) : 'ยังไม่ได้เลือก',
+priceNote: info.keepPrice ? 'ยอดชำระเท่าเดิม' + (info.totalPrice ? ' ฿' + kmMoney(info.totalPrice) : '') + ' ไม่มีค่าธรรมเนียมเลื่อนวัน' : 'ราคาจะคิดใหม่ตามวันที่เลือก ถ้ามีส่วนต่าง ที่พักจะติดต่อกลับ',
+picking: !(s.confirm && s.pick), confirming: !!(s.confirm && s.pick),
+nextDisabled: !s.pick,
+nextBtn: 'border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; color: #FFFFFF; background: ' + (s.pick ? C.purple : '#CFC3AC') + ';',
+next: () => { if (s.pick) this.setState({ confirm: true, pickErr: '' }); },
+back: () => this.setState({ confirm: false }),
+submit: () => this.submit(),
+submitLabel: s.busy ? 'กำลังเลื่อนวันพัก…' : 'ยืนยัน เลื่อนเป็น ' + (s.pick ? kmDate.dm(s.pick) : ''),
+pickErr: s.pickErr
+});
+return out;
+}
+}
+DC.mount(Component, {});
+</script>
+</body>
+</html>
