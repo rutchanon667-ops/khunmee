@@ -15,6 +15,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 @media (max-width:833px){
  .navlinks{display:none !important}
  .subnav-links{display:none !important}
+ .subnav-ci{display:none !important}
  .hero-h{font-size:34px !important}
  .tile{padding:56px 20px !important}
  .two-col{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
@@ -47,6 +48,7 @@ Khun Mhee</a>
 <a href="#living" style="color: #EDE6D7">พื้นที่ส่วนกลาง</a>
 <a href="#pets" style="color: #EDE6D7">สำหรับสัตว์เลี้ยง</a>
 <a href="#stay" style="color: #EDE6D7">ข้อมูลการเข้าพัก</a>
+<a href="checkin.html" style="color: #DCC881; font-weight: 600">เช็คอินด้วยตัวเอง</a>
 <a href="#contact" style="color: #EDE6D7">ติดต่อเรา</a>
 </div>
 <a href="login.html" style="color: #EDE6D7; display: flex; align-items: center; gap: 6px">
@@ -65,6 +67,7 @@ Khun Mhee</a>
 <a href="#rooms" style="color: #5E554C">เปรียบเทียบห้อง</a>
 <a href="#pets" style="color: #5E554C">กติกาสัตว์เลี้ยง</a>
 </div>
+<a class="pill subnav-ci" href="checkin.html" style="background: transparent; color: #2F5A33; border: 1px solid #4F7A52; border-radius: 9999px; padding: 5px 14px; font-size: 14px; display: inline-block; white-space: nowrap">เช็คอิน</a>
 <a class="pill" href="booking.html" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 6px 16px; font-size: 14px; display: inline-block">จองเลย</a>
 </div>
 </div>
@@ -106,7 +109,7 @@ Khun Mhee</a>
 </select>
 </label>
 <a class="pill" href="{{findHref}}" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300; white-space: nowrap; text-align: center">ค้นหาห้องว่าง</a>
-</form><section class="tile" style="background: #F6F3EE; padding: 56px 20px; display: flex; justify-content: center; text-align: start">
+</form><p style="margin: 16px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C; text-align: center">มาถึงที่พักแล้ว? <a href="checkin.html" style="font-weight: 600; color: #2F5A33; text-decoration: underline; text-underline-offset: 3px">เช็คอินด้วยตัวเองและรับรหัสประตู ›</a></p><section class="tile" style="background: #F6F3EE; padding: 56px 20px; display: flex; justify-content: center; text-align: start">
 
 </section><section id="pets" class="tile" style="padding: 80px 20px; display: flex; flex-direction: column; align-items: center; background-color: #ede6d7; text-align: start; width: 100%; box-sizing: border-box">
 <div style="width: 100%; max-width: 1200px">
@@ -130,8 +133,9 @@ Khun Mhee</a>
 </div>
 <div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
 <span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"></circle><path d="M10.7 12.3L21 2"></path><path d="M16 7l3 3"></path><path d="M18.5 4.5l2 2"></path></svg></span>
-<h3 style="margin: 0; font-size: 21px; font-weight: 600">เช็คอิน [เวลา] · เช็คเอาท์ [เวลา]</h3>
-<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">เราจะส่งข้อความเตือนก่อนวันเข้าพัก พร้อมเส้นทางและรหัสประตู</p>
+<h3 style="margin: 0; font-size: 21px; font-weight: 600">เช็คอิน 14:00 · เช็คเอาท์ 12:00</h3>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C">เช็คอินด้วยตัวเองผ่านหน้าเว็บ ถ่ายรูปบัตรแล้วรับรหัสประตูได้ทันที ไม่ต้องรอเจ้าหน้าที่</p>
+<a href="checkin.html" style="color: #2F5A33; font-size: 17px; font-weight: 600">เช็คอินด้วยตัวเอง ›</a>
 </div>
 <div style="background: #F6F3EE; border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; gap: 10px">
 <span style="width: 64px; height: 64px; border-radius: 9999px; background: #EFE2B4; display: flex; align-items: center; justify-content: center; margin-bottom: 6px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2l4 4"></path><path d="M17 7l3-3"></path><path d="M19 9L8.7 19.3a2.4 2.4 0 0 1-3.4 0l-.6-.6a2.4 2.4 0 0 1 0-3.4L15 5"></path><path d="M9 11l4 4"></path><path d="M5 19l-3 3"></path><path d="M14 4l6 6"></path></svg></span>
@@ -255,7 +259,7 @@ Khun Mhee</a>
 <div>
 <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #47413A">ข้อมูลการเข้าพัก</h4>
 <div id="stay" style="display: flex; flex-direction: column; font-size: 14px; line-height: 2.2">
-<a href="#pets" style="color: #5E554C">กติกาสัตว์เลี้ยง</a><a href="#pets" style="color: #5E554C">เวลาเช็คอิน/เอาท์</a><a href="#living" style="color: #5E554C">พื้นที่ส่วนกลาง</a>
+<a href="checkin.html" style="color: #5E554C">เช็คอิน / เช็คเอาท์ด้วยตัวเอง</a><a href="#pets" style="color: #5E554C">กติกาสัตว์เลี้ยง</a><a href="#pets" style="color: #5E554C">เวลาเช็คอิน/เอาท์</a><a href="#living" style="color: #5E554C">พื้นที่ส่วนกลาง</a>
 </div>
 </div>
 <div>
