@@ -19,13 +19,35 @@ input,select,textarea{font-family:inherit}
  #receipt,#receipt *{visibility:visible !important}
  #receipt{position:absolute;left:0;top:0;border:0 !important}
 }
+/* แท็บเล็ต (ไอแพด) และเล็กกว่า */
+@media (max-width:1068px){
+ .sum-img{aspect-ratio:21 / 9 !important}
+}
 @media (max-width:833px){
  .navlinks{display:none !important}
+ .page-h{font-size:40px !important}
+ .months{gap:24px !important}
+}
+/* มือถือ (ไม่เกิน 600px) */
+@media (max-width:600px){
+ .wrap{padding:28px 16px 64px !important}
+ .page-h{font-size:32px !important}
+ .page-sub{font-size:17px !important}
  .rooms4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .months{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
  .fields2{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
- .page-h{font-size:34px !important}
+ .card{padding:20px 16px !important}
+ .card-hero{padding:28px 16px !important}
+ .card-hero h2{font-size:26px !important}
+ .steps li{padding:6px 12px 6px 6px !important;font-size:13px !important}
+ .actions{flex-direction:column-reverse !important;align-items:stretch !important}
+ .actions>button,.actions>a{width:100%;text-align:center;box-sizing:border-box}
+ .next-row{justify-content:center !important;text-align:center}
+ .next-row>button{width:100%}
+ .rcpt-box{overflow:hidden !important}
+ #receipt{zoom:.46}
 }
+@media (min-width:481px) and (max-width:600px){ #receipt{zoom:.62} }
 </style>
 </head>
 <body>
@@ -48,13 +70,13 @@ Khun Mhee</a>
 </nav>
 </header>
 
-<div style="max-width: 1200px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box">
+<div class="wrap" style="max-width: 1200px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box">
 <a href="index.html" style="font-size: 14px; color: {{accent}}">‹ กลับหน้าแรก</a>
 <h1 class="page-h" style="margin: 12px 0 0; font-size: 48px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px">จองห้องพัก</h1>
-<p style="margin: 8px 0 0; font-size: 21px; color: #5E554C">เลือกห้องและวันที่ แล้วกรอกข้อมูลผู้เข้าพัก ใช้เวลาไม่ถึง 2 นาที</p>
+<p class="page-sub" style="margin: 8px 0 0; font-size: 21px; color: #5E554C">เลือกห้องและวันที่ แล้วกรอกข้อมูลผู้เข้าพัก ใช้เวลาไม่ถึง 2 นาที</p>
 
 <!-- Stepper -->
-<ol aria-label="ขั้นตอนการจอง" style="list-style: none; margin: 32px 0 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap">
+<ol class="steps" aria-label="ขั้นตอนการจอง" style="list-style: none; margin: 32px 0 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap">
 <template data-sc="for" list="{{steps}}" as="s" hint-placeholder-count="3">
 <li style="{{s.style}}"><span style="{{s.dot}}">{{s.n}}</span>{{s.label}}</li>
 </template>
@@ -81,7 +103,7 @@ Khun Mhee</a>
 </template>
 
 <template data-sc="if" value="{{isStep1}}" hint-placeholder-val="{{ true }}">
-<section aria-labelledby="h-room" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<section aria-labelledby="h-room" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-room" style="margin: 0; font-size: 24px; font-weight: 600">1. เลือกห้องพัก</h2>
 <p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ทุกห้องพาสัตว์เลี้ยงเข้าพักได้ มีห้องน้ำในตัว</p>
 <template data-sc="if" value="{{loading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 20px 0 0; font-size: 15px; color: #5E554C">กำลังโหลดห้องพักและวันว่าง…</p></template>
@@ -97,7 +119,7 @@ Khun Mhee</a>
 </div>
 </section>
 
-<section aria-labelledby="h-date" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<section aria-labelledby="h-date" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap">
 <h2 id="h-date" style="margin: 0; font-size: 24px; font-weight: 600">2. เลือกวันเข้าพัก</h2>
 <div style="display: flex; align-items: center; gap: 8px">
@@ -135,14 +157,14 @@ Khun Mhee</a>
 </section>
 
 <template data-sc="if" value="{{holdErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{holdErr}}</p></template>
-<div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px; flex-wrap: wrap">
+<div class="next-row" style="display: flex; justify-content: flex-end; align-items: center; gap: 16px; flex-wrap: wrap">
 <span style="font-size: 13px; color: #7A6E63">กดถัดไปแล้ว ระบบจะกันห้องไว้ให้คุณ {{holdMin}} นาที</span>
 <button type="button" onClick="{{goStep2}}" disabled="{{next1Disabled}}" style="{{next1Style}}">{{next1Label}}</button>
 </div>
 </template>
 
 <template data-sc="if" value="{{isStep2}}" hint-placeholder-val="{{ false }}">
-<section aria-labelledby="h-guest" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<section aria-labelledby="h-guest" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-guest" style="margin: 0; font-size: 24px; font-weight: 600">ข้อมูลผู้เข้าพัก</h2>
 <p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ช่องที่มี * จำเป็นต้องกรอก ใช้เบอร์โทรนี้ตรวจสอบสถานะการจองภายหลัง</p>
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 24px">
@@ -178,14 +200,14 @@ Khun Mhee</a>
 <p style="margin: 20px 0 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.6; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 18px; margin-top: 3px"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg><span>ถ้ากรอกอีเมล เราจะส่งอีเมลยืนยันเมื่ออนุมัติการจอง และอีเมลเตือน 1 วันก่อนเช็คอิน</span></p>
 <template data-sc="if" value="{{err.email}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; color: #9E4F63; font-size: 13px">รูปแบบอีเมลไม่ถูกต้อง</p></template>
 </section>
-<div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div class="actions" style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap">
 <button type="button" onClick="{{goStep1}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 11px 22px; font-size: 17px">‹ ย้อนกลับ</button>
 <button type="button" onClick="{{confirm}}" style="background: {{accent}}; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300">ถัดไป: ชำระเงิน</button>
 </div>
 </template>
 
 <template data-sc="if" value="{{isStep3}}" hint-placeholder-val="{{ false }}">
-<section aria-labelledby="h-pay" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<section aria-labelledby="h-pay" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-pay" style="margin: 0; font-size: 24px; font-weight: 600">เลือกวิธีชำระเงิน</h2>
 <p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">กรุณาชำระภายใน {{pay.hours}} ชั่วโมง เพื่อกันห้องไว้ให้คุณ · ยอดชำระ {{totalLabel}}</p>
 <div role="radiogroup" aria-label="วิธีชำระเงิน" class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
@@ -244,7 +266,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{slipErr}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; color: #9E4F63; font-size: 13px">{{slipErrText}}</p></template>
 </div>
 </section>
-<div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div class="actions" style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap">
 <button type="button" onClick="{{goStep2}}" style="background: transparent; color: {{accent}}; border: 1px solid {{accent}}; border-radius: 9999px; padding: 11px 22px; font-size: 17px">‹ ย้อนกลับ</button>
 <button type="button" onClick="{{submitPay}}" disabled="{{busy}}" style="background: {{accent}}; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300">{{submitLabel}}</button>
 </div>
@@ -252,7 +274,7 @@ Khun Mhee</a>
 </template>
 
 <template data-sc="if" value="{{isStep4}}" hint-placeholder-val="{{ false }}">
-<section aria-labelledby="h-wait" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+<section aria-labelledby="h-wait" class="card-hero" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
 <template data-sc="if" value="{{isCancelled}}" hint-placeholder-val="{{ false }}">
 <span style="width: 72px; height: 72px; border-radius: 9999px; background: #B5443F; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFF8F5" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></span>
 <span style="font-size: 13px; font-weight: 600; background: #B5443F; color: #FFF8F5; border-radius: 9999px; padding: 4px 12px">ยกเลิกการจอง</span>
@@ -280,7 +302,7 @@ Khun Mhee</a>
 </template>
 </section>
 
-<section aria-labelledby="h-track" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<section aria-labelledby="h-track" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-track" style="margin: 0 0 20px; font-size: 21px; font-weight: 600">สถานะการจอง</h2>
 <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
 <template data-sc="for" list="{{track}}" as="t" hint-placeholder-count="4">
@@ -307,7 +329,7 @@ Khun Mhee</a>
 </template>
 
 <template data-sc="if" value="{{isStep5}}" hint-placeholder-val="{{ false }}">
-<section aria-labelledby="h-done" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
+<section aria-labelledby="h-done" class="card-hero" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px">
 <span style="width: 72px; height: 72px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
 <span style="font-size: 13px; font-weight: 600; background: #4F7A52; color: #F6F3EE; border-radius: 9999px; padding: 4px 12px">อนุมัติการจองแล้ว</span>
 <h2 id="h-done" style="margin: 0; font-size: 34px; font-weight: 600">การจองของคุณได้รับการยืนยัน</h2>
@@ -317,7 +339,7 @@ Khun Mhee</a>
 </template>
 </section>
 
-<section aria-labelledby="h-receipt" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<section aria-labelledby="h-receipt" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
 <h2 id="h-receipt" style="margin: 0; font-size: 21px; font-weight: 600">ใบเสร็จรับเงิน</h2>
 <button type="button" onClick="{{downloadPdf}}" disabled="{{pdfBusy}}" style="display: flex; align-items: center; gap: 8px; background: {{accent}}; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 11px 20px; font-size: 15px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg>{{pdfLabel}}</button>
@@ -325,7 +347,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{pdfErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; font-size: 13px; color: #9A4E60">{{pdfErr}}</p></template>
 <template data-sc="if" value="{{noReceipt}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; font-size: 14px; color: #5E554C">กำลังโหลดใบเสร็จ…</p></template>
 <template data-sc="if" value="{{hasReceipt}}" hint-placeholder-val="{{ true }}">
-<div style="overflow-x: auto">
+<div class="rcpt-box" style="overflow-x: auto">
 <div id="receipt" style="width: 680px; max-width: none; margin: 0 auto; background: #FFFFFF; color: #2E2A25; border: 1px solid #E6DDCB; border-radius: 8px; padding: 40px 44px; box-sizing: border-box; text-align: left; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Noto Sans Thai', system-ui, sans-serif">
 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; border-bottom: 2px solid #47413A; padding-bottom: 20px">
 <div>
@@ -367,7 +389,7 @@ Khun Mhee</a>
 
 <!-- Summary -->
 <aside aria-label="สรุปการจอง" style="flex: 1 1 320px; min-width: 0; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
-<img src="{{sum.img}}" alt="{{sum.room}}" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block">
+<img class="sum-img" src="{{sum.img}}" alt="{{sum.room}}" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block">
 <div>
 <p style="margin: 0; font-size: 12px; color: #7A6E63">ห้องที่เลือก</p>
 <p style="margin: 2px 0 0; font-size: 21px; font-weight: 600">{{sum.room}}</p>
@@ -589,15 +611,16 @@ load('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.j
 load('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
 ]);
 libs.then(() => (document.fonts ? document.fonts.ready : null))
-.then(() => window.html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true }))
+.then(() => { el.style.zoom = '1'; return window.html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true }); })
 .then((canvas) => {
+el.style.zoom = '';
 const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 const pw = 210, margin = 12, w = pw - margin * 2, h = canvas.height * w / canvas.width;
 pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, w, h);
 pdf.save('receipt-' + code + '.pdf');
 this.setState({ pdfBusy: false });
 })
-.catch(() => { this.setState({ pdfBusy: false, pdfErr: 'สร้าง PDF ไม่สำเร็จ ระบบจะเปิดหน้าพิมพ์แทน ให้เลือก "บันทึกเป็น PDF"' }); setTimeout(() => window.print(), 300); });
+.catch(() => { el.style.zoom = ''; this.setState({ pdfBusy: false, pdfErr: 'สร้าง PDF ไม่สำเร็จ ระบบจะเปิดหน้าพิมพ์แทน ให้เลือก "บันทึกเป็น PDF"' }); setTimeout(() => window.print(), 300); });
 }
 renderVals() {
 const accent = this.props.accent ?? '#47413A';
