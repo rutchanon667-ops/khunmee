@@ -73,13 +73,10 @@ Khun Mhee</a>
 </div>
 </template>
 <template data-sc="if" value="{{holdExpired}}" hint-placeholder-val="{{ false }}">
-<div style="position: fixed; inset: 0; z-index: 90; background: rgba(58,53,47,.55); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box">
-<div role="alertdialog" aria-modal="true" aria-labelledby="km-exp-h" aria-describedby="km-exp-d" style="width: 100%; max-width: 360px; background: #FFFDF9; color: #47413A; border-radius: 18px; box-shadow: 0 20px 48px rgba(58,53,47,.35); padding: 28px 24px 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
-<span style="width: 56px; height: 56px; border-radius: 9999px; background: #F3D6DD; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7E3E50" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2h4"></path><path d="M12 14l3-3"></path><circle cx="12" cy="14" r="8"></circle></svg></span>
-<h2 id="km-exp-h" style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.4">หมดเวลาจองห้องพัก</h2>
-<p id="km-exp-d" style="margin: 0; font-size: 16px; line-height: 1.5; color: #5E554C">กรุณาทำรายการใหม่</p>
-<button type="button" id="km-exp-ok" onClick="{{restart}}" style="margin-top: 10px; min-width: 180px; min-height: 48px; background: #47413A; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 0 28px; font-size: 17px; font-weight: 600">ทำรายการใหม่</button>
-</div>
+<div role="alert" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: #F3D6DD; border: 1px solid #C88193; border-radius: 18px; padding: 16px 20px; color: #7E3E50">
+<span style="flex: 1 1 260px; font-size: 15px; line-height: 1.5"><strong>หมดเวลากันห้องแล้ว</strong> ตอนนี้ลูกค้าท่านอื่นจองวันนี้ได้ ถ้ายังว่างอยู่ กดขอเวลาเพิ่มได้ทันที</span>
+<button type="button" onClick="{{reHold}}" disabled="{{holdBusy}}" style="background: #47413A; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 10px 18px; font-size: 14px">{{reHoldLabel}}</button>
+<button type="button" onClick="{{goStep1}}" style="background: transparent; color: #7E3E50; border: 1px solid #C88193; border-radius: 9999px; padding: 9px 18px; font-size: 14px">เลือกวันใหม่</button>
 </div>
 </template>
 
@@ -260,7 +257,18 @@ Khun Mhee</a>
 <span style="width: 72px; height: 72px; border-radius: 9999px; background: #B5443F; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFF8F5" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></span>
 <span style="font-size: 13px; font-weight: 600; background: #B5443F; color: #FFF8F5; border-radius: 9999px; padding: 4px 12px">ยกเลิกการจอง</span>
 <h2 id="h-wait" style="margin: 0; font-size: 34px; font-weight: 600">การจองนี้ถูกยกเลิกแล้ว</h2>
-<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C; max-width: 540px">หากมีข้อสงสัยหรือต้องการคืนเงิน กรุณาติดต่อที่พัก พร้อมแจ้งหมายเลขการจอง <strong style="color: #47413A">{{code}}</strong></p>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C; max-width: 540px">หมายเลขการจอง <strong style="color: #47413A">{{code}}</strong> หากชำระเงินไปแล้ว แจ้งขอเงินคืนได้ด้านล่าง</p>
+<template data-sc="if" value="{{refundDone}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 4px 0 0; max-width: 540px; font-size: 15px; line-height: 1.6; background: #E7EFE4; color: #2F5A33; border-radius: 11px; padding: 12px 16px">{{refundDone}}</p></template>
+<template data-sc="if" value="{{refundAsk}}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{sendRefund}}" style="width: 100%; max-width: 540px; box-sizing: border-box; text-align: left; display: flex; flex-direction: column; gap: 10px; margin-top: 8px; background: #EDE6D7; border-radius: 14px; padding: 18px">
+<h3 style="margin: 0; font-size: 17px; font-weight: 600">แจ้งขอเงินคืน{{refundAmt}}</h3>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">บัญชีสำหรับรับเงินคืน *
+<textarea rows="3" onInput="{{setRefundAcc}}" maxlength="200" placeholder="ธนาคาร · ชื่อบัญชี · เลขที่บัญชี หรือเบอร์พร้อมเพย์" style="border: 1px solid #CFC3AC; border-radius: 11px; padding: 12px 14px; font-size: 16px; font-weight: 400; color: #47413A; background: #FFFDF9; resize: vertical; box-sizing: border-box">{{refundAcc}}</textarea>
+</label>
+<template data-sc="if" value="{{refundErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; font-size: 14px; color: #9A4E60">{{refundErr}}</p></template>
+<div style="display: flex; justify-content: flex-end"><button type="submit" disabled="{{refundBusy}}" style="background: #B5443F; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 12px 24px; font-size: 16px; font-weight: 600">{{refundLabel}}</button></div>
+</form>
+</template>
 </template>
 <template data-sc="if" value="{{isWaiting}}" hint-placeholder-val="{{ true }}">
 <span style="width: 72px; height: 72px; border-radius: 9999px; background: #E9C46A; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3A352F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></span>
@@ -327,17 +335,18 @@ Khun Mhee</a>
 <div style="text-align: right">
 <p style="margin: 0; font-size: 22px; font-weight: 700; color: #47413A">ใบเสร็จรับเงิน</p>
 <p style="margin: 2px 0 0; font-size: 12px; color: #7A6E63; letter-spacing: 1px">RECEIPT</p>
+<template data-sc="if" value="{{rc.prev}}" hint-placeholder-val="{{ false }}"><p style="margin: 6px 0 0; font-size: 12px; font-weight: 700; color: #5B4B8A">ฉบับแก้ไข · เลื่อนวันพัก</p></template>
 <p style="margin: 10px 0 0; font-size: 13px">เลขที่ <strong>{{rc.no}}</strong></p>
 <p style="margin: 2px 0 0; font-size: 13px">วันที่ {{rc.issued}}</p>
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; gap: 24px; padding: 18px 0; border-bottom: 1px solid #E6DDCB; font-size: 13px; line-height: 1.7">
 <div><p style="margin: 0; font-size: 11px; color: #7A6E63; letter-spacing: 0.5px">ได้รับเงินจาก</p><p style="margin: 2px 0 0; font-size: 15px; font-weight: 600">{{rc.guestName}}</p><p style="margin: 0">โทร {{rc.phone}}</p><p style="margin: 0">{{rc.email}}</p></div>
-<div style="text-align: right"><p style="margin: 0; font-size: 11px; color: #7A6E63; letter-spacing: 0.5px">รายละเอียดการเข้าพัก</p><p style="margin: 2px 0 0">เช็คอิน {{rc.ci}}</p><p style="margin: 0">เช็คเอาท์ {{rc.co}}</p><p style="margin: 0">ผู้เข้าพัก {{rc.guests}} · {{rc.pets}}</p></div>
+<div style="text-align: right"><p style="margin: 0; font-size: 11px; color: #7A6E63; letter-spacing: 0.5px">รายละเอียดการเข้าพัก</p><template data-sc="if" value="{{rc.prev}}" hint-placeholder-val="{{ false }}"><p style="margin: 2px 0 0; color: #7A6E63">วันพักเดิม <s>{{rc.prev}}</s></p><p style="margin: 0; font-weight: 700; color: #5B4B8A">วันพักใหม่ (เลื่อนแล้ว)</p></template><p style="margin: 2px 0 0">เช็คอิน {{rc.ci}}</p><p style="margin: 0">เช็คเอาท์ {{rc.co}}</p><p style="margin: 0">ผู้เข้าพัก {{rc.guests}} · {{rc.pets}}</p></div>
 </div>
 <table style="width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px">
 <thead><tr style="background: #EFE9DD"><th style="text-align: left; padding: 10px 12px; font-weight: 600">รายการ</th><th style="text-align: right; padding: 10px 12px; font-weight: 600">จำนวน</th><th style="text-align: right; padding: 10px 12px; font-weight: 600">ราคา/คืน</th><th style="text-align: right; padding: 10px 12px; font-weight: 600">จำนวนเงิน</th></tr></thead>
-<tbody><tr style="border-bottom: 1px solid #E6DDCB"><td style="padding: 12px">ค่าห้องพัก {{rc.roomName}}<br><span style="font-size: 12px; color: #7A6E63">{{rc.ci}} – {{rc.co}}</span></td><td style="text-align: right; padding: 12px">{{rc.nights}} คืน</td><td style="text-align: right; padding: 12px">{{rc.price}}</td><td style="text-align: right; padding: 12px">{{rc.total}}</td></tr></tbody>
+<tbody><tr style="border-bottom: 1px solid #E6DDCB"><td style="padding: 12px">ค่าห้องพัก {{rc.roomName}}<br><span style="font-size: 12px; color: #7A6E63">{{rc.ci}} – {{rc.co}}</span><template data-sc="if" value="{{rc.prev}}" hint-placeholder-val="{{ false }}"><br><span style="font-size: 12px; color: #5B4B8A">เลื่อนจากวันพักเดิม {{rc.prev}}</span></template></td><td style="text-align: right; padding: 12px">{{rc.nights}} คืน</td><td style="text-align: right; padding: 12px">{{rc.price}}</td><td style="text-align: right; padding: 12px">{{rc.total}}</td></tr></tbody>
 </table>
 <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-top: 18px">
 <div style="font-size: 13px; line-height: 1.7"><p style="margin: 0">ชำระโดย {{rc.payMethod}}</p><span style="display: inline-block; margin-top: 8px; border: 2px solid #4F7A52; color: #4F7A52; border-radius: 6px; padding: 4px 12px; font-size: 14px; font-weight: 700; letter-spacing: 1px">ชำระเงินแล้ว · PAID</span></div>
@@ -426,7 +435,8 @@ room: null, ci: null, co: null, viewY: 0, viewM: 0, tried: false,
 f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' },
 pay: 'bank', copied: false, slip: null, slipTried: false, slipErrText: '', slipReading: false,
 busy: false, submitErr: '', saved: null, bkStatus: 'pending', receipt: null, checking: false, statusMsg: '', lastCheck: '',
-holdId: null, holdUntil: 0, holdBusy: false, holdErr: '', now: Date.now(), pdfBusy: false, pdfErr: ''
+holdId: null, holdUntil: 0, holdBusy: false, holdErr: '', now: Date.now(), pdfBusy: false, pdfErr: '',
+refundStatus: '', refundAmount: 0, refundAcc: '', refundBusy: false, refundErr: '', refundSent: false
 };
 }
 componentDidMount() {
@@ -442,9 +452,6 @@ this.load();
 this.tick = setInterval(() => {
 const s = this.state;
 this.setState({ now: Date.now() });
-const expired = (s.step === 2 || s.step === 3) && s.holdUntil && Date.now() >= s.holdUntil;
-if (expired && !this.expFocused) { this.expFocused = true; setTimeout(() => { const b = document.getElementById('km-exp-ok'); if (b) b.focus(); }, 50); }
-if (!expired) this.expFocused = false;
 if (s.step === 4 && s.bkStatus === 'pending' && !document.hidden && Date.now() - (this.lastPoll || 0) > this.pollGap()) this.checkStatus(true);
 }, 1000);
 // กลับมาที่หน้านี้ (เช่น หลังกดอนุมัติในแอป LINE) ให้เช็คสถานะทันที แม้การเช็คครั้งก่อนยังค้างอยู่
@@ -534,7 +541,7 @@ this.saveLocal(saved);
 if (this.state.step !== 5) window.scrollTo(0, 0);
 return this.setState({ checking: false, step: 5, bkStatus: 'confirmed', saved, receipt: b.receipt || null, lastCheck, statusMsg: '' });
 }
-if (b.status === 'cancelled') return this.setState({ checking: false, step: 4, bkStatus: 'cancelled', lastCheck, statusMsg: '' });
+if (b.status === 'cancelled') return this.setState({ checking: false, step: 4, bkStatus: 'cancelled', lastCheck, statusMsg: '', refundStatus: b.refundStatus || '', refundAmount: Number(b.refundAmount) || 0 });
 this.setState({ checking: false, step: 4, bkStatus: 'pending', lastCheck, statusMsg: quiet ? '' : 'ยังรอแอดมินตรวจสอบสลิปอยู่ ระบบจะเปลี่ยนหน้าให้เองเมื่ออนุมัติ' });
 }).catch((e) => {
 if (req !== this.reqNo) return;
@@ -595,7 +602,7 @@ this.setState({ pdfBusy: false });
 renderVals() {
 const accent = this.props.accent ?? '#47413A';
 const s = this.state;
-const cfg = s.cfg || { today: '2000-01-01', payment: {}, maxNights: 60, holdMinutes: 6 };
+const cfg = s.cfg || { today: '2000-01-01', payment: {}, maxNights: 60, holdMinutes: 5 };
 const today = cfg.today;
 const f = s.f;
 const room = s.rooms.find((r) => r.roomNo === s.room) || null;
@@ -704,6 +711,11 @@ const R = s.receipt;
 const H = (R && R.hotel) || {};
 const st = s.bkStatus;
 const gap = this.pollGap();
+const rAmt = s.refundAmount || (sv && Number(sv.total)) || 0;
+const rSent = s.refundSent || !!(sv && sv.refundSent);
+const refundDone = s.refundStatus === 'refunded' ? 'ที่พักคืนเงินให้แล้ว' + (rAmt ? ' ฿' + money(rAmt) : '') + ' ขอบคุณค่ะ'
+: s.refundStatus === 'none' ? 'คำขอคืนเงินของการจองนี้ปิดแล้ว หากมีข้อสงสัยกรุณาติดต่อที่พัก'
+: s.refundStatus === 'requested' && rSent ? 'แจ้งขอเงินคืนแล้ว' + (rAmt ? ' ยอด ฿' + money(rAmt) : '') + ' ที่พักจะโอนคืนตามบัญชีที่แจ้ง และติดต่อกลับทางเบอร์โทรที่ใช้จอง' : '';
 
 return {
 accent, rooms, months, steps, guestOpts, loading: s.loading, loadErr: s.loadErr, reload: () => this.load(),
@@ -711,7 +723,7 @@ isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.
 dateHint: s.loading ? 'กำลังโหลดวันว่าง…' : !s.ci ? 'แตะวันที่เพื่อเลือกวันเช็คอิน (ช่องสีชมพู "เต็ม" คือมีคนจองแล้ว)' : !s.co ? 'เช็คอิน ' + kmDate.short(s.ci) + ' แตะวันเช็คเอาท์' : 'เข้าพัก ' + nights + ' คืน · ' + kmDate.short(s.ci) + ' ถึง ' + kmDate.short(s.co),
 clearDates: () => this.setState({ ci: null, co: null, holdErr: '' }),
 prevMonths: () => shift(-1), nextMonths: () => shift(1), noPrev, noNext, prevStyle: navBtn(noPrev), nextStyle: navBtn(noNext),
-holdMin: String(cfg.holdMinutes || 6), holdErr: s.holdErr,
+holdMin: String(cfg.holdMinutes || 5), holdErr: s.holdErr,
 next1Disabled: !ready1, next1Label: s.holdBusy ? 'กำลังกันห้อง…' : 'ถัดไป: ข้อมูลผู้เข้าพัก',
 next1Style: 'border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300; color: #F6F3EE; background: ' + (ready1 ? accent : '#CFC3AC') + ';',
 goStep2: () => {
@@ -719,8 +731,7 @@ if (s.step === 3) return this.setState({ step: 2, submitErr: '' });
 this.hold().then((ok) => { if (ok) { this.setState({ step: 2, submitErr: '' }); window.scrollTo(0, 0); } });
 },
 goStep1: () => { this.release(); this.setState({ step: 1, holdErr: '' }); this.refreshBooked(); },
-restart: () => { this.release(); this.setState({ step: 1, holdErr: '', submitErr: '', tried: false }); this.refreshBooked(); window.scrollTo(0, 0); },
-holdActive, holdExpired, holdBusy: s.holdBusy, reHoldLabel: s.holdBusy ? 'กำลังขอเวลา…' : 'ขอเวลาเพิ่ม ' + (cfg.holdMinutes || 6) + ' นาที',
+holdActive, holdExpired, holdBusy: s.holdBusy, reHoldLabel: s.holdBusy ? 'กำลังขอเวลา…' : 'ขอเวลาเพิ่ม ' + (cfg.holdMinutes || 5) + ' นาที',
 holdClock: Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'),
 holdBox: 'display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-radius: 18px; padding: 14px 20px; color: #47413A; background: ' + (left <= 60 ? '#F3D6DD' : '#EFE2B4') + '; border: 1px solid ' + (left <= 60 ? '#C88193' : '#D9B65C') + ';',
 reHold: () => this.hold().then((ok) => { if (!ok) this.setState({ step: 1 }); }),
@@ -785,6 +796,21 @@ code,
 emailNote: view && sv.email ? ' และเราจะส่งอีเมลยืนยันไปที่ ' + sv.email : '',
 hasEmail: !!(view && sv.email),
 isWaiting: st !== 'cancelled', isCancelled: st === 'cancelled',
+refundDone, refundAsk: st === 'cancelled' && !refundDone && !!sv,
+refundAmt: rAmt ? ' ฿' + money(rAmt) : '', refundAcc: s.refundAcc, refundErr: s.refundErr, refundBusy: s.refundBusy,
+refundLabel: s.refundBusy ? 'กำลังส่ง…' : 'แจ้งขอเงินคืน',
+setRefundAcc: (e) => this.setState({ refundAcc: e.target.value, refundErr: '' }),
+sendRefund: (e) => {
+if (e && e.preventDefault) e.preventDefault();
+if (s.refundBusy || !sv) return;
+const acc = String(s.refundAcc || '').trim();
+if (acc.length < 8) return this.setState({ refundErr: 'กรุณากรอกธนาคาร ชื่อบัญชี และเลขบัญชี (หรือเบอร์พร้อมเพย์)' });
+this.setState({ refundBusy: true, refundErr: '' });
+kmCall('publicRequestRefund', [sv.code, sv.phone, acc], { write: true })
+.then((r) => { const saved = Object.assign({}, this.state.saved, { refundSent: true }); this.saveLocal(saved);
+this.setState({ refundBusy: false, refundSent: true, saved, refundStatus: 'requested', refundAmount: (r && r.amount) || this.state.refundAmount }); })
+.catch((er) => this.setState({ refundBusy: false, refundErr: /ไม่รู้จักคำสั่ง/.test(er.message) ? 'ระบบยังไม่เปิดรับแจ้งคืนเงินออนไลน์ กรุณาติดต่อที่พัก' : er.message }));
+},
 liveDot: 'width: 8px; height: 8px; border-radius: 9999px; display: inline-block; background: ' + (s.checking ? '#E9C46A' : gap === Infinity ? '#CFC3AC' : '#4F7A52') + ';',
 autoLabel: s.checking ? 'กำลังตรวจสอบสถานะ…'
 : (gap === Infinity ? 'หยุดตรวจอัตโนมัติแล้ว กดปุ่ม "ตรวจสอบสถานะล่าสุด" เพื่อดูสถานะ'
@@ -808,11 +834,12 @@ hotelLines: [H.address, H.phone ? 'โทร ' + H.phone : '', H.taxId ? 'เล
 issued: R.issuedAt ? kmDate.short(R.issuedAt.slice(0, 10)) + (R.issuedAt.length > 10 ? ' ' + R.issuedAt.slice(11, 16) + ' น.' : '') : '-',
 guestName: R.guestName, phone: R.phone, email: R.email || '',
 ci: kmDate.short(R.checkIn), co: kmDate.short(R.checkOut), nights: String(R.nights), guests: R.guests + ' ท่าน', pets: R.pets || 'ไม่มีสัตว์เลี้ยง',
+prev: R.prevCheckIn ? kmDate.short(R.prevCheckIn) + ' – ' + kmDate.short(R.prevCheckOut) : '',
 roomName: R.roomName, price: R.pricePerNight ? '฿' + money(R.pricePerNight) : '—', total: R.totalPrice ? '฿' + money(R.totalPrice) : '—', payMethod: R.payMethod
 } : {},
 pdfBusy: s.pdfBusy || !R, pdfLabel: s.pdfBusy ? 'กำลังสร้าง PDF…' : 'ดาวน์โหลดใบเสร็จ (PDF)', pdfErr: s.pdfErr,
 downloadPdf: () => this.downloadPdf(),
-reset: () => { this.saveLocal(null); this.release(); this.setState({ step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '',
+reset: () => { this.saveLocal(null); this.release(); this.setState({ refundStatus: '', refundAmount: 0, refundAcc: '', refundErr: '', refundSent: false, step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '',
 f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' } }); this.refreshBooked(); window.scrollTo(0, 0); },
 sum: view ? {
 room: sv.roomName, img: kmRoomImage(sv.roomNo), ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',

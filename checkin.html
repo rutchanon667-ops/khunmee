@@ -39,6 +39,7 @@ Khun Mhee</a>
 <a href="index.html" style="color: #EDE6D7">ห้องพัก</a>
 <a href="booking.html" style="color: #EDE6D7">จองห้องพัก</a>
 <a href="checkin.html" aria-current="page" style="color: #FFFFFF; font-weight: 600">เช็คอิน</a>
+<a href="checkout.html" style="color: #EDE6D7">เช็คเอาท์</a>
 <a href="index.html#contact" style="color: #EDE6D7">ติดต่อเรา</a>
 </div>
 <a href="login.html" style="color: #EDE6D7">แอดมิน</a>
@@ -157,7 +158,7 @@ Khun Mhee</a>
 </section>
 </template>
 
-<!-- 4. เข้าพักอยู่: รหัสประตู + เช็คเอาท์ -->
+<!-- 4. เข้าพักอยู่: รหัสประตู + ลิงก์ไปหน้าเช็คเอาท์ -->
 <template data-sc="if" value="{{inStay}}" hint-placeholder-val="{{ false }}">
 <section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px">
 <template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0 0 4px; font-size: 15px; color: #DCC881; font-weight: 600">เช็คอินเรียบร้อย ยินดีต้อนรับค่ะ</p></template>
@@ -191,33 +192,12 @@ Khun Mhee</a>
 </div>
 </section>
 
-<section class="card" aria-labelledby="h-out" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
-<h2 id="h-out" style="margin: 0; font-size: 22px; font-weight: 600">เช็คเอาท์ด้วยตัวเอง</h2>
-<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5E554C">เก็บของให้ครบแล้วกดเช็คเอาท์ได้เลย ถ้าไม่ได้กด ระบบจะเช็คเอาท์ให้อัตโนมัติเวลา {{checkoutHour}}:00 น.</p>
-<fieldset style="border: 0; margin: 0; padding: 0">
-<legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 8px">ให้คะแนนการเข้าพัก (ไม่บังคับ)</legend>
-<div style="display: flex; gap: 6px; flex-wrap: wrap">
-<template data-sc="for" list="{{stars}}" as="st" hint-placeholder-count="5">
-<button type="button" onClick="{{st.pick}}" aria-pressed="{{st.pressed}}" aria-label="{{st.aria}}" style="{{st.style}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="{{st.fill}}" stroke="#7D6043" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"></path></svg></button>
-</template>
+<section class="card" aria-labelledby="h-out" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<div style="flex: 1 1 260px; min-width: 0">
+<h2 id="h-out" style="margin: 0; font-size: 22px; font-weight: 600">วันกลับ เช็คเอาท์ด้วยตัวเอง</h2>
+<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">เก็บของให้ครบแล้วเช็คเอาท์ได้ที่หน้าเช็คเอาท์ ถ้าไม่ได้กด ระบบจะเช็คเอาท์ให้อัตโนมัติเวลา {{checkoutHour}}:00 น.</p>
 </div>
-</fieldset>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ข้อเสนอแนะ (ไม่บังคับ)
-<textarea rows="3" onInput="{{setComment}}" maxlength="500" style="border: 1px solid #7A6E63; border-radius: 11px; padding: 12px 14px; font-size: 16px; font-weight: 400; color: #47413A; background: #FFFDF9; resize: vertical; box-sizing: border-box">{{out.comment}}</textarea>
-</label>
-<template data-sc="if" value="{{outErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; font-size: 14px; line-height: 1.5; color: #9A4E60">{{outErr}}</p></template>
-<template data-sc="if" value="{{outAsk}}" hint-placeholder-val="{{ true }}">
-<div style="display: flex; justify-content: flex-end">
-<button type="button" onClick="{{askOut}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">เช็คเอาท์</button>
-</div>
-</template>
-<template data-sc="if" value="{{outConfirm}}" hint-placeholder-val="{{ false }}">
-<div role="alert" style="background: #FBF3DC; border: 1px solid #DCC881; border-radius: 12px; padding: 14px 16px; font-size: 15px; line-height: 1.6">หลังเช็คเอาท์ รหัสประตูจะไม่แสดงในหน้านี้อีก ตรวจสอบว่านำของออกจากห้องครบแล้ว</div>
-<div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap">
-<button type="button" onClick="{{cancelOut}}" disabled="{{busy}}" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">ยังไม่เช็คเอาท์</button>
-<button type="button" onClick="{{doOut}}" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">{{outLabel}}</button>
-</div>
-</template>
+<a class="pill" href="{{outHref}}" style="flex: 0 0 auto; background: #7D6043; color: #FFFFFF; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600">ไปหน้าเช็คเอาท์ ›</a>
 </section>
 </template>
 
@@ -242,9 +222,9 @@ Khun Mhee</a>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script>
-/* หน้าเช็คอิน / เช็คเอาท์ด้วยตัวเอง
- * ค้นหาการจองด้วยรหัส + เบอร์โทร → ลงทะเบียน (สัญชาติ เลขบัตร รูปบัตร) → แสดงรหัสประตูทันที → เช็คเอาท์เอง
- * ใช้คำสั่งใน SelfCheckin.gs (publicCheckinInfo, publicSelfCheckin, publicSelfCheckout) */
+/* หน้าเช็คอินด้วยตัวเอง (เช็คเอาท์แยกไปที่ checkout.html)
+ * ค้นหาการจองด้วยรหัส + เบอร์โทร → ลงทะเบียน (สัญชาติ เลขบัตร รูปบัตร) → แสดงรหัสประตูทันที
+ * ใช้คำสั่งใน SelfCheckin.gs (publicCheckinInfo, publicSelfCheckin) */
 const KM_CI_SAVE = 'km_checkin';
 const kmCiCall = (action, args, write) => (typeof window.kmCall === 'function'
   ? window.kmCall(action, args, write ? { write: true } : undefined)
@@ -361,19 +341,6 @@ this.setState({ busy: false, formErr: msg });
 if (/ยังไม่|เลย|ยกเลิก|เรียบร้อย/.test(msg)) kmCiCall('publicCheckinInfo', [s.info.code, s.phone.trim()]).then((info) => this.setState({ info })).catch(() => {});
 });
 }
-checkout() {
-const s = this.state;
-if (s.busy || !s.info) return;
-this.setState({ busy: true, outErr: '' });
-kmCiCall('publicSelfCheckout', [s.info.code, s.phone.trim(), { rating: s.out.rating, comment: s.out.comment.trim() }], true)
-.then((r) => {
-this.remember(false);
-this.setState({ busy: false, info: r.info, out: { rating: 0, comment: '', confirm: false },
-done: { title: 'เช็คเอาท์เรียบร้อย', note: 'ขอบคุณที่มาพักกับ Khun Mhee นะคะ หวังว่าจะได้ต้อนรับคุณและน้อง ๆ อีกครั้ง' } });
-this.focus('h-done');
-})
-.catch((e) => this.setState({ busy: false, outErr: kmCiMsg(e), out: Object.assign({}, s.out, { confirm: false }) }));
-}
 renderVals() {
 const s = this.state, info = s.info, f = s.f;
 const range = (a, b) => kmDate.short(a) + ' – ' + kmDate.short(b);
@@ -455,18 +422,7 @@ copyCode: () => {
 const ok = () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2000); };
 if (navigator.clipboard && code) navigator.clipboard.writeText(code).then(ok, () => {});
 },
-out: s.out, outErr: s.outErr,
-stars: [1, 2, 3, 4, 5].map((n) => ({
-pick: () => this.setState({ out: Object.assign({}, this.state.out, { rating: this.state.out.rating === n ? 0 : n }) }),
-pressed: s.out.rating === n ? 'true' : 'false', aria: n + ' ดาว', fill: n <= s.out.rating ? '#DCC881' : 'none',
-style: 'width: 48px; height: 48px; border-radius: 12px; border: 1px solid ' + (n <= s.out.rating ? '#A1805D' : '#CFC3AC') + '; background: #FFFDF9; display: flex; align-items: center; justify-content: center; padding: 0;'
-})),
-setComment: (e) => this.setState({ out: Object.assign({}, this.state.out, { comment: e.target.value }) }),
-outAsk: !s.out.confirm, outConfirm: !!s.out.confirm,
-askOut: () => this.setState({ out: Object.assign({}, s.out, { confirm: true }), outErr: '' }),
-cancelOut: () => this.setState({ out: Object.assign({}, s.out, { confirm: false }) }),
-doOut: () => this.checkout(),
-outLabel: s.busy ? 'กำลังเช็คเอาท์…' : 'ยืนยันเช็คเอาท์'
+outHref: 'checkout.html?code=' + encodeURIComponent(info.code)
 });
 return out;
 }

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Khun Mhee – เช็คเอาท์ด้วยตัวเอง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed}
+button:active:not(:disabled),.pill:active{transform:scale(0.95)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,label.upl:focus-within{outline:2px solid #A1805D;outline-offset:2px}
+input,select,textarea{font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:833px){
+ .navlinks{display:none !important}
+ .fields2{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
+ .page-h{font-size:34px !important}
+ .lead{font-size:19px !important}
+ .door{font-size:44px !important;letter-spacing:6px !important}
+ .card{padding:24px 20px !important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="view">
+<div style="width: 100%; min-width: 0; background: #EDE6D7; min-height: 100vh">
+
+<header style="background: #3A352F; color: #F6F3EE; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box">
+<nav aria-label="เมนูหลัก" style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px">
+<a href="index.html" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DCC881" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
+Khun Mhee</a>
+<div class="navlinks" style="display: flex; gap: 32px">
+<a href="index.html" style="color: #EDE6D7">ห้องพัก</a>
+<a href="booking.html" style="color: #EDE6D7">จองห้องพัก</a>
+<a href="checkin.html" style="color: #EDE6D7">เช็คอิน</a>
+<a href="checkout.html" aria-current="page" style="color: #FFFFFF; font-weight: 600">เช็คเอาท์</a>
+<a href="index.html#contact" style="color: #EDE6D7">ติดต่อเรา</a>
+</div>
+<a href="login.html" style="color: #EDE6D7">แอดมิน</a>
+</nav>
+</header>
+
+
+<main style="max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<div>
+<a href="index.html" style="font-size: 14px; color: #47413A">‹ กลับหน้าแรก</a>
+<h1 class="page-h" style="margin: 12px 0 0; font-size: 48px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px">เช็คเอาท์ด้วยตัวเอง</h1>
+</div>
+
+<template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
+<div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #F4ECE2; border: 2px solid #7D6043; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
+<span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #7D6043; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
+<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #5A4330">เช็คเอาท์ได้ถึง {{checkoutHour}}:00 น. ของวันเช็คเอาท์ ถ้าไม่ได้กด ระบบจะเช็คเอาท์ให้อัตโนมัติและบันทึกข้อมูลไว้</p>
+</div>
+</template>
+
+<!-- 1. ค้นหาการจอง -->
+<template data-sc="if" value="{{showFind}}" hint-placeholder-val="{{ true }}">
+<section class="card" aria-labelledby="h-find" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-find" style="margin: 0; font-size: 24px; font-weight: 600">ค้นหาการจองของคุณ</h2>
+<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">ใช้รหัสการจองและเบอร์โทรเดียวกับตอนเช็คอิน</p>
+<form onSubmit="{{find}}" style="margin-top: 24px">
+<div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">รหัสการจอง *
+<input id="co-code" type="text" value="{{code}}" onInput="{{setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="เช่น KM261103ABCD" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ที่ใช้ตอนจอง *
+<input type="tel" value="{{phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
+</label>
+</div>
+<template data-sc="if" value="{{findErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{findErr}}</p></template>
+<div style="display: flex; justify-content: flex-end; margin-top: 24px">
+<button type="submit" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 32px; font-size: 18px; font-weight: 600">{{findLabel}}</button>
+</div>
+</form>
+</section>
+</template>
+
+<!-- 2. การจองที่พบ -->
+<template data-sc="if" value="{{hasInfo}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="h-bk" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<div style="flex: 1 1 280px; min-width: 0">
+<p style="margin: 0; font-size: 13px; color: #7A6E63">การจอง {{bk.code}}</p>
+<h2 id="h-bk" style="margin: 2px 0 0; font-size: 22px; font-weight: 600">{{bk.room}}</h2>
+<p style="margin: 4px 0 0; font-size: 16px">{{bk.dates}}</p>
+</div>
+<span style="{{bk.chipStyle}}">{{bk.chip}}</span>
+<button type="button" onClick="{{again}}" style="background: transparent; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 9px 18px; font-size: 14px">ค้นหาการจองอื่น</button>
+</section>
+</template>
+
+<!-- ยังเช็คเอาท์ไม่ได้ -->
+<template data-sc="if" value="{{blockedMsg}}" hint-placeholder-val="{{ false }}">
+<section class="card" style="background: #F6F3EE; border-radius: 18px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<p role="status" style="margin: 0; font-size: 17px; line-height: 1.6; color: #47413A">{{blockedMsg}}</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<template data-sc="if" value="{{checkinHref}}" hint-placeholder-val="{{ false }}"><a class="pill" href="{{checkinHref}}" style="background: #4F7A52; color: #FFFFFF; border-radius: 9999px; padding: 11px 22px; font-size: 16px; font-weight: 600">ไปหน้าเช็คอิน</a></template>
+<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">ติดต่อที่พัก</a>
+</div>
+</section>
+</template>
+
+<!-- 3. ฟอร์มเช็คเอาท์ -->
+<template data-sc="if" value="{{canOut}}" hint-placeholder-val="{{ false }}">
+<section class="card" aria-labelledby="h-out" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<h2 id="h-out" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">เช็คเอาท์ห้อง{{roomShort}}</h2>
+<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 14px 16px">
+<p style="margin: 0; font-size: 13px; color: #5E554C">กำหนดเช็คเอาท์</p>
+<p style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{dueLabel}}</p>
+<p style="margin: 2px 0 0; font-size: 14px; color: #5E554C">{{contact}}</p>
+</div>
+<ul style="margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.8; color: #47413A">
+<li>เก็บของใช้ส่วนตัวและของน้อง ๆ ให้ครบ</li>
+<li>ปิดแอร์ ไฟ และน้ำ ก่อนออกจากห้อง</li>
+<li>ปิดประตูห้องให้สนิท</li>
+</ul>
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 8px">ให้คะแนนการเข้าพัก (ไม่บังคับ)</legend>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<template data-sc="for" list="{{stars}}" as="st" hint-placeholder-count="5">
+<button type="button" onClick="{{st.pick}}" aria-pressed="{{st.pressed}}" aria-label="{{st.aria}}" style="{{st.style}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="{{st.fill}}" stroke="#7D6043" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"></path></svg></button>
+</template>
+</div>
+</fieldset>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ข้อเสนอแนะ (ไม่บังคับ)
+<textarea rows="3" onInput="{{setComment}}" maxlength="500" style="border: 1px solid #7A6E63; border-radius: 11px; padding: 12px 14px; font-size: 16px; font-weight: 400; color: #47413A; background: #FFFDF9; resize: vertical; box-sizing: border-box">{{out.comment}}</textarea>
+</label>
+<template data-sc="if" value="{{outErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; font-size: 14px; line-height: 1.5; color: #9A4E60">{{outErr}}</p></template>
+<template data-sc="if" value="{{outAsk}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; justify-content: flex-end">
+<button type="button" onClick="{{askOut}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">เช็คเอาท์</button>
+</div>
+</template>
+<template data-sc="if" value="{{outConfirm}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="background: #FBF3DC; border: 1px solid #DCC881; border-radius: 12px; padding: 14px 16px; font-size: 15px; line-height: 1.6">หลังเช็คเอาท์ รหัสประตูจะใช้ไม่ได้และไม่แสดงในหน้าเช็คอินอีก ตรวจสอบว่านำของออกจากห้องครบแล้ว</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<button type="button" onClick="{{cancelOut}}" disabled="{{busy}}" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">ยังไม่เช็คเอาท์</button>
+<button type="button" onClick="{{doOut}}" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">{{outLabel}}</button>
+</div>
+</template>
+</section>
+</template>
+
+<!-- 4. เช็คเอาท์แล้ว -->
+<template data-sc="if" value="{{done}}" hint-placeholder-val="{{ false }}">
+<section class="card" aria-labelledby="h-done" style="background: #F6F3EE; border-radius: 18px; padding: 40px 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+<span style="width: 72px; height: 72px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg></span>
+<h2 id="h-done" tabindex="-1" style="margin: 0; font-size: 30px; font-weight: 600">{{done.title}}</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5E554C; max-width: 520px">{{done.note}}</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px">
+<a class="pill" href="booking.html" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 16px">จองห้องพักอีกครั้ง</a>
+<a class="pill" href="index.html" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">กลับหน้าแรก</a>
+</div>
+</section>
+</template>
+
+</main>
+</div>
+</template>
+<script src="js/morphdom.min.js"></script>
+<script src="js/runtime.js"></script>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+/* หน้าเช็คเอาท์ด้วยตัวเอง (แยกจากหน้าเช็คอิน)
+ * ค้นหาการจองด้วยรหัส + เบอร์โทร → ให้คะแนน/ข้อเสนอแนะ → ยืนยันเช็คเอาท์
+ * ใช้คำสั่ง publicCheckinInfo และ publicSelfCheckout (SelfCheckin.gs) · บันทึกลงแท็บ CheckoutLog (Extras.gs) */
+const KM_CI_SAVE = 'km_checkin';
+const kmCoCall = (action, args, write) => (typeof window.kmCall === 'function'
+  ? window.kmCall(action, args, write ? { write: true } : undefined)
+  : window.kmApi.apply(null, [action].concat(args)));
+const kmCoMsg = (e) => {
+  const m = String((e && e.message) || e).replace(/^BUSY:\s*/, '');
+  return /ไม่รู้จักคำสั่ง/.test(m) ? 'ระบบเช็คเอาท์ด้วยตัวเองยังไม่เปิดใช้งาน กรุณาติดต่อที่พัก' : m;
+};
+
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+let sv = null, bk = null;
+try { sv = JSON.parse(localStorage.getItem(KM_CI_SAVE) || 'null'); } catch (e) {}
+try { bk = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch (e) {}
+const q = new URLSearchParams(window.__kmQuery || location.search);
+const qCode = (q.get('code') || '').toUpperCase();
+const pickSaved = (o) => o && (!qCode || String(o.code).toUpperCase() === qCode) ? o : null;
+const base = pickSaved(sv) || pickSaved(bk) || {};
+this.state = {
+code: qCode || String(base.code || '').toUpperCase(), phone: base.phone || '',
+busy: false, findErr: '', info: null,
+out: { rating: 0, comment: '', confirm: false }, outErr: '', done: null
+};
+}
+componentDidMount() {
+if (this.state.code && this.state.phone) this.find(true);
+else { const i = document.getElementById('co-code'); if (i) i.focus({ preventScroll: true }); }
+}
+focus(id) { setTimeout(() => { const el = document.getElementById(id); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.focus({ preventScroll: true }); } }, 0); }
+remember(on) {
+try {
+if (on) localStorage.setItem(KM_CI_SAVE, JSON.stringify({ code: this.state.code, phone: this.state.phone.trim() }));
+else localStorage.removeItem(KM_CI_SAVE);
+} catch (e) {}
+}
+find(auto) {
+const s = this.state;
+if (s.busy) return;
+const code = String(s.code || '').trim().toUpperCase(), phone = String(s.phone || '').trim();
+if (!code || !phone) return this.setState({ findErr: 'กรุณากรอกทั้งรหัสการจองและเบอร์โทรศัพท์' });
+this.setState({ busy: true, findErr: '', code });
+kmCoCall('publicCheckinInfo', [code, phone])
+.then((info) => { this.setState({ busy: false, info, done: null, outErr: '' }); if (info.step === 'in') { this.remember(true); this.focus('h-out'); } })
+.catch((e) => { if (auto) this.remember(false); this.setState({ busy: false, findErr: kmCoMsg(e) }); });
+}
+checkout() {
+const s = this.state;
+if (s.busy || !s.info) return;
+this.setState({ busy: true, outErr: '' });
+kmCoCall('publicSelfCheckout', [s.info.code, s.phone.trim(), { rating: s.out.rating, comment: s.out.comment.trim() }], true)
+.then((r) => {
+this.remember(false);
+this.setState({ busy: false, info: r.info, out: { rating: 0, comment: '', confirm: false },
+done: { title: 'เช็คเอาท์เรียบร้อย', note: 'ขอบคุณที่มาพักกับ Khun Mhee นะคะ หวังว่าจะได้ต้อนรับคุณและน้อง ๆ อีกครั้ง' } });
+this.focus('h-done');
+})
+.catch((e) => this.setState({ busy: false, outErr: kmCoMsg(e), out: Object.assign({}, s.out, { confirm: false }) }));
+}
+renderVals() {
+const s = this.state, info = s.info;
+const range = (a, b) => kmDate.short(a) + ' – ' + kmDate.short(b);
+const step = info ? info.step : '';
+const out = {
+checkoutHour: String(info ? info.checkoutHour : 12),
+showLead: !info || step === 'in',
+code: s.code, phone: s.phone, busy: s.busy, findErr: s.findErr,
+findLabel: s.busy && !info ? 'กำลังค้นหา…' : 'ค้นหาการจอง',
+setCode: (e) => this.setState({ code: e.target.value, findErr: '' }),
+setPhone: (e) => this.setState({ phone: e.target.value, findErr: '' }),
+find: (e) => { if (e && e.preventDefault) e.preventDefault(); this.find(false); },
+showFind: !info, hasInfo: !!info && !s.done,
+again: () => { this.remember(false); this.setState({ info: null, done: null, outErr: '' }); setTimeout(() => { const i = document.getElementById('co-code'); if (i) i.focus(); }, 0); },
+blockedMsg: '', checkinHref: '', canOut: false, done: s.done
+};
+if (!info || s.done) return out;
+
+const chip = { open: ['ยังไม่ได้เช็คอิน', '#FBF3DC', '#6B5420'], early: ['ยังไม่ถึงวันเข้าพัก', '#FBF3DC', '#6B5420'], wait: ['รอยืนยันการชำระเงิน', '#FBF3DC', '#6B5420'],
+in: ['เข้าพักอยู่', '#E7EFE4', '#2F5A33'], done: ['เช็คเอาท์แล้ว', '#E6DDCB', '#47413A'], missed: ['เลยวันเข้าพัก', '#F3D6DD', '#7E3E50'], cancelled: ['ยกเลิกแล้ว', '#F3D6DD', '#7E3E50'] }[step] || ['-', '#EDE6D7', '#47413A'];
+out.bk = { code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + info.nights + ' คืน)',
+chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
+
+if (step === 'done') {
+const at = String(info.checkedOutAt || '');
+out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว',
+note: 'การจองนี้เช็คเอาท์แล้ว' + (at.length >= 16 ? ' เมื่อ ' + kmDate.short(at.slice(0, 10)) + ' ' + at.slice(11, 16) + ' น.' : '') + ' ขอบคุณที่มาพักกับ Khun Mhee นะคะ' };
+out.hasInfo = false;
+return out;
+}
+if (step !== 'in') {
+const notIn = step === 'open' || step === 'early' || step === 'wait';
+out.blockedMsg = notIn ? 'การจองนี้ยังไม่ได้เช็คอิน จึงยังเช็คเอาท์ไม่ได้' + (info.reason ? ' · ' + info.reason : '') : info.reason;
+out.checkinHref = notIn ? 'checkin.html?code=' + encodeURIComponent(info.code) : '';
+return out;
+}
+Object.assign(out, {
+canOut: true, roomShort: String(info.roomName || '').replace(/^ห้อง/, ''),
+dueLabel: kmDate.short(info.checkOut) + ' ก่อน ' + info.checkoutHour + ':00 น.',
+contact: 'ติดต่อ' + info.contact,
+out: s.out, outErr: s.outErr,
+stars: [1, 2, 3, 4, 5].map((n) => ({
+pick: () => this.setState({ out: Object.assign({}, this.state.out, { rating: this.state.out.rating === n ? 0 : n }) }),
+pressed: s.out.rating === n ? 'true' : 'false', aria: n + ' ดาว', fill: n <= s.out.rating ? '#DCC881' : 'none',
+style: 'width: 48px; height: 48px; border-radius: 12px; border: 1px solid ' + (n <= s.out.rating ? '#A1805D' : '#CFC3AC') + '; background: #FFFDF9; display: flex; align-items: center; justify-content: center; padding: 0;'
+})),
+setComment: (e) => this.setState({ out: Object.assign({}, this.state.out, { comment: e.target.value }) }),
+outAsk: !s.out.confirm, outConfirm: !!s.out.confirm,
+askOut: () => this.setState({ out: Object.assign({}, s.out, { confirm: true }), outErr: '' }),
+cancelOut: () => this.setState({ out: Object.assign({}, s.out, { confirm: false }) }),
+doOut: () => this.checkout(),
+outLabel: s.busy ? 'กำลังเช็คเอาท์…' : 'ยืนยันเช็คเอาท์'
+});
+return out;
+}
+}
+DC.mount(Component, {});
+</script>
+</body>
+</html>
