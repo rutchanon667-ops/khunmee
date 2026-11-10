@@ -55,7 +55,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
 <div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
-<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร แล้วรับรหัสประตูได้ทันที ตั้งแต่ {{checkinHour}}:00 น. ของวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
+<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร ถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันที ตั้งแต่ {{checkinHour}}:00 น. ของวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
 </div>
 </template>
 
@@ -63,7 +63,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{showFind}}" hint-placeholder-val="{{ true }}">
 <section class="card" aria-labelledby="h-find" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-find" style="margin: 0; font-size: 24px; font-weight: 600">เช็คอินด้วยรหัสการจอง</h2>
-<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รหัสการจองอยู่ในหน้ายืนยันการจองและอีเมลยืนยัน เช่น KM261103ABCD กดปุ่มแล้วระบบเช็คอินและแสดงรหัสประตูให้ทันที</p>
+<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รหัสการจองอยู่ในหน้ายืนยันการจองและอีเมลยืนยัน เช่น KM261103ABCD กดปุ่มแล้วเช็คอินได้เลย รหัสประตูรับทาง LINE</p>
 <form onSubmit="{{find}}" style="margin-top: 24px">
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
 <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">รหัสการจอง *
@@ -110,21 +110,70 @@ Khun Mhee</a>
 <section class="card" aria-labelledby="h-form" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
 <div style="flex: 1 1 260px; min-width: 0">
 <h2 id="h-form" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">พร้อมเช็คอินแล้ว{{firstName}}</h2>
-<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">กดปุ่มเพื่อเช็คอินและรับรหัสประตูห้องได้ทันที</p>
+<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">กดปุ่มเพื่อเช็คอิน แล้วรับรหัสประตูทาง LINE</p>
 </div>
 <button type="button" onClick="{{submit}}" disabled="{{busy}}" style="flex: 0 0 auto; background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 15px 30px; font-size: 18px; font-weight: 600">{{submitLabel}}</button>
 <template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
 </section>
 </template>
 
-<!-- 4. เข้าพักอยู่: รหัสประตู + ลิงก์ไปหน้าเช็คเอาท์ -->
+<!-- 3b. ลงทะเบียนผู้เข้าพัก (ต้องยืนยันบัตรก่อนรับรหัสประตู · SC_REQUIRE_ID) -->
+<template data-sc="if" value="{{idForm}}" hint-placeholder-val="{{ false }}">
+<section class="card" aria-labelledby="h-form" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div>
+<h2 id="h-form" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">พร้อมเช็คอินแล้ว{{firstName}}</h2>
+<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ที่พักต้องลงทะเบียนผู้เข้าพักตามกฎหมาย กรอกเลขบัตรและถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันที</p>
+</div>
+<div role="radiogroup" aria-label="ประเภทบัตร" class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<button type="button" role="radio" aria-checked="{{idf.thai}}" onClick="{{pickThai}}" style="{{idf.thaiStyle}}"><span style="font-size: 17px; font-weight: 600; color: #47413A">คนไทย</span><span style="font-size: 13px; color: #5E554C">บัตรประชาชน 13 หลัก</span></button>
+<button type="button" role="radio" aria-checked="{{idf.foreign}}" onClick="{{pickForeign}}" style="{{idf.foreignStyle}}"><span style="font-size: 17px; font-weight: 600; color: #47413A">ชาวต่างชาติ</span><span style="font-size: 13px; color: #5E554C">พาสปอร์ต · Passport</span></button>
+</div>
+<div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+<template data-sc="if" value="{{idf.foreign}}" hint-placeholder-val="{{ false }}">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">สัญชาติ · Nationality *
+<input type="text" value="{{idf.nationality}}" onInput="{{setNationality}}" autocomplete="country-name" placeholder="เช่น Japanese" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
+</label>
+</template>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">{{idf.noLabel}} *
+<input id="ci-idno" type="text" value="{{idf.idNumber}}" onInput="{{setIdNo}}" inputmode="{{idf.inputMode}}" autocomplete="off" spellcheck="false" placeholder="{{idf.noHint}}" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; box-sizing: border-box">
+</label>
+</div>
+<label style="{{idf.photoBox}}">
+<input type="file" accept="image/*" onChange="{{setPhoto}}" style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+<span style="font-size: 15px; font-weight: 600">{{idf.photoLabel}}</span>
+<span style="font-size: 13px; color: #5E554C">{{idf.photoSub}}</span>
+</label>
+<button type="button" role="checkbox" aria-checked="{{idf.accept}}" onClick="{{toggleAccept}}" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; background: transparent; border: 0; padding: 0; color: #47413A; font-size: 14px; line-height: 1.6"><span style="{{idf.boxStyle}}" aria-hidden="true">{{idf.tick}}</span><span>ยินยอมให้ Khun Mhee เก็บเลขบัตรและรูปบัตรเพื่อลงทะเบียนผู้เข้าพักตามกฎหมาย รูปบัตรจะถูกลบอัตโนมัติ {{idf.keepDays}} วันหลังเช็คเอาท์</span></button>
+<template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
+<div style="display: flex; justify-content: flex-end">
+<button type="button" onClick="{{submitId}}" disabled="{{idf.busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 15px 30px; font-size: 18px; font-weight: 600">{{idf.submitLabel}}</button>
+</div>
+</section>
+</template>
+
+<!-- รับรหัสประตูทาง LINE (LineGuest.gs) -->
+<template data-sc="if" value="{{lineTop}}" hint-placeholder-val="{{ false }}">
+<section class="card" aria-labelledby="h-line" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
+<div style="flex: 1 1 240px; min-width: 0">
+<h2 id="h-line" style="margin: 0; font-size: 21px; font-weight: 600">{{line.title}}</h2>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">{{line.note}}</p>
+</div>
+<button type="button" onClick="{{line.go}}" disabled="{{line.busy}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 24px; font-size: 17px; font-weight: 600">{{line.label}}</button>
+<template data-sc="if" value="{{line.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{line.err}}</p></template>
+</section>
+</template>
+
+<!-- 4. เข้าพักอยู่: รหัสประตูรับทาง LINE เท่านั้น (ไม่แสดงบนหน้าเว็บ) -->
 <template data-sc="if" value="{{inStay}}" hint-placeholder-val="{{ false }}">
-<section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px">
-<template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0 0 4px; font-size: 15px; color: #DCC881; font-weight: 600">เช็คอินเรียบร้อย ยินดีต้อนรับค่ะ</p></template>
-<h2 id="h-door" tabindex="-1" style="margin: 0; font-size: 18px; font-weight: 400; color: #EDE6D7">รหัสประตู {{stay.room}}</h2>
-<p class="door" aria-label="รหัสประตู {{stay.codeSpaced}}" style="margin: 4px 0 0; font-size: 60px; font-weight: 700; letter-spacing: 10px; font-variant-numeric: tabular-nums; color: #FFFFFF">{{stay.doorCode}}</p>
-<button type="button" onClick="{{copyCode}}" style="margin-top: 8px; background: transparent; color: #F6F3EE; border: 1px solid #A39A8F; border-radius: 9999px; padding: 9px 20px; font-size: 14px; min-height: 44px">{{copyLabel}}</button>
-<p style="margin: 10px 0 0; font-size: 14px; line-height: 1.6; color: #D9D1C5; max-width: 440px">กรุณาอย่าส่งต่อรหัสนี้ให้ผู้อื่น เปิดหน้านี้ดูรหัสได้ตลอดการเข้าพักด้วยรหัสการจองและเบอร์โทร</p>
+<section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
+<template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; color: #DCC881; font-weight: 600">เช็คอินเรียบร้อย ยินดีต้อนรับค่ะ</p></template>
+<span style="width: 64px; height: 64px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
+<h2 id="h-door" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 600; line-height: 1.3; color: #FFFFFF">รับรหัสประตูทาง LINE</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #D9D1C5; max-width: 460px">{{door.note}}</p>
+<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{line.go}}" disabled="{{line.busy}}" style="margin-top: 6px; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 600">{{line.label}}</button></template>
+<template data-sc="if" value="{{line.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 4px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{line.err}}</p></template>
 </section>
 
 <section class="card" aria-labelledby="h-stay" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
@@ -151,14 +200,8 @@ Khun Mhee</a>
 </div>
 </section>
 
-<section class="card" aria-labelledby="h-out" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
-<div style="flex: 1 1 260px; min-width: 0">
-<h2 id="h-out" style="margin: 0; font-size: 22px; font-weight: 600">วันกลับ เช็คเอาท์ด้วยตัวเอง</h2>
-<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">เก็บของให้ครบแล้วเช็คเอาท์ได้ที่หน้าเช็คเอาท์ ถ้าไม่ได้กด ระบบจะเช็คเอาท์ให้อัตโนมัติเวลา {{checkoutHour}}:00 น.</p>
-</div>
-<a class="pill" href="{{outHref}}" style="flex: 0 0 auto; background: #7D6043; color: #FFFFFF; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600">ไปหน้าเช็คเอาท์ ›</a>
-</section>
 </template>
+
 
 <!-- 5. เช็คเอาท์แล้ว -->
 <template data-sc="if" value="{{done}}" hint-placeholder-val="{{ false }}">
@@ -207,7 +250,9 @@ this.state = {
 code: qCode || String(base.code || '').toUpperCase(), phone: q.get('phone') || base.phone || '',
 busy: false, findErr: '', info: null, justIn: false, copied: false,
 formErr: '',
-done: null
+done: null,
+idf: { foreign: false, nationality: '', idNumber: '', photo: null, accept: false }, idTried: false, photoBusy: false,
+lineBusy: false, lineErr: '', lineSent: false
 };
 }
 componentDidMount() {
@@ -236,7 +281,7 @@ if (!code || !phone) return this.setState({ findErr: 'กรุณากรอ�
 this.setState({ busy: true, findErr: '', code });
 kmCiCall('publicCheckinInfo', [code, phone])
 .then((info) => {
-if (info.step === 'open' && !auto) return this.quickIn(code, phone);
+if (info.step === 'open' && !auto && !info.requireId) return this.quickIn(code, phone);
 this.setInfo(info, { justIn: false, done: null });
 })
 .catch((e) => { if (auto) this.remember(false); this.setState({ busy: false, findErr: kmCiMsg(e) }); });
@@ -253,6 +298,89 @@ else this.setState({ busy: false, findErr: msg });
 kmCiCall('publicCheckinInfo', [code, phone]).then((info) => this.setState({ info })).catch(() => {});
 });
 }
+setIdf(patch) { this.setState({ idf: Object.assign({}, this.state.idf, patch), formErr: '' }); }
+/* ย่อรูปบัตรให้ไม่เกิน 1600px (JPG) ก่อนส่ง · HEIC ที่เบราว์เซอร์เปิดไม่ได้ส่งไฟล์เดิม */
+readPhoto(file) {
+const MAX = 5 * 1024 * 1024;
+const fail = (m) => this.setState({ photoBusy: false, formErr: m, idf: Object.assign({}, this.state.idf, { photo: null }) });
+const done = (mimeType, dataUrl) => this.setState({ photoBusy: false, formErr: '',
+idf: Object.assign({}, this.state.idf, { photo: { name: file.name, mimeType, base64: dataUrl.replace(/^data:[^,]*,/, '') } }) });
+if (!/^image\//.test(file.type)) return fail('กรุณาเลือกไฟล์รูปภาพของบัตร (JPG หรือ PNG)');
+this.setState({ photoBusy: true, formErr: '' });
+const asIs = () => {
+if (!/^image\/(jpeg|png|webp|heic|heif)$/.test(file.type)) return fail('รูปบัตรต้องเป็นไฟล์ JPG หรือ PNG');
+if (file.size > MAX) return fail('รูปบัตรต้องไม่เกิน 5 MB');
+const rd = new FileReader();
+rd.onload = () => done(file.type, rd.result);
+rd.onerror = () => fail('อ่านไฟล์ไม่สำเร็จ ลองถ่ายรูปใหม่');
+rd.readAsDataURL(file);
+};
+const url = URL.createObjectURL(file);
+const img = new Image();
+img.onload = () => {
+const scale = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+const c = document.createElement('canvas');
+c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+URL.revokeObjectURL(url);
+done('image/jpeg', c.toDataURL('image/jpeg', 0.85));
+};
+img.onerror = () => { URL.revokeObjectURL(url); asIs(); };
+img.src = url;
+}
+/* เช็คอินพร้อมยืนยันบัตร (คำสั่ง publicSelfCheckin ใน SelfCheckin.gs) */
+submitId() {
+const s = this.state, d = s.idf, info = s.info;
+if (s.busy || s.photoBusy || !info) return;
+const idNo = String(d.idNumber || '').replace(/[\s-]/g, '');
+let err = '';
+if (d.foreign && String(d.nationality || '').trim().length < 2) err = 'กรุณากรอกสัญชาติ';
+else if (!d.foreign && !/^\d{13}$/.test(idNo)) err = 'กรุณากรอกเลขบัตรประชาชน 13 หลัก';
+else if (d.foreign && !/^[A-Za-z0-9]{6,20}$/.test(idNo)) err = 'กรุณากรอกเลขพาสปอร์ตให้ถูกต้อง';
+else if (!d.photo) err = 'กรุณาถ่ายรูปหรือแนบรูปบัตร';
+else if (!d.accept) err = 'กรุณากดยินยอมการเก็บข้อมูลเพื่อลงทะเบียนเข้าพัก';
+if (err) return this.setState({ formErr: err, idTried: true });
+this.setState({ busy: true, formErr: '' });
+kmCiCall('publicSelfCheckin', [info.code, String(s.phone || '').trim(), {
+foreign: !!d.foreign, nationality: String(d.nationality || '').trim(), idNumber: idNo, accept: true,
+idPhoto: { name: d.photo.name, mimeType: d.photo.mimeType, base64: d.photo.base64 }
+}], true)
+.then((res) => {
+this.setInfo(res, { justIn: res.step === 'in', done: null, idTried: false,
+idf: { foreign: false, nationality: '', idNumber: '', photo: null, accept: false } });
+window.scrollTo(0, 0);
+})
+.catch((e) => {
+this.setState({ busy: false, formErr: kmCiMsg(e) });
+kmCiCall('publicCheckinInfo', [info.code, String(s.phone || '').trim()]).then((i) => { if (i.step !== 'open') this.setState({ info: i }); }).catch(() => {});
+});
+}
+/* เชื่อมการจองกับ LINE OA: ขอลิงก์จากระบบ แล้วเปิดแอป LINE พร้อมข้อความ "เชื่อมการจอง XXXXXX" (LineGuest.gs) */
+linkLine() {
+const s = this.state;
+if (s.lineBusy || !s.info) return;
+this.setState({ lineBusy: true, lineErr: '' });
+kmCiCall('publicLineLink', [s.info.code, String(s.phone || '').trim()])
+.then((r) => { this.setState({ lineBusy: false, lineSent: true }); window.location.href = r.url; })
+.catch((e) => this.setState({ lineBusy: false, lineErr: /ไม่รู้จักคำสั่ง/.test(String(e && e.message)) ? 'ระบบ LINE ยังไม่เปิดใช้งาน กรุณาติดต่อที่พัก' : kmCiMsg(e) }));
+}
+lineVals(info, step) {
+const s = this.state, L = info.line || {};
+const show = !!L.ready && ['open', 'early', 'wait', 'in'].indexOf(step) >= 0;
+const linked = Number(L.linked) > 0;
+return {
+lineTop: show && step !== 'in',
+line: {
+title: linked ? 'เชื่อมกับ LINE แล้ว' : 'รับรหัสประตูทาง LINE',
+note: linked ? 'พิมพ์ "รหัสประตู" ในแชท LINE ของ Khun Mhee เพื่อดูรหัสได้ทุกเมื่อ เราจะแจ้งเตือนวันเช็คอินและวันเช็คเอาท์ในแชทนั้น'
+: s.lineSent ? 'กด "ส่ง" ในแชท LINE เพื่อเชื่อมการจอง ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย เพื่อรับแจ้งเตือน'
+: 'เชื่อมการจองกับ LINE ของ Khun Mhee แล้วพิมพ์ "รหัสประตู" ในแชทเพื่อดูรหัสได้ตลอดการเข้าพัก พร้อมแจ้งเตือนวันเช็คอินและวันเช็คเอาท์',
+label: s.lineBusy ? 'กำลังเปิด LINE…' : linked ? 'เปิดแชท LINE' : s.lineSent ? 'เปิด LINE อีกครั้ง' : 'เชื่อมกับ LINE',
+busy: !!s.lineBusy, err: s.lineErr || '',
+go: () => { if (linked && L.chatUrl) window.location.href = L.chatUrl; else this.linkLine(); }
+}
+};
+}
 renderVals() {
 const s = this.state, info = s.info;
 const range = (a, b) => kmDate.short(a) + ' – ' + kmDate.short(b);
@@ -262,13 +390,14 @@ pageTitle: step === 'in' ? 'ห้องของคุณ' : 'เช็คอ�
 checkinHour: String(info ? info.checkinHour : 14), checkoutHour: String(info ? info.checkoutHour : 12),
 showLead: !info || step === 'open' || step === 'early',
 code: s.code, phone: s.phone, busy: s.busy, findErr: s.findErr,
-findLabel: s.busy && !info ? 'กำลังเช็คอิน…' : 'เช็คอินและรับรหัสประตู',
+findLabel: s.busy && !info ? 'กำลังค้นหา…' : 'เช็คอิน',
 setCode: (e) => this.setState({ code: e.target.value, findErr: '' }),
 setPhone: (e) => this.setState({ phone: e.target.value, findErr: '' }),
 find: (e) => { if (e && e.preventDefault) e.preventDefault(); this.find(false); },
 showFind: !info, hasInfo: !!info && !s.done,
 again: () => { this.remember(false); this.setState({ info: null, done: null, justIn: false, formErr: '' }); setTimeout(() => { const i = document.getElementById('ci-code'); if (i) i.focus(); }, 0); },
-blockedMsg: '', canRecheck: false, canCheckin: false, inStay: false, done: s.done
+blockedMsg: '', canRecheck: false, canCheckin: false, idForm: false, inStay: false, done: s.done,
+lineTop: false
 };
 if (!info || s.done) return out;
 
@@ -276,6 +405,7 @@ const chip = { open: ['พร้อมเช็คอิน', '#E7EFE4', '#2F5A3
 in: ['เข้าพักอยู่', '#E7EFE4', '#2F5A33'], done: ['เช็คเอาท์แล้ว', '#E6DDCB', '#47413A'], missed: ['เลยวันเข้าพัก', '#F3D6DD', '#7E3E50'], cancelled: ['ยกเลิกแล้ว', '#F3D6DD', '#7E3E50'] }[step] || ['-', '#EDE6D7', '#47413A'];
 out.bk = { code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + info.nights + ' คืน)',
 chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
+Object.assign(out, this.lineVals(info, step));
 
 if (step === 'done') {
 out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว', note: 'การจองนี้เช็คเอาท์แล้ว ขอบคุณที่มาพักกับ Khun Mhee นะคะ' };
@@ -289,12 +419,41 @@ out.recheckLabel = s.busy ? 'กำลังตรวจสอบ…' : 'ตร�
 out.recheck = () => this.find(false);
 return out;
 }
+if (step === 'open' && info.requireId) {
+const d = s.idf;
+const opt = (on) => 'display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 14px 16px; border-radius: 12px; background: #FFFDF9; cursor: pointer; border: ' + (on ? '2px solid #4F7A52' : '1px solid #CFC3AC') + '; margin: ' + (on ? '0' : '1px') + ';';
+const missingPhoto = s.idTried && !d.photo;
+Object.assign(out, {
+idForm: true, firstName: info.firstName ? ' คุณ' + info.firstName : '', formErr: s.formErr,
+idf: {
+thai: d.foreign ? 'false' : 'true', foreign: !!d.foreign, thaiStyle: opt(!d.foreign), foreignStyle: opt(!!d.foreign),
+nationality: d.nationality, idNumber: d.idNumber,
+noLabel: d.foreign ? 'เลขพาสปอร์ต · Passport No.' : 'เลขบัตรประชาชน', noHint: d.foreign ? 'เช่น TR1234567' : 'ตัวเลข 13 หลัก',
+inputMode: d.foreign ? 'text' : 'numeric',
+photoLabel: s.photoBusy ? 'กำลังเตรียมรูป…' : d.photo ? 'แนบรูปบัตรแล้ว' : 'แตะเพื่อถ่ายรูปบัตร',
+photoSub: d.photo ? 'แตะเพื่อถ่ายใหม่' : 'ถ่ายด้านหน้าบัตรให้เห็นชื่อและเลขบัตรชัดเจน',
+photoBox: 'position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px; border-radius: 18px; cursor: pointer; text-align: center; border: 2px dashed ' + (d.photo ? '#4F7A52' : missingPhoto ? '#9A4E60' : '#CFC3AC') + '; background: ' + (d.photo ? '#E7EFE4' : '#EDE6D7') + ';',
+accept: d.accept ? 'true' : 'false', tick: d.accept ? '✓' : '',
+boxStyle: 'flex: 0 0 24px; width: 24px; height: 24px; margin-top: 1px; border-radius: 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #FFFFFF; background: ' + (d.accept ? '#4F7A52' : '#FFFDF9') + '; border: ' + (d.accept ? '0' : '1px solid ' + (s.idTried ? '#9A4E60' : '#7A6E63')) + ';',
+keepDays: String(info.keepIdDays || 90),
+busy: s.busy || s.photoBusy, submitLabel: s.busy ? 'กำลังเช็คอิน…' : 'เช็คอิน'
+},
+pickThai: () => this.setIdf({ foreign: false }),
+pickForeign: () => this.setIdf({ foreign: true }),
+setNationality: (e) => this.setIdf({ nationality: e.target.value }),
+setIdNo: (e) => this.setIdf({ idNumber: e.target.value }),
+setPhoto: (e) => { const fl = e.target.files && e.target.files[0]; if (fl) this.readPhoto(fl); e.target.value = ''; },
+toggleAccept: () => this.setIdf({ accept: !this.state.idf.accept }),
+submitId: () => this.submitId()
+});
+return out;
+}
 if (step === 'open') {
 Object.assign(out, {
 canCheckin: true, firstName: info.firstName ? ' คุณ' + info.firstName : '',
 formErr: s.formErr,
 submit: () => { if (!s.busy) this.quickIn(info.code, String(s.phone || '').trim()); },
-submitLabel: s.busy ? 'กำลังเช็คอิน…' : 'เช็คอินและรับรหัสประตู'
+submitLabel: s.busy ? 'กำลังเช็คอิน…' : 'เช็คอิน'
 });
 return out;
 }
@@ -312,7 +471,13 @@ copyCode: () => {
 const ok = () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2000); };
 if (navigator.clipboard && code) navigator.clipboard.writeText(code).then(ok, () => {});
 },
-outHref: 'checkout.html?code=' + encodeURIComponent(info.code)
+door: {
+canLine: !!(info.line && info.line.ready),
+note: !(info.line && info.line.ready) ? 'กรุณาติดต่อ' + info.contact + ' เพื่อรับรหัสประตู'
+: Number(info.line.linked) > 0 ? 'เปิดแชท LINE ของ Khun Mhee แล้วกดเมนู "รับรหัสประตู" ด้านล่างแชท ระบบจะส่งรหัสเข้าห้องให้ทันที กรุณาอย่าส่งต่อรหัสให้ผู้อื่น'
+: s.lineSent ? 'กด "ส่ง" ในแชท LINE เพื่อเชื่อมการจอง แล้วกดเมนู "รับรหัสประตู" ด้านล่างแชท ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ก่อน'
+: 'รหัสประตูส่งให้ทางแชท LINE ของ Khun Mhee เท่านั้น เชื่อมการจองกับ LINE แล้วกดเมนู "รับรหัสประตู" ด้านล่างแชท'
+}
 });
 return out;
 }
