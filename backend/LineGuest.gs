@@ -15,7 +15,7 @@
  *    รหัสประตูส่งให้ทาง LINE เท่านั้น (LG_DOOR_ON_WEB = false): ไม่แสดงบนหน้าเช็คอิน ไม่ส่งทางอีเมล
  *    ลูกค้ากดเมนู "รับรหัสประตู" ใน Rich menu (ส่งข้อความ "รหัสประตู") เพื่อรับรหัส
  * 4) อุดช่องโหว่ เช็คอินด่วน (publicQuickCheckin ใน Extras.gs) ที่ให้รหัสประตูโดยไม่ยืนยันบัตร
- *    ตอนนี้ถ้า SC_REQUIRE_ID = true ต้องเช็คอินผ่านฟอร์มบัตร (publicSelfCheckin) เท่านั้น
+ *    ตอนนี้ถ้า LG_REQUIRE_ID = true ต้องเช็คอินผ่านฟอร์มบัตร (publicSelfCheckin) เท่านั้น
  *
  * ติดตั้ง
  *   1) Apps Script กด + → Script ตั้งชื่อ LineGuest แล้ววางโค้ดทั้งไฟล์นี้
@@ -32,6 +32,7 @@
  **********************************************************/
 
 /***** ตั้งค่า *****/
+const LG_REQUIRE_ID = false;      // false = เช็คอินด้วยรหัสการจอง + เบอร์โทรอย่างเดียว ไม่ต้องกรอกเลขบัตร/ถ่ายรูปบัตร (แทน SC_REQUIRE_ID)
 const LG_CHECKIN_ANYTIME = true;  // true = เช็คอินได้ทั้งวันในวันเข้าพัก ไม่ล็อกเวลา SC_CHECKIN_HOUR (แต่ต้องรอห้องว่าง)
 const LG_ROOM_BUSY_MSG = 'ขออภัย ห้องพักยังไม่พร้อมเช็คอิน เนื่องจากอยู่ระหว่างรอผู้เข้าพักก่อนหน้าเช็คเอาท์ ' +
   'หากท่านมีสัมภาระ สามารถฝากไว้ที่ล็อบบี้ก่อนได้เลยครับ';
@@ -68,7 +69,7 @@ function setupLineGuest() {
   if (!lineProps_().token) Logger.log('ยังไม่มี LINE_CHANNEL_ACCESS_TOKEN ใน Script properties');
   if (!lgOaId_()) Logger.log('ยังไม่มี LINE_OA_ID ใน Script properties (เช่น @khunmhee) ปุ่ม "เชื่อมกับ LINE" บนเว็บจะยังไม่แสดง');
   if (!scPageUrl_()) Logger.log('ยังไม่มี CHECKIN_PAGE_URL ข้อความใน LINE จะไม่มีปุ่มไปหน้าเช็คอิน/เช็คเอาท์');
-  if (!SC_REQUIRE_ID) Logger.log('หมายเหตุ: SC_REQUIRE_ID = false ลูกค้าเช็คอินได้โดยไม่ต้องแนบรูปบัตร');
+  if (!LG_REQUIRE_ID) Logger.log('หมายเหตุ: LG_REQUIRE_ID = false ลูกค้าเช็คอินได้โดยไม่ต้องแนบรูปบัตร');
   Logger.log(p.ready ? 'พร้อมใช้งาน · ลิงก์เพิ่มเพื่อน ' + p.chatUrl : 'ยังไม่พร้อม ใส่ค่าที่ขาดแล้วรัน setupLineGuest อีกครั้ง');
   Logger.log('อย่าลืม Deploy → Manage deployments → New version และตั้งค่าใน LINE OA Manager (ดูหัวไฟล์)');
 }
@@ -604,24 +605,23 @@ function lgWasIn_(code, phone) {
 
 /**
  * เช็คอินด่วน (Extras.gs): เดิมให้รหัสประตูโดยไม่ต้องยืนยันบัตร
- * ตอนนี้ ถ้า SC_REQUIRE_ID = true จะใช้ได้เฉพาะดูรหัสของการจองที่เช็คอินแล้ว
+ * ตอนนี้ ถ้า LG_REQUIRE_ID = true จะใช้ได้เฉพาะดูรหัสของการจองที่เช็คอินแล้ว
  * การจองที่ยังไม่เช็คอินต้องกรอกเลขบัตรและแนบรูปบัตรผ่าน publicSelfCheckin
  */
 (function () {
   const orig = API_ACTIONS.publicQuickCheckin;
   if (!orig) return;
   API_ACTIONS.publicQuickCheckin = function (code, phone) {
-    if (!SC_REQUIRE_ID) {
-      const wasIn = lgWasIn_(code, phone);
-      const info = orig(code, phone);
-      lgAfterCheckin_(info && info.code, wasIn);
-      return info;
-    }
     scEnsure_();
     const b = scFind_(code, phone);
-    const st = scState_(b);
+    const st = scState_(b);                       // ตรวจวันเข้าพักและห้องว่าง (แขกคนก่อนเช็คเอาท์แล้ว) ก่อนเสมอ
     if (st.step === 'in') return scInfo_(b);
     if (st.step !== 'open') throw new Error(st.reason || 'ยังเช็คอินด้วยตัวเองไม่ได้');
+    if (!LG_REQUIRE_ID) {
+      const info = orig(code, phone);
+      lgAfterCheckin_(info && info.code, false);
+      return info;
+    }
     throw new Error('ก่อนรับรหัสประตู กรุณากรอกเลขบัตรและแนบรูปบัตรประชาชนหรือพาสปอร์ต เพื่อลงทะเบียนผู้เข้าพักตามกฎหมาย');
   };
 })();
@@ -731,7 +731,7 @@ function lgNotice_(type, b) {
       color: LG_BLUE_, textColor: LG_PAPER_,
       alt: 'พรุ่งนี้เช็คอิน · ' + roomLabel_(b.roomNo) + ' · ' + HOTEL_NAME,
       rows: lgBaseRows_(b).concat([
-        lineRow_('เตรียม', SC_REQUIRE_ID ? 'บัตรประชาชนหรือพาสปอร์ต · สมุดวัคซีนของน้อง ๆ' : 'สมุดวัคซีนของน้อง ๆ'),
+        lineRow_('เตรียม', LG_REQUIRE_ID ? 'บัตรประชาชนหรือพาสปอร์ต · สมุดวัคซีนของน้อง ๆ' : 'สมุดวัคซีนของน้อง ๆ'),
         lineRow_('วิธีเช็คอิน', 'เมื่อห้องพร้อม ระบบจะส่งปุ่มเช็คอินมาที่แชทนี้ ' + lgHowCheckin_() + ' แล้วกดเมนู "รับรหัสประตู"')
       ])
     })];
@@ -742,9 +742,9 @@ function lgNotice_(type, b) {
   return [lgCheckoutCard_(b)];
 }
 
-/** วิธีเช็คอินบนหน้าเว็บ ตามการตั้งค่า SC_REQUIRE_ID */
+/** วิธีเช็คอินบนหน้าเว็บ ตามการตั้งค่า LG_REQUIRE_ID */
 function lgHowCheckin_() {
-  return SC_REQUIRE_ID ? 'กรอกเลขบัตรและถ่ายรูปบัตรในหน้าเช็คอิน' : 'กรอกรหัสการจองและเบอร์โทรในหน้าเช็คอิน';
+  return LG_REQUIRE_ID ? 'กรอกเลขบัตรและถ่ายรูปบัตรในหน้าเช็คอิน' : 'กรอกรหัสการจองและเบอร์โทรในหน้าเช็คอิน';
 }
 
 function lgPurge_() {
@@ -778,6 +778,7 @@ function lgPurge_() {
   scInfo_ = function (b) {
     const out = orig(b);
     if (!LG_DOOR_ON_WEB && out.stay) out.stay.doorCode = '';   // หน้าเว็บไม่เห็นรหัสประตู
+    out.requireId = LG_REQUIRE_ID;                              // หน้าเช็คอินแสดงฟอร์มบัตรหรือไม่
     out.keepIdDays = SC_KEEP_ID_DAYS;
     try {
       const p = lgPublicLine_();
@@ -795,7 +796,7 @@ function lgPurge_() {
   if (typeof guestReminderHtml_ === 'function') {
     const orig = guestReminderHtml_;
     guestReminderHtml_ = function (b) {
-      return orig(b).replace('ถ่ายรูปบัตรแล้วรับรหัสประตูได้ทันทีที่', (SC_REQUIRE_ID ? 'ถ่ายรูปบัตร ' : 'กรอกรหัสการจองและเบอร์โทร ') +
+      return orig(b).replace('ถ่ายรูปบัตรแล้วรับรหัสประตูได้ทันทีที่', (LG_REQUIRE_ID ? 'ถ่ายรูปบัตร ' : 'กรอกรหัสการจองและเบอร์โทร ') +
         'แล้วรับรหัสประตูทาง LINE ของ ' + HOTEL_NAME + ' (กดเมนู "รับรหัสประตู") เช็คอินได้ที่');
     };
   }
