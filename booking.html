@@ -303,14 +303,22 @@ Khun Mhee</a>
 </section>
 
 <template data-sc="if" value="{{lineShow}}" hint-placeholder-val="{{ false }}">
-<section class="card" aria-label="รับแจ้งเตือนและรหัสประตูทาง LINE" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<section class="card" aria-labelledby="{{line.hid}}" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; gap: 16px; align-items: flex-start">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
-<div style="flex: 1 1 240px; min-width: 0">
-<h2 style="margin: 0; font-size: 21px; font-weight: 600">{{line.title}}</h2>
-<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">{{line.note}}</p>
+<div style="flex: 1 1 auto; min-width: 0">
+<h2 id="{{line.hid}}" style="margin: 0; font-size: 21px; font-weight: 600">เชื่อมการจองกับ LINE</h2>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่งรหัสประตูให้ในวันเช็คอิน</p>
 </div>
-<button type="button" onClick="{{line.go}}" disabled="{{line.busy}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 24px; font-size: 17px; font-weight: 600">{{line.label}}</button>
-<template data-sc="if" value="{{line.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{line.err}}</p></template>
+</div>
+<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 16px">
+<p style="margin: 0; font-size: 13px; color: #5E554C">พิมพ์ในแชทแบบนี้</p>
+<p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{line.sample}}</p>
+</div>
+<div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
+<button type="button" onClick="{{line.go}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600">เปิดแชท LINE</button>
+<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย</span>
+</div>
 </section>
 </template>
 <section aria-labelledby="h-track" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
@@ -345,20 +353,32 @@ Khun Mhee</a>
 <span style="font-size: 13px; font-weight: 600; background: #4F7A52; color: #F6F3EE; border-radius: 9999px; padding: 4px 12px">อนุมัติการจองแล้ว</span>
 <h2 id="h-done" style="margin: 0; font-size: 34px; font-weight: 600">การจองของคุณได้รับการยืนยัน</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C; max-width: 520px">ขอบคุณคุณ{{f.first}} แอดมินตรวจสลิปและยืนยันห้องให้แล้ว ดาวน์โหลดใบเสร็จเก็บไว้ได้จากด้านล่าง</p>
+<div style="margin-top: 4px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 14px 12px 20px">
+<span style="display: flex; flex-direction: column; text-align: left"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 26px; font-weight: 600; letter-spacing: 1px; font-variant-numeric: tabular-nums; color: #47413A">{{code}}</span></span>
+<button type="button" onClick="{{copyCode}}" aria-label="คัดลอกรหัสการจอง {{code}}" style="display: flex; align-items: center; gap: 6px; background: #F6F3EE; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 10px 18px; font-size: 15px; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>{{codeCopyLabel}}</button>
+</div>
 <template data-sc="if" value="{{hasEmail}}" hint-placeholder-val="{{ true }}">
 <p style="margin: 4px 0 0; font-size: 14px; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 16px; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>ระบบจะส่งอีเมลเตือนไปที่ {{f.email}} 1 วันก่อนเช็คอิน</p>
 </template>
 </section>
 
 <template data-sc="if" value="{{lineShow}}" hint-placeholder-val="{{ false }}">
-<section class="card" aria-label="รับแจ้งเตือนและรหัสประตูทาง LINE" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<section class="card" aria-labelledby="{{line.hid}}" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; gap: 16px; align-items: flex-start">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
-<div style="flex: 1 1 240px; min-width: 0">
-<h2 style="margin: 0; font-size: 21px; font-weight: 600">{{line.title}}</h2>
-<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">{{line.note}}</p>
+<div style="flex: 1 1 auto; min-width: 0">
+<h2 id="{{line.hid}}" style="margin: 0; font-size: 21px; font-weight: 600">เชื่อมการจองกับ LINE</h2>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่งรหัสประตูให้ในวันเช็คอิน</p>
 </div>
-<button type="button" onClick="{{line.go}}" disabled="{{line.busy}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 24px; font-size: 17px; font-weight: 600">{{line.label}}</button>
-<template data-sc="if" value="{{line.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{line.err}}</p></template>
+</div>
+<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 16px">
+<p style="margin: 0; font-size: 13px; color: #5E554C">พิมพ์ในแชทแบบนี้</p>
+<p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{line.sample}}</p>
+</div>
+<div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
+<button type="button" onClick="{{line.go}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600">เปิดแชท LINE</button>
+<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย</span>
+</div>
 </section>
 </template>
 <section aria-labelledby="h-receipt" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
@@ -481,7 +501,7 @@ pay: 'bank', copied: false, slip: null, slipTried: false, slipErrText: '', slipR
 busy: false, submitErr: '', saved: null, bkStatus: 'pending', receipt: null, checking: false, statusMsg: '', lastCheck: '',
 holdId: null, holdUntil: 0, holdBusy: false, holdErr: '', now: Date.now(), pdfBusy: false, pdfErr: '',
 refundStatus: '', refundAmount: 0, refundAcc: '', refundBusy: false, refundErr: '', refundSent: false,
-lineBusy: false, lineErr: ''
+codeCopied: false
 };
 }
 componentDidMount() {
@@ -623,19 +643,14 @@ done('image/jpeg', out, Math.round(out.length * 0.75));
 img.onerror = () => { URL.revokeObjectURL(url); asIs(); };
 img.src = url;
 }
-/* เชื่อมการจองกับ LINE OA: ขอลิงก์จากระบบ แล้วเปิดแอป LINE พร้อมข้อความ "เชื่อมการจอง XXXXXX" (LineGuest.gs) */
-linkLine() {
-const sv = this.state.saved;
-if (this.state.lineBusy || !sv) return;
-this.setState({ lineBusy: true, lineErr: '' });
-kmCall('publicLineLink', [sv.code, sv.phone])
-.then((r) => {
-const saved = Object.assign({}, this.state.saved, { lineSent: true });
-this.saveLocal(saved);
-this.setState({ lineBusy: false, saved });
-window.location.href = r.url;
-})
-.catch((e) => this.setState({ lineBusy: false, lineErr: /ไม่รู้จักคำสั่ง/.test(e.message) ? 'ระบบ LINE ยังไม่เปิดใช้งาน กรุณาติดต่อที่พัก' : e.message }));
+/* คัดลอกข้อความ (มีทางสำรองสำหรับเบราว์เซอร์ในแอป เช่น LINE ที่ไม่มี clipboard API) */
+copyText(text, key) {
+const ok = () => { this.setState({ [key]: true }); setTimeout(() => this.setState({ [key]: false }), 2000); };
+const fallback = () => {
+const t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+document.body.appendChild(t); t.select(); try { if (document.execCommand('copy')) ok(); } catch (e) {} document.body.removeChild(t);
+};
+if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
 }
 downloadPdf() {
 const el = document.getElementById('receipt');
@@ -778,17 +793,15 @@ const refundDone = s.refundStatus === 'refunded' ? 'ที่พักคืน�
 : s.refundStatus === 'requested' && rSent ? 'แจ้งขอเงินคืนแล้ว' + (rAmt ? ' ยอด ฿' + money(rAmt) : '') + ' ที่พักจะโอนคืนตามบัญชีที่แจ้ง และติดต่อกลับทางเบอร์โทรที่ใช้จอง' : '';
 
 const L = cfg.line || {};
-const lineSent = !!(sv && sv.lineSent);
+const lineSample = sv ? sv.code + ' ' + String(sv.phone || '').replace(/[^0-9+]/g, '') : '';
+// เปิดแชท OA พร้อมข้อความ "รหัสการจอง เบอร์โทร" (https://line.me/R/oaMessage/@id/?ข้อความ)
+const lineUrl = L.chatUrl ? L.chatUrl.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(lineSample) : '';
 return {
+copyCode: () => this.copyText(code, 'codeCopied'), codeCopyLabel: s.codeCopied ? 'คัดลอกแล้ว' : 'คัดลอก',
 lineShow: !!(L.ready && sv && (s.step === 5 || (s.step === 4 && st !== 'cancelled'))),
 line: {
-title: 'รับแจ้งเตือนและรหัสประตูทาง LINE',
-note: lineSent
-? 'กด "ส่ง" ในแชท LINE เพื่อเชื่อมการจอง ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย หลังเชื่อมแล้วพิมพ์ "การจองของฉัน" ในแชทเพื่อดูสถานะ'
-: 'เชื่อมการจองกับ LINE ของ Khun Mhee เราจะแจ้งเมื่ออนุมัติการจอง เตือนก่อนวันเข้าพัก และส่งรหัสประตูให้ในแชทเมื่อเช็คอิน',
-label: s.lineBusy ? 'กำลังเปิด LINE…' : lineSent ? 'เปิด LINE อีกครั้ง' : 'เชื่อมกับ LINE',
-busy: !!s.lineBusy, err: s.lineErr,
-go: () => this.linkLine()
+hid: s.step === 5 ? 'h-line5' : 'h-line4', sample: lineSample,
+go: () => { if (lineUrl) window.location.href = lineUrl; }
 },
 accent, rooms, months, steps, guestOpts, loading: s.loading, loadErr: s.loadErr, reload: () => this.load(),
 isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
