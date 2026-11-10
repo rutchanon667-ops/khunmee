@@ -14,6 +14,7 @@ button:disabled{cursor:not-allowed}
 button:active:not(:disabled),.pill:active{transform:scale(0.95)}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,label.upl:focus-within{outline:2px solid #A1805D;outline-offset:2px}
 input,select,textarea{font-family:inherit}
+[tabindex="-1"]:focus{outline:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:833px){
  .navlinks{display:none !important}
@@ -55,7 +56,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
 <div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
-<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร ถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันทีในวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
+<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร แล้วรับรหัสประตูทาง LINE ได้ทันทีในวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
 </div>
 </template>
 
@@ -236,6 +237,8 @@ Khun Mhee</a>
  * กรอกรหัสการจอง + เบอร์โทร → เช็คอินทันทีและแสดงรหัสประตู
  * ใช้คำสั่ง publicCheckinInfo (SelfCheckin.gs) และ publicQuickCheckin (Extras.gs) */
 const KM_CI_SAVE = 'km_checkin';
+// true = แสดงฟอร์มกรอกเลขบัตร + ถ่ายรูปบัตรก่อนเช็คอิน (เมื่อระบบหลังบ้านตั้งให้ต้องยืนยันบัตร) · false = เช็คอินด้วยรหัสการจอง + เบอร์โทรอย่างเดียว
+const KM_ID_FORM = false;
 const kmCiCall = (action, args, write) => (typeof window.kmCall === 'function'
   ? window.kmCall(action, args, write ? { write: true } : undefined)
   : window.kmApi.apply(null, [action].concat(args)));
@@ -289,7 +292,7 @@ if (!code || !phone) return this.setState({ findErr: 'กรุณากรอ�
 this.setState({ busy: true, findErr: '', code });
 kmCiCall('publicCheckinInfo', [code, phone])
 .then((info) => {
-if (info.step === 'open' && !auto && !info.requireId) return this.quickIn(code, phone);
+if (info.step === 'open' && !auto && !(KM_ID_FORM && info.requireId)) return this.quickIn(code, phone);
 this.setInfo(info, { justIn: false, done: null });
 })
 .catch((e) => { if (auto) this.remember(false); this.setState({ busy: false, findErr: kmCiMsg(e) }); });
@@ -421,7 +424,7 @@ out.recheckLabel = s.busy ? 'กำลังตรวจสอบ…' : 'ตร�
 out.recheck = () => this.find(false);
 return out;
 }
-if (step === 'open' && info.requireId) {
+if (step === 'open' && KM_ID_FORM && info.requireId) {
 const d = s.idf;
 const opt = (on) => 'display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 14px 16px; border-radius: 12px; background: #FFFDF9; cursor: pointer; border: ' + (on ? '2px solid #4F7A52' : '1px solid #CFC3AC') + '; margin: ' + (on ? '0' : '1px') + ';';
 const missingPhoto = s.idTried && !d.photo;
