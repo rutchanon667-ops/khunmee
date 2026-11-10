@@ -316,8 +316,8 @@ Khun Mhee</a>
 <p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{line.sample}}</p>
 </div>
 <div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
-<button type="button" onClick="{{line.go}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600">เปิดแชท LINE</button>
-<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย</span>
+<a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
+<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
 </div>
 </section>
 </template>
@@ -376,8 +376,8 @@ Khun Mhee</a>
 <p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{line.sample}}</p>
 </div>
 <div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
-<button type="button" onClick="{{line.go}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600">เปิดแชท LINE</button>
-<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย</span>
+<a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
+<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
 </div>
 </section>
 </template>
@@ -802,7 +802,7 @@ copyCode: () => this.copyText(code, 'codeCopied'), codeCopyLabel: s.codeCopied ?
 lineShow: !!(chat && sv && (s.step === 5 || (s.step === 4 && st !== 'cancelled'))),
 line: {
 hid: s.step === 5 ? 'h-line5' : 'h-line4', sample: lineSample,
-go: () => { if (lineUrl) window.location.href = lineUrl; }
+url: lineUrl || '#', oa: chat ? decodeURIComponent(chat.split('/R/ti/p/')[1] || '') : ''
 },
 accent, rooms, months, steps, guestOpts, loading: s.loading, loadErr: s.loadErr, reload: () => this.load(),
 isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
