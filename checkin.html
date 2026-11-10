@@ -374,10 +374,10 @@ if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText
 }
 /* LINE: เปิดแชท OA พร้อมข้อความ "รหัสการจอง เบอร์โทร" ให้ลูกค้ากดส่ง (LineGuest.gs ตอบกลับ) */
 lineVals(info, step) {
-const s = this.state, L = info.line || {};
-const show = !!L.ready && ['open', 'early', 'busy', 'wait'].indexOf(step) >= 0;
+const s = this.state, chat = window.kmLineChatUrl ? window.kmLineChatUrl(info.line) : '';
+const show = !!chat && ['open', 'early', 'busy', 'wait'].indexOf(step) >= 0;
 const sample = info.code + ' ' + String(s.phone || '').replace(/[^0-9+]/g, '');
-const url = L.chatUrl ? L.chatUrl.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(sample) : '';
+const url = chat ? chat.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(sample) : '';
 return {
 lineTop: show,
 line: { sample, go: () => { if (url) window.location.href = url; } }
@@ -474,8 +474,8 @@ const ok = () => { this.setState({ copied: true }); setTimeout(() => this.setSta
 if (navigator.clipboard && code) navigator.clipboard.writeText(code).then(ok, () => {});
 },
 door: {
-canLine: !!(info.line && info.line.ready),
-note: !(info.line && info.line.ready) ? 'กรุณาติดต่อ' + info.contact + ' เพื่อรับรหัสประตู'
+canLine: !!(window.kmLineChatUrl && window.kmLineChatUrl(info.line)),
+note: !(window.kmLineChatUrl && window.kmLineChatUrl(info.line)) ? 'กรุณาติดต่อ' + info.contact + ' เพื่อรับรหัสประตู'
 : 'รหัสประตูส่งให้ทางแชท LINE ของ Khun Mhee เท่านั้น ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ระบบจะส่งรหัสเข้าห้องให้ทันที'
 }
 });

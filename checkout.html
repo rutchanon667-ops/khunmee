@@ -191,7 +191,7 @@ const qCode = (q.get('code') || '').toUpperCase();
 const pickSaved = (o) => o && (!qCode || String(o.code).toUpperCase() === qCode) ? o : null;
 const base = pickSaved(sv) || pickSaved(bk) || {};
 this.state = {
-code: qCode || String(base.code || '').toUpperCase(), phone: base.phone || '',
+code: qCode || String(base.code || '').toUpperCase(), phone: q.get('phone') || base.phone || '',
 busy: false, findErr: '', info: null,
 out: { rating: 0, comment: '', confirm: false }, outErr: '', done: null
 };
