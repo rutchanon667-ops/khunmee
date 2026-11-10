@@ -55,7 +55,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
 <div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
-<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร ถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันที ตั้งแต่ {{checkinHour}}:00 น. ของวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
+<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร ถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันทีในวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
 </div>
 </template>
 
@@ -277,7 +277,7 @@ else localStorage.removeItem(KM_CI_SAVE);
 setInfo(info, extra) {
 const st = Object.assign({ busy: false, info, findErr: '', formErr: '' }, extra || {});
 this.setState(st);
-this.remember(info.step === 'in' || info.step === 'open' || info.step === 'early');
+this.remember(['in', 'open', 'early', 'busy'].indexOf(info.step) >= 0);
 if (info.step === 'open') this.focus('h-form');
 else if (info.step === 'in') this.focus('h-door');
 }
@@ -375,7 +375,7 @@ if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText
 /* LINE: เปิดแชท OA พร้อมข้อความ "รหัสการจอง เบอร์โทร" ให้ลูกค้ากดส่ง (LineGuest.gs ตอบกลับ) */
 lineVals(info, step) {
 const s = this.state, L = info.line || {};
-const show = !!L.ready && ['open', 'early', 'wait'].indexOf(step) >= 0;
+const show = !!L.ready && ['open', 'early', 'busy', 'wait'].indexOf(step) >= 0;
 const sample = info.code + ' ' + String(s.phone || '').replace(/[^0-9+]/g, '');
 const url = L.chatUrl ? L.chatUrl.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(sample) : '';
 return {
@@ -403,7 +403,7 @@ lineTop: false
 };
 if (!info || s.done) return out;
 
-const chip = { open: ['พร้อมเช็คอิน', '#E7EFE4', '#2F5A33'], early: ['ยังไม่ถึงเวลาเช็คอิน', '#FBF3DC', '#6B5420'], wait: ['รอยืนยันการชำระเงิน', '#FBF3DC', '#6B5420'],
+const chip = { open: ['พร้อมเช็คอิน', '#E7EFE4', '#2F5A33'], early: ['ยังไม่ถึงเวลาเช็คอิน', '#FBF3DC', '#6B5420'], wait: ['รอยืนยันการชำระเงิน', '#FBF3DC', '#6B5420'], busy: ['ห้องพักยังไม่พร้อม', '#FBF3DC', '#6B5420'],
 in: ['เข้าพักอยู่', '#E7EFE4', '#2F5A33'], done: ['เช็คเอาท์แล้ว', '#E6DDCB', '#47413A'], missed: ['เลยวันเข้าพัก', '#F3D6DD', '#7E3E50'], cancelled: ['ยกเลิกแล้ว', '#F3D6DD', '#7E3E50'] }[step] || ['-', '#EDE6D7', '#47413A'];
 out.bk = { code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + info.nights + ' คืน)',
 chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
@@ -414,9 +414,9 @@ out.done = { title: 'เช็คเอาท์เรียบร้อยแ�
 out.hasInfo = false;
 return out;
 }
-if (['early', 'wait', 'missed', 'cancelled'].indexOf(step) >= 0) {
+if (['early', 'busy', 'wait', 'missed', 'cancelled'].indexOf(step) >= 0) {
 out.blockedMsg = info.reason;
-out.canRecheck = step === 'early' || step === 'wait';
+out.canRecheck = step === 'early' || step === 'busy' || step === 'wait';
 out.recheckLabel = s.busy ? 'กำลังตรวจสอบ…' : 'ตรวจสอบอีกครั้ง';
 out.recheck = () => this.find(false);
 return out;
