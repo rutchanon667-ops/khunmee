@@ -795,10 +795,11 @@ const refundDone = s.refundStatus === 'refunded' ? 'ที่พักคืน�
 const L = cfg.line || {};
 const lineSample = sv ? sv.code + ' ' + String(sv.phone || '').replace(/[^0-9+]/g, '') : '';
 // เปิดแชท OA พร้อมข้อความ "รหัสการจอง เบอร์โทร" (https://line.me/R/oaMessage/@id/?ข้อความ)
-const lineUrl = L.chatUrl ? L.chatUrl.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(lineSample) : '';
+const chat = window.kmLineChatUrl ? window.kmLineChatUrl(L) : '';
+const lineUrl = chat ? chat.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(lineSample) : '';
 return {
 copyCode: () => this.copyText(code, 'codeCopied'), codeCopyLabel: s.codeCopied ? 'คัดลอกแล้ว' : 'คัดลอก',
-lineShow: !!(L.ready && sv && (s.step === 5 || (s.step === 4 && st !== 'cancelled'))),
+lineShow: !!(chat && sv && (s.step === 5 || (s.step === 4 && st !== 'cancelled'))),
 line: {
 hid: s.step === 5 ? 'h-line5' : 'h-line4', sample: lineSample,
 go: () => { if (lineUrl) window.location.href = lineUrl; }
