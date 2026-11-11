@@ -12,6 +12,11 @@
  *   - แขกได้รหัสเมื่อกดเมนู "รับรหัสประตู" ใน LINE ตั้งแต่วันเข้าพัก (การจองยืนยันแล้ว + แอดมินกดยืนยันว่าตั้งแล้ว)
  *     เข้าล็อบบี้ได้ทันทีแม้ห้องยังไม่พร้อม (ฝากสัมภาระได้) ส่วนการเช็คอินยังรอแขกคนก่อนเช็คเอาท์เหมือนเดิม
  *   - แอดมินพิมพ์ "งานล็อบบี้" ในแชท LINE ที่ลงทะเบียนแอดมินไว้ เพื่อดูงานที่ค้าง
+ *   - ใช้รหัสของแอดมินเองแทนรหัสที่ระบบสุ่ม: ตั้งรหัสในกลอนก่อน แล้วพิมพ์ใน LINE
+ *       ล็อบบี้ 21 482915          (ช่องในกลอน ตามด้วยรหัส 6–8 หลัก)
+ *       ล็อบบี้ KM261111BBBB 482915 (หรือใช้รหัสการจองแทนช่อง)
+ *     หรือกดปุ่ม [ใส่รหัสเอง] ในการ์ดงาน แป้นพิมพ์จะเปิดพร้อมคำสั่ง "ล็อบบี้ 21 " ให้พิมพ์รหัสต่อท้ายแล้วส่ง
+ *     ใช้เปลี่ยนรหัสที่ใช้งานอยู่ได้ด้วย (เช่น แขกทำรหัสหลุด) ระบบแจ้งแขกให้กดเมนูรับรหัสใหม่
  *
  * ติดตั้ง
  *   1) Apps Script กด + → Script ตั้งชื่อ LobbyCode แล้ววางโค้ดทั้งไฟล์นี้
@@ -230,7 +235,7 @@ function lcAdminCard_(r, key) {
   const remind = key === 'set2' || key === 'del2';
   const roomNo = String(r.roomNo).replace(/^'/, '');
   if (key === 'set' || key === 'set2') {
-    return lineCard_({
+    const card = lineCard_({
       title: (remind ? '⏰ ยังไม่ได้ตั้ง · ' : '') + 'ตั้งรหัสล็อบบี้ ช่อง ' + r.slot,
       subtitle: roomLabel_(roomNo) + ' · เข้าพัก ' + thShort_(strDate_(r.checkIn)),
       color: LG_GREEN_, textColor: LG_PAPER_,
@@ -241,10 +246,16 @@ function lcAdminCard_(r, key) {
         lineRow_('ช่องในกลอน', 'ผู้ใช้หมายเลข ' + r.slot + ' (ตั้งเป็นรหัสผ่าน)'),
         lineRow_('แขก', unsafe_(r.guestName) + ' · ' + r.code),
         lineRow_('เข้าพัก', thShort_(strDate_(r.checkIn)) + ' – ' + thShort_(strDate_(r.checkOut))),
-        lineRow_('ขั้นตอน', 'ตั้งรหัสในกลอนล็อบบี้ ทดสอบกด 1 ครั้ง แล้วกดปุ่มด้านล่าง แขกจะได้รหัสหลังกดปุ่มนี้เท่านั้น')
+        lineRow_('ใช้รหัสนี้', 'ตั้งรหัสนี้ในกลอน ทดสอบกด 1 ครั้ง แล้วกด [ตั้งในกลอนแล้ว]'),
+        lineRow_('ใช้รหัสเอง', 'ตั้งรหัสที่ต้องการในกลอน แล้วกด [ใส่รหัสเอง] พิมพ์รหัสต่อท้ายแล้วส่ง'),
+        { type: 'text', text: 'แขกจะได้รหัสหลังแอดมินยืนยันเท่านั้น', size: 'xs', color: '#7A6E63', wrap: true, margin: 'md' }
       ],
-      buttons: [{ label: 'ตั้งในกลอนแล้ว', data: 'lc=set&id=' + r.id, primary: true, color: LG_GREEN_ }]
+      buttons: [
+        { label: 'ตั้งในกลอนแล้ว', data: 'lc=set&id=' + r.id, primary: true, color: LG_GREEN_, group: 'set' },
+        { label: 'ใส่รหัสเอง', data: 'lc=own&id=' + r.id, group: 'own' }
+      ]
     });
+    return lcOpenKeyboard_(card, 'lc=own', lcCmd_(r.slot));
   }
   return lineCard_({
     title: (remind ? '⏰ ยังไม่ได้ลบ · ' : '') + 'ลบรหัสล็อบบี้ ช่อง ' + r.slot,
@@ -260,6 +271,22 @@ function lcAdminCard_(r, key) {
     ],
     buttons: [{ label: 'ลบแล้ว', data: 'lc=del&id=' + r.id, primary: true, color: LG_BROWN_ }]
   });
+}
+
+/** คำสั่งตั้งรหัสเองที่เติมไว้ให้ในแป้นพิมพ์ */
+function lcCmd_(slot) { return 'ล็อบบี้ ' + slot + ' '; }
+
+/** ปุ่ม postback ที่กดแล้วเปิดแป้นพิมพ์พร้อมข้อความเริ่มต้น (LINE inputOption: openKeyboard) */
+function lcOpenKeyboard_(card, prefix, fill) {
+  try {
+    (card.contents.footer ? card.contents.footer.contents : []).forEach(c => {
+      if (c.type !== 'button' || !c.action || String(c.action.data || '').indexOf(prefix) !== 0) return;
+      delete c.action.displayText;
+      c.action.inputOption = 'openKeyboard';
+      c.action.fillInText = fill;
+    });
+  } catch (e) { console.error('LINE lobby keyboard: ' + e); }
+  return card;
 }
 
 function lcRemoveReason_(r) {
@@ -284,6 +311,12 @@ function lcAdminPostback_(ev, data) {
   if (!lcIsAdmin_(src)) return lineReply_(ev.replyToken, 'คุณไม่มีสิทธิ์จัดการรหัสล็อบบี้');
   const p = {};
   data.split('&').forEach(kv => { const i = kv.indexOf('='); if (i > 0) p[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1)); });
+  if (p.lc === 'own') {
+    const r0 = lcRows_().find(x => String(x.id) === String(p.id));
+    const slot = r0 ? r0.slot : 'ช่อง';
+    return lineReply_(ev.replyToken, 'ตั้งรหัสที่ต้องการในกลอนช่อง ' + slot + ' ก่อน แล้วพิมพ์ต่อท้ายคำสั่งที่แป้นพิมพ์ แล้วกดส่ง\n' +
+      'เช่น ' + lcCmd_(slot) + '482915 (ตัวเลข 6–8 หลัก)');
+  }
   const who = lineDisplayName_(src) || 'แอดมิน';
   const now = new Date();
   let notifyGuest = null;
@@ -325,6 +358,79 @@ function lcAdminPostback_(ev, data) {
   }
 }
 
+/* =========================================================
+ * แอดมินใส่รหัสเอง: "ล็อบบี้ 21 482915" หรือ "ล็อบบี้ KM261111BBBB 482915"
+ * ใช้หลังตั้งรหัสนั้นในกลอนแล้ว → บันทึกและเปิดใช้ทันที (แทนรหัสที่ระบบสุ่ม หรือเปลี่ยนรหัสที่ใช้อยู่)
+ * ========================================================= */
+const LC_SET_RE_ = /^(?:ล็อบบี้|ตั้งรหัส(?:ล็อบบี้)?)\s*(?:ช่อง\s*)?(\d{1,3}|KM\d{6}[A-Z0-9]{4})?\s*(\d+)?$/i;
+
+/** รหัสที่เดาง่าย คืนเหตุผล (ว่าง = ใช้ได้) */
+function lcWeakPin_(pin) {
+  if (/^(\d)\1+$/.test(pin)) return 'เป็นเลขเดียวกันทั้งหมด';
+  if ('01234567890'.indexOf(pin) >= 0 || '09876543210'.indexOf(pin) >= 0) return 'เป็นเลขเรียงกัน';
+  return '';
+}
+
+function lcAdminSetPin_(ev, target, pin) {
+  const src = ev.source || {};
+  const help = 'พิมพ์: ล็อบบี้ <ช่อง> <รหัส 6–8 หลัก> เช่น ล็อบบี้ 21 482915\nหรือใช้รหัสการจองแทนช่อง เช่น ล็อบบี้ KM261111BBBB 482915\nพิมพ์ "งานล็อบบี้" เพื่อดูช่องที่รอตั้งรหัส';
+  if (!target || !pin) return lineReply_(ev.replyToken, help);
+  if (!/^\d{6,8}$/.test(pin)) return lineReply_(ev.replyToken, 'รหัสต้องเป็นตัวเลข 6–8 หลัก (PP9100 รับ 6–8 หลัก)\n' + help);
+  const weak = lcWeakPin_(pin);
+  if (weak) return lineReply_(ev.replyToken, 'รหัส ' + pin + ' ' + weak + ' เดาง่ายเกินไป กรุณาใช้รหัสอื่น');
+  lcSweepSafe_();
+  const byCode = /^KM/i.test(target);
+  const key = byCode ? target.toUpperCase() : String(Number(target));
+  const who = lineDisplayName_(src) || 'แอดมิน';
+  const now = new Date();
+  let notifyGuest = null, changed = false;
+  const msg = withLock_(() => {
+    const rows = lcRows_();
+    const open = rows.filter(x => LC_OPEN_.indexOf(String(x.status)) >= 0 &&
+      (byCode ? String(x.code).toUpperCase() === key : String(x.slot) === key))
+      .sort((a, b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1));
+    const r = open[0];
+    if (!r) {
+      if (!byCode) return 'ช่อง ' + key + ' ไม่มีการจองที่รอตั้งรหัสหรือใช้งานอยู่\nพิมพ์ "งานล็อบบี้" เพื่อดูช่องที่รอตั้งรหัส';
+      const b = readTable_('bookings').find(x => String(x.code).trim().toUpperCase() === key);
+      if (!b) return 'ไม่พบการจอง ' + key;
+      const st = String(b.status);
+      if (st === 'pending') return 'การจอง ' + key + ' ยังรอยืนยันการชำระเงิน อนุมัติก่อนแล้วระบบจะสร้างงานตั้งรหัสให้';
+      if (st === 'cancelled' || st === 'checked_out') return 'การจอง ' + key + ' ' + (STATUS_TH_[st] || st) + ' ไม่ต้องตั้งรหัสแล้ว';
+      if (strDate_(b.checkIn) > addDays_(today_(), LC_PREP_DAYS)) {
+        return 'การจอง ' + key + ' เข้าพัก ' + thShort_(strDate_(b.checkIn)) + ' ระบบจะส่งงานตั้งรหัสให้ ' + LC_PREP_DAYS +
+          ' วันก่อนเข้าพัก แล้วค่อยพิมพ์คำสั่งนี้อีกครั้ง';
+      }
+      return roomLabel_(b.roomNo) + ' ใช้ครบ 2 ช่องแล้ว (แขกคนก่อนยังไม่ได้ลบรหัส) รอแขกคนก่อนเช็คเอาท์แล้วลองใหม่';
+    }
+    const dup = rows.find(x => x.id !== r.id && ['pending', 'active', 'remove'].indexOf(String(x.status)) >= 0 && lcPin_(x) === pin);
+    if (dup) return 'รหัส ' + pin + ' ซ้ำกับรหัสช่อง ' + dup.slot + ' ที่ยังอยู่ในกลอน กรุณาใช้รหัสอื่น';
+    const roomNo = String(r.roomNo).replace(/^'/, '');
+    const oldPin = lcPin_(r), wasActive = String(r.status) === 'active';
+    if (wasActive && oldPin === pin) return 'ช่อง ' + r.slot + ' ใช้รหัส ' + pin + ' อยู่แล้ว';
+    changed = wasActive;
+    Object.assign(r, { pin: pin, status: 'active', setAt: now, setBy: safe_(who + ' · ใส่รหัสเอง') });
+    lcWrite_(r);
+    rows.filter(x => x.id !== r.id && String(x.slot) === String(r.slot) && String(x.status) === 'remove').forEach(x => {
+      Object.assign(x, { status: 'removed', removedAt: now, removedBy: safe_('ทับด้วยรหัสใหม่ · ' + who) });
+      lcWrite_(x);
+    });
+    if (strDate_(r.checkIn) <= today_()) notifyGuest = r.bookingId;
+    return '✅ ' + (wasActive ? 'เปลี่ยน' : 'บันทึก') + 'รหัสล็อบบี้ช่อง ' + r.slot + ' เป็น ' + pin + ' แล้ว\n' +
+      roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) + ' · ' + r.code +
+      (wasActive ? '\nอย่าลืมลบรหัสเดิม ' + oldPin + ' ออกจากกลอน (ถ้าตั้งรหัสใหม่ทับช่องเดิมแล้ว ไม่ต้องทำอะไรเพิ่ม)' : '') +
+      '\nแขกกดเมนู "รับรหัสประตู" ได้ตั้งแต่ ' + thShort_(strDate_(r.checkIn));
+  });
+  lineReply_(ev.replyToken, msg);
+  if (notifyGuest) {
+    try {
+      lgPushBooking_(notifyGuest, [lgText_(changed
+        ? 'รหัสเข้าล็อบบี้ของคุณเปลี่ยนแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัสใหม่'
+        : 'รหัสเข้าล็อบบี้ของคุณพร้อมแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัส')]);
+    } catch (e) { console.error('LINE lobby guest pin: ' + e); }
+  }
+}
+
 function lcAdminList_(ev) {
   lcSweepSafe_();
   const rows = lcRows_();
@@ -335,7 +441,8 @@ function lcAdminList_(ev) {
   const head = 'รหัสล็อบบี้ที่ใช้งานอยู่ ' + active.length + ' รหัส' +
     (active.length ? '\n' + active.map(r => '• ช่อง ' + r.slot + ' · ' + roomLabel_(String(r.roomNo).replace(/^'/, '')) +
       ' · ' + unsafe_(r.guestName) + ' · ถึง ' + thShort_(strDate_(r.checkOut))).join('\n') : '') +
-    '\n\nงานค้าง ' + todo.length + ' รายการ' + (todo.length > 4 ? ' (แสดง 4 รายการแรก)' : '');
+    '\n\nงานค้าง ' + todo.length + ' รายการ' + (todo.length > 4 ? ' (แสดง 4 รายการแรก)' : '') +
+    '\nใช้รหัสของคุณเอง: ตั้งในกลอนแล้วพิมพ์ ล็อบบี้ <ช่อง> <รหัส> เช่น ล็อบบี้ 21 482915';
   const cards = todo.slice(0, 4).map(r => lcAdminCard_(r, String(r.status) === 'pending' ? 'set' : 'del'));
   lineRequest_('reply', { replyToken: ev.replyToken, messages: [{ type: 'text', text: head }].concat(cards) });
 }
@@ -354,9 +461,11 @@ function lcAdminList_(ev) {
         if (ev.type === 'postback' && /^lc=/.test(String((ev.postback && ev.postback.data) || ''))) {
           return lcAdminPostback_(ev, String(ev.postback.data));
         }
-        if (ev.type === 'message' && ev.message && ev.message.type === 'text' &&
-            /^(?:งานล็อบบี้|รหัสล็อบบี้ทั้งหมด)$/.test(String(ev.message.text || '').trim()) && lcIsAdmin_(src)) {
-          return lcAdminList_(ev);
+        if (ev.type === 'message' && ev.message && ev.message.type === 'text' && lcIsAdmin_(src)) {
+          const text = String(ev.message.text || '').replace(/\s+/g, ' ').trim();
+          if (/^(?:งานล็อบบี้|รหัสล็อบบี้ทั้งหมด)$/.test(text)) return lcAdminList_(ev);
+          const m = text.match(LC_SET_RE_);
+          if (m) return lcAdminSetPin_(ev, m[1], m[2]);
         }
       } catch (err) {
         console.error('LINE lobby admin: ' + err);
