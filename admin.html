@@ -159,7 +159,7 @@ Khun Mhee · หลังบ้าน</a>
 </div>
 <div style="flex: 1 1 auto; min-width: 0">
 <p style="margin: 0; font-size: 15px; font-weight: 600">{{r.name}}</p>
-<p style="margin: 2px 0 0; font-size: 12px; color: #7A6E63">{{r.room}} · {{r.phone}} · {{r.pets}}</p>
+<p style="margin: 2px 0 0; font-size: 12px; color: #7A6E63">{{r.room}} · {{r.phone}} · {{r.pets}}{{r.arr}}</p>
 <p style="margin: 2px 0 0; font-size: 12px; color: #7A6E63">{{r.emailNote}}</p>
 </div>
 <template data-sc="if" value="{{r.tag}}" hint-placeholder-val="{{ true }}"><span style="{{r.tagStyle}}">{{r.tag}}</span></template>
@@ -269,7 +269,7 @@ Khun Mhee · หลังบ้าน</a>
 <td style="padding: 14px 12px; font-weight: 600">{{b.name}}</td>
 <td style="padding: 14px 12px; font-variant-numeric: tabular-nums">{{b.phone}}</td>
 <td style="padding: 14px 12px; white-space: nowrap">{{b.room}}</td>
-<td style="padding: 14px 12px; white-space: nowrap">{{b.ci}}</td>
+<td style="padding: 14px 12px; white-space: nowrap">{{b.ci}}<template data-sc="if" value="{{b.arr}}" hint-placeholder-val="{{ false }}"><br><span style="font-size: 12px; color: #7A6E63">ถึง {{b.arr}}</span></template></td>
 <td style="padding: 14px 12px; white-space: nowrap">{{b.co}}</td>
 <td style="padding: 14px 12px">{{b.pets}}</td>
 <td style="padding: 14px 12px; font-variant-numeric: tabular-nums; white-space: nowrap">{{b.total}}</td>
@@ -910,7 +910,7 @@ if (b.status === 'pending' || b.status === 'confirmed') actions.push({ label: '�
 if (b.refundStatus === 'requested') { actions.push({ label: 'คืนเงินแล้ว', style: btn('ok'), run: refundAct(b, 'refunded'), busy }); actions.push({ label: 'ไม่ต้องคืน', style: btn('ghost'), run: refundAct(b, 'none'), busy }); }
 const rAmt = '฿' + kmMoney(b.refundAmount || b.totalPrice);
 return { code: b.code, name: b.guestName, phone: b.phone, room: rn(b.roomNo), pets: b.pets || '—',
-ci: kmDate.dm(b.checkIn), co: kmDate.dm(b.checkOut), total: b.totalPrice ? '฿' + kmMoney(b.totalPrice) : '—',
+ci: kmDate.dm(b.checkIn), arr: b.arrivalTime || '', co: kmDate.dm(b.checkOut), total: b.totalPrice ? '฿' + kmMoney(b.totalPrice) : '—',
 slipUrl: b.slipUrl || '', noSlip: !b.slipUrl, receiptUrl: b.receiptUrl || '', statusName: stName(b, k), actions,
 isNew: isNewRow, ack: () => ackBooking(b.id),
 refund: b.refundStatus === 'requested' ? 'ขอเงินคืน ' + rAmt : b.refundStatus === 'refunded' ? 'คืนเงินแล้ว ' + rAmt : '',
@@ -932,7 +932,7 @@ const emailNote = !hasEmail ? 'ไม่มีอีเมล โทรแจ้
 : sent ? 'ส่งอีเมลเตือนอัตโนมัติแล้ว · ' + b.email
 : b.status === 'pending' ? 'อีเมล ' + b.email + ' · ระบบจะส่งเตือนเมื่ออนุมัติแล้ว'
 : 'อีเมล ' + b.email + ' · ระบบจะส่งเตือนอัตโนมัติ ' + guestDays + ' วันก่อนเช็คอิน';
-return { name: b.guestName, room: rn(b.roomNo), phone: b.phone, pets: b.pets || 'ไม่มีสัตว์เลี้ยง',
+return { name: b.guestName, room: rn(b.roomNo), phone: b.phone, pets: b.pets || 'ไม่มีสัตว์เลี้ยง', arr: b.arrivalTime ? ' · ถึง ' + b.arrivalTime : '',
 emailNote, when: n === 1 ? 'พรุ่งนี้' : 'อีก ' + n + ' วัน', day: String(Number(b.checkIn.slice(8, 10))),
 tag: sent ? 'ส่งเมลแล้ว' : b.status === 'pending' ? 'รออนุมัติ' : '',
 tagStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; ' + (sent ? 'background: #DCE8DD; color: #2F5A33;' : 'background: #F3E3B0; color: #6B4E1E;') };
@@ -991,6 +991,7 @@ const k = stOf(popB);
 const rowsP = [
 ['ห้อง', rn(popB.roomNo)],
 ['เช็คอิน', kmDate.short(popB.checkIn)],
+['มาถึงประมาณ', popB.arrivalTime || '—'],
 ['เช็คเอาท์', kmDate.short(popB.checkOut) + ' · 12:00 น.'],
 ['จำนวน', popB.nights + ' คืน · ' + (popB.guests || 1) + ' คน'],
 ['สัตว์เลี้ยง', popB.pets || 'ไม่มี'],

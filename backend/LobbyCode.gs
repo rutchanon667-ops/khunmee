@@ -39,6 +39,9 @@ const LC_SLOTS = {};                   // กำหนดช่องเอง�
 const LC_REMIND_HOURS = 3;             // งานค้างนานกี่ชั่วโมงแล้วเตือนแอดมินอีกครั้ง (เตือนซ้ำครั้งเดียว)
 const LC_ROOM_NOTE = 'ประตูห้องพักไม่ได้ล็อก กุญแจห้องวางไว้บนโต๊ะในห้อง';   // บอกแขกหลังเช็คอินว่าเข้าห้องอย่างไร
 const LC_KEYPAD_NOTE = 'แตะหน้าจอกลอนให้ไฟติด กดรหัส แล้วกดปุ่มยืนยัน';      // วิธีกดรหัสที่กลอน (ว่าง = ไม่แสดง)
+const LC_AFTER_CHECKIN_ONLY = true;    // แขกขอรหัสล็อบบี้ได้หลังเช็คอินแล้วเท่านั้น
+// เวลาที่คาดว่าจะมาถึง (ลูกค้าเลือกในหน้าจอง ขั้นข้อมูลผู้เข้าพัก) แสดงให้แอดมินดูอย่างเดียว ไม่มีผลกับการออกรหัส
+const LC_ARRIVAL_SLOTS = ['14:00–16:00', '16:00–18:00', '18:00–20:00', '20:00–22:00', 'หลัง 22:00'];
 
 SHEETS.lobbyCodes = {
   name: 'LobbyCodes',
@@ -214,12 +217,12 @@ function lcSweep_() {
       sent.push(key);
       r.notified = sent.join(',');
       lcWrite_(r);
-      toAdmin.push({ r: Object.assign({}, r), key: key });
+      toAdmin.push({ r: Object.assign({}, r), key: key, arrival: lcArrivalText_((byId[String(r.bookingId)] || {}).arrivalTime) });
     });
   });
 
   if (toAdmin.length) {
-    const cards = toAdmin.map(x => lcAdminCard_(x.r, x.key));
+    const cards = toAdmin.map(x => lcAdminCard_(x.r, x.key, x.arrival));
     for (let i = 0; i < cards.length; i += 5) {
       try { linePushAdmins_(cards.slice(i, i + 5)); } catch (e) { console.error('LINE lobby admin: ' + e); }
     }
@@ -230,8 +233,9 @@ function lcSweep_() {
 /* =========================================================
  * การ์ดงานของแอดมิน
  * ========================================================= */
-function lcAdminCard_(r, key) {
+function lcAdminCard_(r, key, arrival) {
   const pin = lcPin_(r);
+  if (arrival === undefined) arrival = lcArrivalOf_(r.bookingId);
   const remind = key === 'set2' || key === 'del2';
   const roomNo = String(r.roomNo).replace(/^'/, '');
   if (key === 'set' || key === 'set2') {
@@ -246,9 +250,10 @@ function lcAdminCard_(r, key) {
         lineRow_('ช่องในกลอน', 'ผู้ใช้หมายเลข ' + r.slot + ' (ตั้งเป็นรหัสผ่าน)'),
         lineRow_('แขก', unsafe_(r.guestName) + ' · ' + r.code),
         lineRow_('เข้าพัก', thShort_(strDate_(r.checkIn)) + ' – ' + thShort_(strDate_(r.checkOut))),
+        lineRow_('มาถึงประมาณ', arrival || 'ไม่ได้ระบุ'),
         lineRow_('ใช้รหัสนี้', 'ตั้งรหัสนี้ในกลอน ทดสอบกด 1 ครั้ง แล้วกด [ตั้งในกลอนแล้ว]'),
         lineRow_('ใช้รหัสเอง', 'ตั้งรหัสที่ต้องการในกลอน แล้วกด [ใส่รหัสเอง] พิมพ์รหัสต่อท้ายแล้วส่ง'),
-        { type: 'text', text: 'แขกจะได้รหัสหลังแอดมินยืนยันเท่านั้น', size: 'xs', color: '#7A6E63', wrap: true, margin: 'md' }
+        { type: 'text', text: 'แขกขอรหัสได้หลังเช็คอิน และหลังแอดมินยืนยันว่าตั้งในกลอนแล้วเท่านั้น', size: 'xs', color: '#7A6E63', wrap: true, margin: 'md' }
       ],
       buttons: [
         { label: 'ตั้งในกลอนแล้ว', data: 'lc=set&id=' + r.id, primary: true, color: LG_GREEN_, group: 'set' },
@@ -337,9 +342,9 @@ function lcAdminPostback_(ev, data) {
         Object.assign(x, { status: 'removed', removedAt: now, removedBy: safe_('ทับด้วยรหัสใหม่ · ' + who) });
         lcWrite_(x);
       });
-      if (strDate_(r.checkIn) <= today_()) notifyGuest = r.bookingId;
+      notifyGuest = r.bookingId;
       return '✅ ตั้งรหัสล็อบบี้ช่อง ' + r.slot + ' แล้ว · ' + roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) +
-        '\nแขกกดเมนู "รับรหัสประตู" ได้ตั้งแต่ ' + thShort_(strDate_(r.checkIn));
+        '\n' + lcGuestWhen_(r);
     }
     if (p.lc === 'del') {
       if (String(r.status) === 'removed') return 'ช่อง ' + r.slot + ' ลบไปแล้ว';
@@ -351,11 +356,28 @@ function lcAdminPostback_(ev, data) {
     return 'ไม่รู้จักคำสั่ง';
   });
   lineReply_(ev.replyToken, msg);
-  if (notifyGuest) {
-    try {
-      lgPushBooking_(notifyGuest, [lgText_('รหัสเข้าล็อบบี้ของคุณพร้อมแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัส')]);
-    } catch (e) { console.error('LINE lobby guest ready: ' + e); }
-  }
+  if (notifyGuest) lcNotifyGuest_(notifyGuest, false);
+}
+
+/** ข้อความบอกแอดมินว่าแขกจะได้รหัสเมื่อไร */
+function lcGuestWhen_(r) {
+  return LC_AFTER_CHECKIN_ONLY
+    ? 'แขกกดเมนู "รับรหัสประตู" ได้หลังเช็คอิน (ตั้งแต่ ' + thShort_(strDate_(r.checkIn)) + ')'
+    : 'แขกกดเมนู "รับรหัสประตู" ได้ตั้งแต่ ' + thShort_(strDate_(r.checkIn));
+}
+
+/** บอกแขกว่ารหัสพร้อม/เปลี่ยนแล้ว เฉพาะแขกที่ขอรหัสได้แล้ว (เช็คอินแล้ว หรือถึงวันเข้าพักถ้าไม่บังคับเช็คอิน) */
+function lcNotifyGuest_(bookingId, changed) {
+  try {
+    const b = readTable_('bookings').find(x => String(x.id) === String(bookingId));
+    if (!b) return;
+    const ok = LC_AFTER_CHECKIN_ONLY ? String(b.status) === 'checked_in'
+      : strDate_(b.checkIn) <= today_() && ['confirmed', 'checked_in'].indexOf(String(b.status)) >= 0;
+    if (!ok) return;
+    lgPushBooking_(b.id, [lgText_(changed
+      ? 'รหัสเข้าล็อบบี้ของคุณเปลี่ยนแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัสใหม่'
+      : 'รหัสเข้าล็อบบี้ของคุณพร้อมแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัส')]);
+  } catch (e) { console.error('LINE lobby guest ready: ' + e); }
 }
 
 /* =========================================================
@@ -415,20 +437,14 @@ function lcAdminSetPin_(ev, target, pin) {
       Object.assign(x, { status: 'removed', removedAt: now, removedBy: safe_('ทับด้วยรหัสใหม่ · ' + who) });
       lcWrite_(x);
     });
-    if (strDate_(r.checkIn) <= today_()) notifyGuest = r.bookingId;
+    notifyGuest = r.bookingId;
     return '✅ ' + (wasActive ? 'เปลี่ยน' : 'บันทึก') + 'รหัสล็อบบี้ช่อง ' + r.slot + ' เป็น ' + pin + ' แล้ว\n' +
       roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) + ' · ' + r.code +
       (wasActive ? '\nอย่าลืมลบรหัสเดิม ' + oldPin + ' ออกจากกลอน (ถ้าตั้งรหัสใหม่ทับช่องเดิมแล้ว ไม่ต้องทำอะไรเพิ่ม)' : '') +
-      '\nแขกกดเมนู "รับรหัสประตู" ได้ตั้งแต่ ' + thShort_(strDate_(r.checkIn));
+      '\n' + lcGuestWhen_(r);
   });
   lineReply_(ev.replyToken, msg);
-  if (notifyGuest) {
-    try {
-      lgPushBooking_(notifyGuest, [lgText_(changed
-        ? 'รหัสเข้าล็อบบี้ของคุณเปลี่ยนแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัสใหม่'
-        : 'รหัสเข้าล็อบบี้ของคุณพร้อมแล้ว กดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อดูรหัส')]);
-    } catch (e) { console.error('LINE lobby guest pin: ' + e); }
-  }
+  if (notifyGuest) lcNotifyGuest_(notifyGuest, changed);
 }
 
 function lcAdminList_(ev) {
@@ -495,9 +511,30 @@ function lcAlertNotReady_(b, r) {
   cache.put(key, '1', 1800);
   try {
     linePushAdmins_([{ type: 'text', text: '⚠️ แขก ' + unsafe_(b.guestName) + ' (' + b.code + ' · ' + roomLabel_(b.roomNo) + ') ' +
-      'ขอรหัสเข้าล็อบบี้แล้ว แต่' + (r ? 'ยังไม่ได้กด "ตั้งในกลอนแล้ว" ช่อง ' + r.slot : 'ยังไม่มีช่องว่างในกลอน') +
+      (String(b.status) === 'checked_in' ? 'เช็คอินแล้วและ' : '') + 'ขอรหัสเข้าล็อบบี้แล้ว แต่' +
+      (r ? 'ยังไม่ได้กด "ตั้งในกลอนแล้ว" ช่อง ' + r.slot : 'ยังไม่มีช่องว่างในกลอน') +
+      (lcArrivalText_(b.arrivalTime) ? ' (แจ้งว่าจะมาถึง ' + lcArrivalText_(b.arrivalTime) + ')' : '') +
       '\nพิมพ์ "งานล็อบบี้" เพื่อดูงานค้าง หรือโทรหาแขก ' + phoneText_(b.phone) }]);
   } catch (e) { console.error('LINE lobby alert: ' + e); }
+}
+
+/** ยังไม่เช็คอิน: บอกให้เช็คอินก่อน แล้วค่อยกดรับรหัส */
+function lcCheckinFirst_(b, st) {
+  const url = lgCheckinUrl_(b);
+  const busy = st && st.step === 'busy';
+  return lineCard_({
+    title: busy ? 'ห้องพักยังไม่พร้อมเช็คอิน' : 'เช็คอินก่อนรับรหัส',
+    subtitle: roomLabel_(b.roomNo) + ' · การจอง ' + b.code,
+    color: busy ? LG_AMBER_ : LG_GREEN_, textColor: busy ? LG_DARK_ : LG_PAPER_,
+    alt: busy ? 'ห้องพักยังไม่พร้อมเช็คอิน' : 'เช็คอินก่อนรับรหัสเข้าล็อบบี้',
+    rows: [
+      { type: 'text', wrap: true, size: 'sm', color: LG_INK_, text: busy
+        ? LG_ROOM_BUSY_MSG
+        : 'รหัสเข้าล็อบบี้จะให้หลังเช็คอินเท่านั้น กดปุ่ม "เช็คอิน" ด้านล่าง (ใช้รหัสการจองและเบอร์โทรที่ใช้จอง) แล้วกดเมนู "รับรหัสประตู" อีกครั้ง' },
+      lineRow_('ติดต่อ', scContact_())
+    ],
+    buttons: !busy && url ? [{ label: 'เช็คอิน', uri: url, primary: true, color: LG_GREEN_ }] : []
+  });
 }
 
 function lcGuestMsg_(b, st) {
@@ -507,6 +544,7 @@ function lcGuestMsg_(b, st) {
     return lgText_('รหัสเข้าล็อบบี้ของการจอง ' + b.code + ' จะส่งให้ในวันเข้าพัก ' + thShort_(ci) +
       ' กดเมนู "รับรหัสประตู" อีกครั้งในวันนั้น');
   }
+  if (LC_AFTER_CHECKIN_ONLY && String(b.status) !== 'checked_in') return lcCheckinFirst_(b, st);
   let r = lcRowFor_(b);
   if (!r) { lcSweepSafe_(); r = lcRowFor_(b); }
   if (r && String(r.status) === 'active') return lgDoorCard_(b);
@@ -529,6 +567,7 @@ function lcGuestMsg_(b, st) {
   lgDoorCard_ = function (b) {
     const r = lcRowFor_(b);
     if (!r || String(r.status) !== 'active' || today_() < strDate_(b.checkIn)) return lgStatusCard_(b);
+    if (LC_AFTER_CHECKIN_ONLY && String(b.status) !== 'checked_in') return lcCheckinFirst_(b, scState_(b));
     const st = scState_(b);
     const S = SC_STAY_INFO;
     const room = st.step === 'in' ? LC_ROOM_NOTE
@@ -567,9 +606,14 @@ function lcGuestMsg_(b, st) {
       const c = String(code || '').trim().toUpperCase();
       const b = readTable_('bookings').find(x => String(x.code).trim().toUpperCase() === c);
       if (b && String(b.status) === 'checked_in') {
+        let r = lcRowFor_(b);
+        if (!r) { lcSweepSafe_(); r = lcRowFor_(b); }
+        const ready = r && String(r.status) === 'active';
+        if (!ready) lcAlertNotReady_(b, r);
         lgPushBooking_(b.id, [lgText_('เช็คอิน ' + b.code + ' เรียบร้อย ยินดีต้อนรับสู่ ' + HOTEL_NAME +
           '\n' + roomLabel_(b.roomNo) + ' · ' + LC_ROOM_NOTE +
-          '\nรหัสเข้าล็อบบี้ กดเมนู "รับรหัสประตู" ด้านล่างแชทได้ตลอดการเข้าพัก')]);
+          (ready ? '\nกดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อรับรหัสเข้าล็อบบี้ (กดดูซ้ำได้ตลอดการเข้าพัก)'
+            : '\nรหัสเข้าล็อบบี้กำลังเตรียม เราแจ้งเจ้าหน้าที่แล้ว จะส่งข้อความในแชทนี้ทันทีที่พร้อม'))]);
       }
     } catch (e) { console.error('LINE lobby checkin: ' + e); }
   };
@@ -578,7 +622,7 @@ function lcGuestMsg_(b, st) {
   const origState = scState_;
   scState_ = function (b) {
     const st = origState(b);
-    if (st.step === 'busy') st.reason = LG_ROOM_BUSY_MSG + ' (รับรหัสเข้าล็อบบี้ได้จากเมนู "รับรหัสประตู" ใน LINE)';
+    if (st.step === 'busy' && !LC_AFTER_CHECKIN_ONLY) st.reason = LG_ROOM_BUSY_MSG + ' (รับรหัสเข้าล็อบบี้ได้จากเมนู "รับรหัสประตู" ใน LINE)';
     return st;
   };
 
@@ -643,4 +687,78 @@ function lcGuestMsg_(b, st) {
         return out;
       };
     });
+})();
+
+/* =========================================================
+ * เวลาที่คาดว่าจะมาถึง (คอลัมน์ arrivalTime ในแท็บ Bookings)
+ * ลูกค้าเลือกในหน้าจอง แสดงในแจ้งเตือนการจองใหม่ แจ้งเตือนเช็คอิน การ์ดตั้งรหัสล็อบบี้ และแดชบอร์ด
+ * ========================================================= */
+function lcArrivalText_(v) {
+  const t = unsafe_(v).replace(/^'/, '').replace(/\s*[-–—]\s*/g, '–').replace(/\s+/g, ' ').trim();
+  if (!t) return '';
+  return LC_ARRIVAL_SLOTS.indexOf(t) >= 0 ? t : t.slice(0, 30);
+}
+
+function lcArrivalOf_(bookingId) {
+  try {
+    const b = readTable_('bookings').find(x => String(x.id) === String(bookingId));
+    return b ? lcArrivalText_(b.arrivalTime) : '';
+  } catch (e) { return ''; }
+}
+
+let LC_ARR_MAP_ = null;   // code → เวลามาถึง ระหว่างสร้างการ์ดแจ้งเตือนแอดมิน
+
+(function () {
+  if (SHEETS.bookings.headers.indexOf('arrivalTime') < 0) SHEETS.bookings.headers.push('arrivalTime');
+
+  /** รับค่าจากหน้าจอง (เฉพาะตัวเลือกที่กำหนด) แอดมินแก้การจองโดยไม่ส่งค่านี้ = คงค่าเดิม */
+  const origValidate = validateBooking_;
+  validateBooking_ = function (data, excludeId, isAdmin) {
+    const d = origValidate(data, excludeId, isAdmin);
+    const a = lcArrivalText_(data && data.arrivalTime);
+    if (a && (isAdmin || LC_ARRIVAL_SLOTS.indexOf(a) >= 0)) d.arrivalTime = safe_(a);
+    return d;
+  };
+
+  const origPub = publicBooking_;
+  publicBooking_ = function (b) {
+    const out = origPub(b);
+    out.arrivalTime = lcArrivalText_(b && b.arrivalTime);
+    return out;
+  };
+
+  const origCfg = publicGetConfig;
+  publicGetConfig = function () {
+    const out = origCfg();
+    out.arrivalSlots = LC_ARRIVAL_SLOTS;
+    return out;
+  };
+  API_ACTIONS.publicGetConfig = publicGetConfig;
+
+  /** ใส่แถว "มาถึง" ต่อจากแถว "เข้าพัก" ของแต่ละการจองในการ์ดแจ้งเตือนแอดมิน */
+  const origCard = lineCard_;
+  lineCard_ = function (o) {
+    if (LC_ARR_MAP_ && o && Array.isArray(o.rows)) {
+      const rows = [];
+      let code = '';
+      o.rows.forEach(x => {
+        rows.push(x);
+        const c = x && x.type === 'box' && x.contents && x.contents[0];
+        const label = c && c.text, val = x && x.contents && x.contents[1] && x.contents[1].text;
+        if (label === 'รหัส') code = String(val || '');
+        if (label === 'เข้าพัก' && LC_ARR_MAP_[code]) rows.push(lineRow_('มาถึง', 'ประมาณ ' + LC_ARR_MAP_[code]));
+      });
+      o = Object.assign({}, o, { rows: rows });
+    }
+    return origCard(o);
+  };
+  const withArrivals = (list, fn) => {
+    LC_ARR_MAP_ = {};
+    (list || []).forEach(b => { if (b && b.arrivalTime) LC_ARR_MAP_[String(b.code)] = lcArrivalText_(b.arrivalTime); });
+    try { return fn(); } finally { LC_ARR_MAP_ = null; }
+  };
+  const origNotify = lineNotifyBooking_;
+  lineNotifyBooking_ = function (type, b, reason) { return withArrivals([b], () => origNotify(type, b, reason)); };
+  const origRemind = lineNotifyReminders_;
+  lineNotifyReminders_ = function (due) { return withArrivals(due, () => origRemind(due)); };
 })();
