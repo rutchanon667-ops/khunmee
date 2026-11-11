@@ -56,7 +56,7 @@ Khun Mhee</a>
 <template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
 <div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
-<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร แล้วรับรหัสประตูทาง LINE ได้ทันทีในวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
+<p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร แล้วรับ{{doorLabel}}ทาง LINE ได้ทันทีในวันเข้าพัก ไม่ต้องรอเจ้าหน้าที่</p>
 </div>
 </template>
 
@@ -111,7 +111,7 @@ Khun Mhee</a>
 <section class="card" aria-labelledby="h-form" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
 <div style="flex: 1 1 260px; min-width: 0">
 <h2 id="h-form" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">พร้อมเช็คอินแล้ว{{firstName}}</h2>
-<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">กดปุ่มเพื่อเช็คอิน แล้วรับรหัสประตูทาง LINE</p>
+<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">{{checkinNote}}</p>
 </div>
 <button type="button" onClick="{{submit}}" disabled="{{busy}}" style="flex: 0 0 auto; background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 15px 30px; font-size: 18px; font-weight: 600">{{submitLabel}}</button>
 <template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
@@ -160,7 +160,7 @@ Khun Mhee</a>
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
 <div style="flex: 1 1 auto; min-width: 0">
 <h2 id="h-line" style="margin: 0; font-size: 21px; font-weight: 600">เชื่อมการจองกับ LINE</h2>
-<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่งรหัสประตูให้ในวันเช็คอิน</p>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้ในวันเข้าพัก</p>
 </div>
 </div>
 <div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 16px">
@@ -179,14 +179,20 @@ Khun Mhee</a>
 <section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
 <template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; color: #DCC881; font-weight: 600">เช็คอินเรียบร้อย ยินดีต้อนรับค่ะ</p></template>
 <span style="width: 64px; height: 64px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
-<h2 id="h-door" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 600; line-height: 1.3; color: #FFFFFF">รับรหัสประตูทาง LINE</h2>
+<h2 id="h-door" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 600; line-height: 1.3; color: #FFFFFF">รับ{{doorLabel}}ทาง LINE</h2>
 <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #D9D1C5; max-width: 460px">{{door.note}}</p>
 <template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><div style="margin-top: 4px; background: rgba(246,243,238,0.08); border: 1px solid #5E554C; border-radius: 12px; padding: 12px 18px"><p style="margin: 0; font-size: 13px; color: #D9D1C5">พิมพ์ในแชทแบบนี้</p><p style="margin: 2px 0 0; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #FFFFFF">{{line.sample}}</p></div></template>
-<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><a class="pill" href="{{line.url}}" style="margin-top: 6px; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">รับรหัสประตูทาง LINE</a><p style="margin: 0; font-size: 13px; line-height: 1.6; color: #D9D1C5; max-width: 420px">กดปุ่มแล้ว LINE จะพิมพ์ข้อความให้ กดส่งได้เลย ครั้งต่อไปกดเมนู "รับรหัสประตู" ในแชทได้ทันที · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือ</p></template>
+<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><a class="pill" href="{{line.url}}" style="margin-top: 6px; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">รับ{{doorLabel}}ทาง LINE</a><p style="margin: 0; font-size: 13px; line-height: 1.6; color: #D9D1C5; max-width: 420px">กดปุ่มแล้ว LINE จะพิมพ์ข้อความให้ กดส่งได้เลย ครั้งต่อไปกดเมนู "รับรหัสประตู" ในแชทได้ทันที · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือ</p></template>
 </section>
 
 <section class="card" aria-labelledby="h-stay" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
 <h2 id="h-stay" style="margin: 0; font-size: 22px; font-weight: 600">ข้อมูลระหว่างเข้าพัก</h2>
+<template data-sc="if" value="{{stay.roomNote}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; gap: 14px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 12px; padding: 14px 16px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F5A33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 22px; margin-top: 2px"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"></path><path d="M2 21h20"></path><path d="M15 12h.01"></path></svg>
+<div><p style="margin: 0; font-size: 13px; color: #2F5A33">เข้าห้องพัก{{stay.roomLabel}}</p><p style="margin: 2px 0 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: #2F5A33">{{stay.roomNote}}</p></div>
+</div>
+</template>
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
 <template data-sc="if" value="{{stay.wifiName}}" hint-placeholder-val="{{ true }}">
 <div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 14px 16px">
@@ -391,6 +397,8 @@ const s = this.state, info = s.info;
 const range = (a, b) => kmDate.short(a) + ' – ' + kmDate.short(b);
 const step = info ? info.step : '';
 const out = {
+doorLabel: kmDoorLabel(),
+checkinNote: info && info.lobby ? 'กดปุ่มเพื่อเช็คอิน แล้วเข้าห้องพักได้เลย' : 'กดปุ่มเพื่อเช็คอิน แล้วรับ' + kmDoorLabel() + 'ทาง LINE',
 pageTitle: step === 'in' ? 'ห้องของคุณ' : 'เช็คอินด้วยตัวเอง',
 checkinHour: String(info ? info.checkinHour : 14), checkoutHour: String(info ? info.checkoutHour : 12),
 showLead: !info || step === 'open' || step === 'early',
@@ -470,7 +478,8 @@ inStay: true, justIn: s.justIn, contact: 'ติดต่อ' + info.contact,
 stay: { room: info.roomName, doorCode: code || 'ติดต่อที่พัก', codeSpaced: code.split('').join(' '),
 wifiName: stay.wifiName || '', wifiPassword: stay.wifiPassword || '-',
 checkout: kmDate.short(info.checkOut) + ' ก่อน ' + (stay.checkoutTime || '12:00') + ' น.',
-rules: (stay.rules || []).map((t) => ({ t })) },
+rules: (stay.rules || []).map((t) => ({ t })),
+roomNote: (info.lobby && info.lobby.roomNote) || '', roomLabel: info.roomName ? ' · ' + info.roomName : '' },
 copyLabel: s.copied ? 'คัดลอกแล้ว' : 'คัดลอกรหัส',
 copyCode: () => {
 const ok = () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2000); };
@@ -478,8 +487,8 @@ if (navigator.clipboard && code) navigator.clipboard.writeText(code).then(ok, ()
 },
 door: {
 canLine: !!(window.kmLineChatUrl && window.kmLineChatUrl(info.line)),
-note: !(window.kmLineChatUrl && window.kmLineChatUrl(info.line)) ? 'กรุณาติดต่อ' + info.contact + ' เพื่อรับรหัสประตู'
-: 'รหัสประตูส่งให้ทางแชท LINE ของ Khun Mhee เท่านั้น ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ระบบจะส่งรหัสเข้าห้องให้ทันที'
+note: !(window.kmLineChatUrl && window.kmLineChatUrl(info.line)) ? 'กรุณาติดต่อ' + info.contact + ' เพื่อรับ' + kmDoorLabel()
+: kmDoorLabel() + 'ส่งให้ทางแชท LINE ของ Khun Mhee เท่านั้น ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ระบบจะส่งรหัสให้ทันที'
 }
 });
 return out;
