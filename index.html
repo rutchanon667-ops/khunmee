@@ -12,6 +12,38 @@ a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
 .pill:active,.btn:active{transform:scale(0.95)}
 .pill:hover{text-decoration:none}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #A1805D;outline-offset:2px}
+/* ค้นหาห้องว่าง: มือถือก่อน แล้วขยายเป็นแถวเดียวบนจอใหญ่ */
+.finder{width:100%;max-width:980px;box-sizing:border-box;margin-top:8px;display:grid;gap:12px;padding:14px;background:#FFFDF9;border:1px solid #E2D8C6;border-radius:24px;box-shadow:0 10px 30px rgba(71,65,58,.10);text-align:start}
+.f-dates{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;background:#F6F3EE;border:1px solid #E2D8C6;border-radius:18px}
+.f-date{position:relative;display:flex;flex-direction:column;gap:2px;padding:12px 16px;min-width:0;cursor:pointer;border-radius:18px}
+.f-date:focus-within,.f-sel:focus-within{outline:2px solid #A1805D;outline-offset:-2px}
+.f-k{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#7A6E63;letter-spacing:.2px}
+.f-v{font-size:22px;font-weight:600;line-height:1.25;color:#3A352F;white-space:nowrap}
+.f-s{font-size:13px;color:#7A6E63;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;padding:0;margin:0}
+.f-native::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+.f-nights{font-size:12px;font-weight:600;color:#7D6043;background:#EFE2B4;border-radius:9999px;padding:5px 10px;white-space:nowrap}
+.f-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.f-sel{position:relative;display:flex;flex-direction:column;gap:2px;padding:10px 16px;background:#F6F3EE;border:1px solid #E2D8C6;border-radius:18px;min-width:0}
+.f-sel select{-webkit-appearance:none;appearance:none;width:100%;border:0;background:transparent;font:inherit;font-size:17px;font-weight:600;color:#3A352F;padding:0 22px 0 0;cursor:pointer}
+.f-sel select:focus-visible{outline:none}
+.f-chev{position:absolute;right:14px;bottom:14px;pointer-events:none}
+.f-go{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 32px;border-radius:9999px;background:#47413A;color:#F6F3EE !important;font-size:18px;font-weight:600;white-space:nowrap}
+.f-go:hover{background:#3A352F}
+@media (min-width:834px){
+ .finder{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto;align-items:stretch;padding:10px;border-radius:9999px}
+ .f-dates,.f-sel{border-radius:9999px}
+ .f-date{padding:10px 24px;border-radius:9999px}
+ .f-sel{padding:10px 24px;justify-content:center}
+ .f-chev{right:20px;bottom:auto;top:50%;margin-top:-2px}
+ .f-v{font-size:19px}
+ .f-go{min-height:0}
+}
+@media (max-width:360px){
+ .f-date{padding:12px}
+ .f-v{font-size:19px}
+ .f-sel{padding:10px 12px}
+}
 /* แท็บเล็ต + มือถือ (ไอแพดแนวตั้ง 768–833px และเล็กกว่า) */
 @media (max-width:833px){
  .navlinks{display:none !important}
@@ -21,10 +53,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
  .grid4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .grid3{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .gallery{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
- .finder{flex-wrap:wrap !important;border-radius:18px !important;padding:12px !important;row-gap:4px !important}
- .finder>label{flex:1 1 40% !important}
- .finder>.pill{flex:1 1 100% !important;margin-top:4px}
- .finder-sep{display:none !important}
  .display{font-size:34px !important}
  .lead{font-size:22px !important}
  .quote-box{padding:56px 32px !important}
@@ -41,8 +69,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
  .two-col{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
  .grid4{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
  .grid3{grid-template-columns:repeat(1,minmax(0,1fr)) !important}
- .finder{flex-direction:column !important;align-items:stretch !important;padding:8px !important}
- .finder>label{flex:0 0 auto !important}
  .foot-cols{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .display{font-size:30px !important}
  .lead{font-size:19px !important}
@@ -111,31 +137,33 @@ Khun Mhee</a>
 <p style="margin: 0 0 12px; font-size: 21px; font-weight: 600; letter-spacing: 0.231px; color: #A1805D">ที่พักสไตล์ญี่ปุ่น · เป็นมิตรกับสัตว์เลี้ยง</p>
 <h1 class="hero-h" style="margin: 0; font-family: -apple-system,'SF Pro Display','Inter','Noto Sans Thai',sans-serif; font-size: 56px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px; max-width: 880px; color: #3a352f">บ้านที่น้องหมาน้องแมว<br>ก็คือแขกคนสำคัญ</h1><img src="images/exterior-day.jpg" alt="ภาพด้านหน้าอาคาร Pet Friendly House ยามกลางวัน" style="display: block; width: 100%; max-width: 1440px; aspect-ratio: 16 / 8; object-fit: cover; object-position: center 62%; margin-top: 56px">
 <p style="margin: 16px 0 0; font-size: 24px; font-weight: 300; line-height: 1.5; color: #47413a; max-width: 446px; box-sizing: border-box; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px"><b>พักผ่อนอย่างอบอุ่นในบ้านไม้โทนญี่ปุ่น พร้อมพาสมาชิกสี่ขาของคุณมาด้วยได้ทุกห้อง</b></p>
-<form aria-label="ค้นหาห้องว่าง" class="finder" style="width: 100%; max-width: 980px; display: flex; align-items: center; gap: 0; border: 1px solid #DED4C1; border-radius: 9999px; padding: 8px 8px 8px 28px; box-sizing: border-box; background: #F6F3EE; text-align: start; min-height: 75px; border-width: 3px; border-style: solid">
-<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
-<span style="font-size: 12px; font-weight: 600; color: #5E554C">เช็คอิน</span>
-<input type="date" name="in" value="{{fIn}}" onChange="{{setIn}}" min="{{todayIso}}" style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
+<form aria-label="ค้นหาห้องว่าง" class="finder" onSubmit="{{noSubmit}}">
+<div class="f-dates">
+<label class="f-date">
+<span class="f-k"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A1805D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg>เช็คอิน</span>
+<span class="f-v">{{inDay}}</span>
+<span class="f-s">{{inSub}}</span>
+<input class="f-native" type="date" name="in" value="{{fIn}}" onChange="{{setIn}}" onClick="{{openPicker}}" min="{{todayIso}}" aria-label="วันเช็คอิน {{inFull}}">
 </label>
-<span class="finder-sep" style="width: 1px; height: 36px; background: #DED4C1"></span>
-<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
-<span style="font-size: 12px; font-weight: 600; color: #5E554C">เช็คเอาท์</span>
-<input type="date" name="out" value="{{fOut}}" onChange="{{setOut}}" min="{{fIn}}" style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
+<span class="f-nights" aria-hidden="true">{{nightsLabel}}</span>
+<label class="f-date">
+<span class="f-k"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A1805D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg>เช็คเอาท์</span>
+<span class="f-v">{{outDay}}</span>
+<span class="f-s">{{outSub}}</span>
+<input class="f-native" type="date" name="out" value="{{fOut}}" onChange="{{setOut}}" onClick="{{openPicker}}" min="{{minOut}}" aria-label="วันเช็คเอาท์ {{outFull}}">
 </label>
-<span class="finder-sep" style="width: 1px; height: 36px; background: #DED4C1"></span>
-<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
-<span style="font-size: 12px; font-weight: 600; color: #5E554C">ผู้เข้าพัก</span>
-<select style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
-<option>2 ท่าน</option><option>1 ท่าน</option><option>3 ท่าน</option>
-</select>
+</div>
+<div class="f-opts">
+<label class="f-sel">
+<span class="f-k">ผู้เข้าพัก</span>
+<select name="guests"><option>2 ท่าน</option><option>1 ท่าน</option><option>3 ท่าน</option></select><svg class="f-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7A6E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
 </label>
-<span class="finder-sep" style="width: 1px; height: 36px; background: #DED4C1"></span>
-<label style="flex: 1 1 0; display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; min-width: 0">
-<span style="font-size: 12px; font-weight: 600; color: #5E554C">สัตว์เลี้ยง</span>
-<select style="border: 0; font: inherit; font-size: 17px; color: #47413A; background: transparent; padding: 0">
-<option>สุนัข 1 ตัว</option><option>แมว 1 ตัว</option><option>2 ตัว</option><option>ไม่มี</option>
-</select>
+<label class="f-sel">
+<span class="f-k">สัตว์เลี้ยง</span>
+<select name="pets"><option>สุนัข 1 ตัว</option><option>แมว 1 ตัว</option><option>2 ตัว</option><option>ไม่มี</option></select><svg class="f-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7A6E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
 </label>
-<a class="pill" href="{{findHref}}" style="background: {{accent}}; color: #F6F3EE; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 300; white-space: nowrap; text-align: center">ค้นหาห้องว่าง</a>
+</div>
+<a class="pill f-go" href="{{findHref}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>ค้นหาห้องว่าง</a>
 </form><div style="margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; max-width: 420px">
 <a class="pill" href="checkin.html" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56px; box-sizing: border-box; background: #4F7A52; color: #FFFFFF; border-radius: 9999px; padding: 14px 28px; font-size: 19px; font-weight: 600; text-align: center; box-shadow: 0 2px 16px rgba(71, 65, 58, 0.12)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"></circle><path d="M10.7 12.3L21 2"></path><path d="M16 7l3 3"></path><path d="M18.5 4.5l2 2"></path></svg>เช็คอินด้วยตัวเอง</a>
 <a class="pill" href="checkout.html" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56px; box-sizing: border-box; background: #FFFDF9; color: #7D6043; border: 2px solid #7D6043; border-radius: 9999px; padding: 12px 28px; font-size: 19px; font-weight: 600; text-align: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>เช็คเอาท์ด้วยตัวเอง</a>
@@ -337,10 +365,21 @@ const todayIso = iso(now);
 const fIn = this.state.fIn || kmDate.add(todayIso, 1);
 let fOut = this.state.fOut || kmDate.add(fIn, 1);
 if (fOut <= fIn) fOut = kmDate.add(fIn, 1);
+const n = kmDate.diff(fIn, fOut);
+const TH_DF = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+const TH_M = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+const day = (d) => { const p = d.split('-').map(Number); return p[2] + ' ' + TH_M[p[1] - 1]; };
+const TH_D = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+const sub = (d) => { const k = kmDate.diff(todayIso, d), w = kmDate.weekday(d); return k === 0 ? 'วันนี้ · ' + TH_D[w] : k === 1 ? 'พรุ่งนี้ · ' + TH_D[w] : 'วัน' + TH_DF[w]; };
 return {
-todayIso, fIn, fOut,
-setIn: (e) => this.setState({ fIn: e.target.value }),
-setOut: (e) => this.setState({ fOut: e.target.value }),
+todayIso, fIn, fOut, minOut: kmDate.add(fIn, 1),
+inDay: day(fIn), inSub: sub(fIn), inFull: kmDate.long(fIn),
+outDay: day(fOut), outSub: sub(fOut), outFull: kmDate.long(fOut),
+nightsLabel: n + ' คืน',
+setIn: (e) => { const v = e.target.value; if (!v) return; const st = { fIn: v < todayIso ? todayIso : v }; if (!this.state.fOut || this.state.fOut <= st.fIn) st.fOut = kmDate.add(st.fIn, 1); this.setState(st); },
+setOut: (e) => { const v = e.target.value; if (v) this.setState({ fOut: v }); },
+openPicker: (e) => { try { if (e.currentTarget.showPicker) e.currentTarget.showPicker(); } catch (_) {} },
+noSubmit: (e) => e.preventDefault(),
 findHref: 'booking.html?in=' + fIn + '&out=' + fOut,
 accent: this.props.accent ?? '#47413A',
 rooms: [
