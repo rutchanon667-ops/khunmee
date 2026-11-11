@@ -194,6 +194,14 @@ Khun Mhee</a>
 </select>
 </label>
 </div>
+<fieldset style="border: 0; margin: 20px 0 0; padding: 0; min-width: 0">
+<legend style="padding: 0; font-size: 14px; font-weight: 600">เวลาที่คาดว่าจะมาถึง *</legend>
+<p style="margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: #7A6E63">กรุณาระบุเวลาที่คาดว่าจะมาถึง เพื่อให้ระบบออกรหัสเข้า LOBBY</p>
+<div role="radiogroup" aria-label="เวลาที่คาดว่าจะมาถึง" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px">
+<template data-sc="for" list="{{arrOpts}}" as="a" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{a.on}}" onClick="{{a.pick}}" style="{{a.style}}">{{a.label}}</button></template>
+</div>
+<template data-sc="if" value="{{err.arrival}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 8px 0 0; color: #9E4F63; font-size: 13px">กรุณาเลือกเวลาที่คาดว่าจะมาถึง</p></template>
+</fieldset>
 <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; margin-top: 20px">คำขอเพิ่มเติม
 <textarea rows="3" value="{{f.note}}" onInput="{{setNote}}" placeholder="เช่น น้องแพ้อาหารบางชนิด หรือจะเช็คอินดึก" style="border: 1px solid #CFC3AC; border-radius: 11px; padding: 12px 14px; font-size: 17px; font-weight: 400; color: #47413A; resize: vertical"></textarea>
 </label>
@@ -308,7 +316,7 @@ Khun Mhee</a>
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
 <div style="flex: 1 1 auto; min-width: 0">
 <h2 id="{{line.hid}}" style="margin: 0; font-size: 21px; font-weight: 600">เชื่อมการจองกับ LINE</h2>
-<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้ในวันเข้าพัก</p>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้หลังเช็คอิน</p>
 </div>
 </div>
 <div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 16px">
@@ -353,9 +361,8 @@ Khun Mhee</a>
 <span style="font-size: 13px; font-weight: 600; background: #4F7A52; color: #F6F3EE; border-radius: 9999px; padding: 4px 12px">อนุมัติการจองแล้ว</span>
 <h2 id="h-done" style="margin: 0; font-size: 34px; font-weight: 600">การจองของคุณได้รับการยืนยัน</h2>
 <p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5E554C; max-width: 520px">ขอบคุณคุณ{{f.first}} แอดมินตรวจสลิปและยืนยันห้องให้แล้ว ดาวน์โหลดใบเสร็จเก็บไว้ได้จากด้านล่าง</p>
-<div style="margin-top: 4px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 14px 12px 20px">
-<span style="display: flex; flex-direction: column; text-align: left"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 26px; font-weight: 600; letter-spacing: 1px; font-variant-numeric: tabular-nums; color: #47413A">{{code}}</span></span>
-<button type="button" onClick="{{copyCode}}" aria-label="คัดลอกรหัสการจอง {{code}}" style="display: flex; align-items: center; gap: 6px; background: #F6F3EE; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 10px 18px; font-size: 15px; min-height: 44px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>{{codeCopyLabel}}</button>
+<div style="margin-top: 4px; display: flex; justify-content: center; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 28px">
+<span style="display: flex; flex-direction: column; text-align: center"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 26px; font-weight: 600; letter-spacing: 1px; font-variant-numeric: tabular-nums; color: #47413A">{{code}}</span></span>
 </div>
 <template data-sc="if" value="{{hasEmail}}" hint-placeholder-val="{{ true }}">
 <p style="margin: 4px 0 0; font-size: 14px; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 16px; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#47413A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>ระบบจะส่งอีเมลเตือนไปที่ {{f.email}} 1 วันก่อนเช็คอิน</p>
@@ -368,7 +375,7 @@ Khun Mhee</a>
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
 <div style="flex: 1 1 auto; min-width: 0">
 <h2 id="{{line.hid}}" style="margin: 0; font-size: 21px; font-weight: 600">เชื่อมการจองกับ LINE</h2>
-<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้ในวันเข้าพัก</p>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้หลังเช็คอิน</p>
 </div>
 </div>
 <div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 16px">
@@ -444,6 +451,7 @@ Khun Mhee</a>
 <div style="display: flex; justify-content: space-between"><span style="color: #5E554C">จำนวนคืน</span><span style="font-weight: 600">{{sum.nights}}</span></div>
 <div style="display: flex; justify-content: space-between"><span style="color: #5E554C">ผู้เข้าพัก</span><span>{{sum.guests}}</span></div>
 <div style="display: flex; justify-content: space-between"><span style="color: #5E554C">สัตว์เลี้ยง</span><span>{{f.pets}}</span></div>
+<template data-sc="if" value="{{f.arrival}}" hint-placeholder-val="{{ false }}"><div style="display: flex; justify-content: space-between"><span style="color: #5E554C">มาถึงประมาณ</span><span>{{f.arrival}}</span></div></template>
 </div>
 <div style="border-top: 1px solid #E6DDCB; padding-top: 16px; display: flex; justify-content: space-between; align-items: baseline">
 <span style="font-size: 17px; font-weight: 600">ยอดรวม</span>
@@ -496,7 +504,7 @@ super(props);
 this.state = {
 step: 1, loading: true, loadErr: '', cfg: null, rooms: [], booked: {},
 room: null, ci: null, co: null, viewY: 0, viewM: 0, tried: false,
-f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' },
+f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '', arrival: '' },
 pay: 'bank', copied: false, slip: null, slipTried: false, slipErrText: '', slipReading: false,
 busy: false, submitErr: '', saved: null, bkStatus: 'pending', receipt: null, checking: false, statusMsg: '', lastCheck: '',
 holdId: null, holdUntil: 0, holdBusy: false, holdErr: '', now: Date.now(), pdfBusy: false, pdfErr: '',
@@ -510,7 +518,7 @@ try { saved = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch 
 if (saved && saved.code && saved.phone) {
 this.pollStart = Date.now();
 this.setState({ saved, step: saved.status === 'confirmed' ? 5 : 4, bkStatus: saved.status || 'pending',
-f: Object.assign({}, this.state.f, { first: saved.first || '', email: saved.email || '', phone: saved.phone, pets: saved.pets || '' }) });
+f: Object.assign({}, this.state.f, { first: saved.first || '', email: saved.email || '', phone: saved.phone, pets: saved.pets || '', arrival: saved.arrival || '' }) });
 setTimeout(() => this.checkStatus(true), 0);
 }
 this.load();
@@ -760,7 +768,10 @@ const guests = String(Math.min(Number(f.guests) || 1, cap));
 const guestOpts = []; for (let i = 1; i <= cap; i++) guestOpts.push({ v: String(i), label: i + ' ท่าน' });
 const phoneOk = /^0\d{8,9}$/.test((f.phone || '').replace(/[-\s]/g, ''));
 const emailOk = !f.email.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim());
-const err = { first: s.tried && !f.first.trim(), last: s.tried && !f.last.trim(), phone: s.tried && !phoneOk, email: s.tried && !emailOk };
+const err = { first: s.tried && !f.first.trim(), last: s.tried && !f.last.trim(), phone: s.tried && !phoneOk, email: s.tried && !emailOk, arrival: s.tried && !f.arrival };
+const arrSlots = (Array.isArray(cfg.arrivalSlots) && cfg.arrivalSlots.length) ? cfg.arrivalSlots : ['14:00–16:00', '16:00–18:00', '18:00–20:00', '20:00–22:00', 'หลัง 22:00'];
+const arrOpts = arrSlots.map((label) => { const on = f.arrival === label; return { label, on, pick: () => this.setF('arrival', label),
+style: 'min-height: 44px; padding: 10px 18px; border-radius: 9999px; font-size: 16px; cursor: pointer; font-variant-numeric: tabular-nums; ' + (on ? 'background: ' + accent + '; color: #F6F3EE; border: 1px solid ' + accent + ';' : 'background: #F6F3EE; color: #47413A; border: 1px solid ' + (err.arrival ? '#9E4F63' : '#CFC3AC') + ';') }; });
 const inp = (bad) => 'height: 48px; border: 1px solid ' + (bad ? '#9E4F63' : '#CFC3AC') + '; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #F6F3EE';
 const payCard = (on) => 'display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: #F6F3EE; cursor: pointer; border: ' + (on ? '2px solid ' + accent : '1px solid #DED4C1') + '; margin: ' + (on ? '0' : '1px') + ';';
 
@@ -799,7 +810,6 @@ const chat = window.kmLineChatUrl ? window.kmLineChatUrl(L) : '';
 const lineUrl = chat ? chat.replace('/R/ti/p/', '/R/oaMessage/') + '/?' + encodeURIComponent(lineSample) : '';
 return {
 doorLabel: window.kmDoorLabel ? kmDoorLabel() : 'รหัสประตู',
-copyCode: () => this.copyText(code, 'codeCopied'), codeCopyLabel: s.codeCopied ? 'คัดลอกแล้ว' : 'คัดลอก',
 lineShow: !!(chat && sv && (s.step === 5 || (s.step === 4 && st !== 'cancelled'))),
 line: {
 hid: s.step === 5 ? 'h-line5' : 'h-line4', sample: lineSample,
@@ -822,7 +832,7 @@ holdActive, holdExpired, holdBusy: s.holdBusy, reHoldLabel: s.holdBusy ? 'กำ
 holdClock: Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'),
 holdBox: 'display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-radius: 18px; padding: 14px 20px; color: #47413A; background: ' + (left <= 60 ? '#F3D6DD' : '#EFE2B4') + '; border: 1px solid ' + (left <= 60 ? '#C88193' : '#D9B65C') + ';',
 reHold: () => this.hold().then((ok) => { if (!ok) this.setState({ step: 1 }); }),
-f: Object.assign({}, f, { guests }), err,
+f: Object.assign({}, f, { guests }), err, arrOpts,
 fs: { first: inp(err.first), last: inp(err.last), phone: inp(err.phone) },
 setFirst: (e) => this.setF('first', e.target.value),
 setLast: (e) => this.setF('last', e.target.value),
@@ -832,7 +842,7 @@ setGuests: (e) => this.setF('guests', e.target.value),
 setPets: (e) => this.setF('pets', e.target.value),
 setNote: (e) => this.setF('note', e.target.value),
 confirm: () => {
-if (!f.first.trim() || !f.last.trim() || !phoneOk || !emailOk) return this.setState({ tried: true });
+if (!f.first.trim() || !f.last.trim() || !phoneOk || !emailOk || !f.arrival) return this.setState({ tried: true });
 this.setState({ step: 3, tried: false });
 },
 isBank: s.pay === 'bank', isQr: s.pay === 'qr',
@@ -864,11 +874,11 @@ this.setState({ busy: true, submitErr: '' });
 kmCall('publicCreateBooking', [{
 roomNo: s.room, checkIn: s.ci, checkOut: s.co, guests: Number(guests),
 guestName: (f.first.trim() + ' ' + f.last.trim()).trim(), phone: f.phone.trim(), email: f.email.trim(),
-pets: f.pets, note: f.note.trim(), payMethod: s.pay, holdId: s.holdId || '',
+pets: f.pets, arrivalTime: f.arrival, note: f.note.trim(), payMethod: s.pay, holdId: s.holdId || '',
 slip: { name: s.slip.name, mimeType: s.slip.mimeType, base64: s.slip.base64 }
 }], { write: true })
 .then((r) => {
-const saved = { code: r.code, phone: f.phone.trim(), first: f.first.trim(), email: f.email.trim(), pets: f.pets,
+const saved = { code: r.code, phone: f.phone.trim(), first: f.first.trim(), email: f.email.trim(), pets: f.pets, arrival: f.arrival,
 roomNo: s.room, roomName: room ? room.name : '', ci: r.checkIn, co: r.checkOut, nights: r.nights, guests,
 total: r.totalPrice, payName: (cfg.payMethods || {})[s.pay] || '', slipName: s.slip.name, status: 'pending' };
 this.saveLocal(saved);
@@ -927,7 +937,7 @@ roomName: R.roomName, price: R.pricePerNight ? '฿' + money(R.pricePerNight) : 
 pdfBusy: s.pdfBusy || !R, pdfLabel: s.pdfBusy ? 'กำลังสร้าง PDF…' : 'ดาวน์โหลดใบเสร็จ (PDF)', pdfErr: s.pdfErr,
 downloadPdf: () => this.downloadPdf(),
 reset: () => { this.saveLocal(null); this.release(); this.setState({ refundStatus: '', refundAmount: 0, refundAcc: '', refundErr: '', refundSent: false, step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '',
-f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '' } }); this.refreshBooked(); window.scrollTo(0, 0); },
+f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '', arrival: '' } }); this.refreshBooked(); window.scrollTo(0, 0); },
 sum: view ? {
 room: sv.roomName, img: kmRoomImage(sv.roomNo), ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
 priceNote: total > 0 ? 'ยอดชำระ ฿' + money(total) : 'ราคาจะแจ้งหลังยืนยัน'
