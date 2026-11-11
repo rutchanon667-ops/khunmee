@@ -14,7 +14,15 @@ window.KM_CONFIG = {
 
   // LINE ID ของ LINE OA เช่น '@khunmhee' (ดูที่หน้าแรกของ LINE OA Manager)
   // ใส่ไว้แล้วปุ่ม "รับรหัสประตูทาง LINE" จะแสดงเสมอ แม้ระบบหลังบ้านยังไม่ได้ตั้ง LINE_OA_ID
-  LINE_OA_ID: '@413bzbdc'
+  LINE_OA_ID: '@413bzbdc',
+
+  // 'lobby' = กลอนรหัสเฉพาะประตูล็อบบี้ (รหัสต่อการจอง · LobbyCode.gs) · 'room' = รหัสประตูรายห้องแบบเดิม
+  DOOR_MODE: 'lobby'
+};
+
+/** ชื่อรหัสที่แสดงบนหน้าเว็บ ตาม DOOR_MODE */
+window.kmDoorLabel = function () {
+  return (window.KM_CONFIG || {}).DOOR_MODE === 'room' ? 'รหัสประตู' : 'รหัสเข้าล็อบบี้';
 };
 
 /** ลิงก์เปิดแชท LINE OA: ใช้ค่าจากระบบหลังบ้านก่อน ถ้าไม่มีใช้ LINE_OA_ID ด้านบน */
