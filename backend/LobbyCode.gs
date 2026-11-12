@@ -764,3 +764,59 @@ let LC_ARR_MAP_ = null;   // code → เวลามาถึง ระหว�
   const origRemind = lineNotifyReminders_;
   lineNotifyReminders_ = function (due) { return withArrivals(due, () => origRemind(due)); };
 })();
+
+/* =========================================================
+ * ตรวจระบบแจ้งเตือน LINE ของแอดมิน
+ * เลือกฟังก์ชัน checkLineNotify แล้วกด Run → ดูผลใน Execution log
+ * - ตรวจ token, จำนวนแอดมินที่ลงทะเบียน, โควตาข้อความของเดือนนี้
+ * - ส่งการ์ด "การจองใหม่ รอตรวจสลิป" ของการจองที่ยังรออนุมัติ (สูงสุด 5 รายการล่าสุด) ให้แอดมินอีกครั้ง
+ *   ถ้าไม่มีการจองค้าง จะส่งข้อความทดสอบแทน
+ * ========================================================= */
+function checkLineNotify() {
+  const cfg = lineProps_();
+  const log = s => Logger.log(s);
+  const hint = code => ({
+    400: 'ข้อความไม่ถูกต้อง (ส่งรายละเอียดนี้ให้ผู้พัฒนา)',
+    401: 'Channel access token ไม่ถูกต้องหรือหมดอายุ ออก token ใหม่ใน LINE Developers แล้วใส่ใน Script properties',
+    403: 'บัญชี OA ไม่มีสิทธิ์ส่งข้อความนี้',
+    429: 'ส่งข้อความครบโควตาของเดือนนี้แล้ว (หรือส่งถี่เกินไป) อัปเกรดแพ็กเกจ LINE OA หรือรอเดือนถัดไป'
+  }[code] || '');
+  log('Token: ' + (cfg.token ? 'มี' : 'ไม่มี ❌ ใส่ LINE_CHANNEL_ACCESS_TOKEN ใน Script properties'));
+  log('แอดมินที่ลงทะเบียน: ' + cfg.ids.length + (cfg.ids.length ? '' : ' ❌ พิมพ์ "แอดมิน <รหัส>" ในแชท LINE OA ก่อน'));
+  if (!cfg.token || !cfg.ids.length) return;
+
+  try {
+    const get = path => {
+      const res = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/' + path,
+        { headers: { Authorization: 'Bearer ' + cfg.token }, muteHttpExceptions: true });
+      return { code: res.getResponseCode(), body: JSON.parse(res.getContentText() || '{}') };
+    };
+    const q = get('quota'), used = get('quota/consumption');
+    if (q.code === 401) log('❌ ' + hint(401));
+    else log('โควตาเดือนนี้: ใช้ไป ' + (used.body.totalUsage === undefined ? '?' : used.body.totalUsage) +
+      (q.body.type === 'limited' ? ' จาก ' + q.body.value + ' ข้อความ' : ' (ไม่จำกัด)') +
+      (q.body.type === 'limited' && used.body.totalUsage >= q.body.value ? ' ❌ ครบโควตาแล้ว ส่งข้อความไม่ได้จนถึงเดือนหน้า' : ''));
+  } catch (e) { log('ตรวจโควตาไม่สำเร็จ: ' + e); }
+
+  const sendTo = (label, messages) => {
+    cfg.ids.forEach((to, i) => {
+      const r = lineRequest_('push', { to: to, messages: messages });
+      const code = Number((String(r.error || '').match(/LINE (\d{3})/) || [])[1]);
+      log(label + ' → แอดมิน ' + (i + 1) + ': ' + (r.ok ? '✅ ส่งแล้ว' : '❌ ' + r.error + (hint(code) ? '\n   ' + hint(code) : '')));
+    });
+  };
+  const pending = readTable_('bookings').filter(b => String(b.status) === 'pending')
+    .map(publicBooking_).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5);
+  if (!pending.length) {
+    sendTo('ข้อความทดสอบ', [{ type: 'text', text: 'ทดสอบการแจ้งเตือนจาก ' + HOTEL_NAME + ' ระบบส่ง LINE ทำงานปกติ' }]);
+    return;
+  }
+  const origPush = linePushAdmins_;
+  pending.forEach(b => {
+    let built = false;
+    linePushAdmins_ = function (messages) { built = true; sendTo('การ์ดอนุมัติ ' + b.code, messages); return 0; };
+    try { lineNotifyBooking_('new', b, 'ส่งซ้ำ · รอตรวจสลิป'); }
+    finally { linePushAdmins_ = origPush; }
+    if (!built) log('การ์ดอนุมัติ ' + b.code + ': ❌ สร้างการ์ดไม่สำเร็จ ดูรายละเอียดใน Executions');
+  });
+}
