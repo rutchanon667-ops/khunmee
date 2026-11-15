@@ -37,7 +37,8 @@ const LC_PREP_DAYS = 1;                // สุ่มรหัสและส�
 const LC_PIN_LENGTH = 6;               // ความยาวรหัส (PP9100 รับ 6–8 หลัก)
 const LC_SLOTS = {};                   // กำหนดช่องเองได้ เช่น { '1': [11, 21], '2': [12, 22] } ว่าง = ห้องที่ n ใช้ช่อง 10+n และ 20+n
 const LC_REMIND_HOURS = 3;             // งานค้างนานกี่ชั่วโมงแล้วเตือนแอดมินอีกครั้ง (เตือนซ้ำครั้งเดียว)
-const LC_ROOM_NOTE = 'ประตูห้องพักไม่ได้ล็อก กุญแจห้องวางไว้บนโต๊ะในห้อง';   // บอกแขกหลังเช็คอินว่าเข้าห้องอย่างไร
+const LC_ROOM_NOTE = 'รหัสเข้าล็อบบี้ จะเป็นรหัสเดียวกันกับรหัสปลดล็อคตู้เซฟเพื่อรับกุญแจเข้าห้องพักที่จองไว้ (ตู้เซฟจะอยู่ทางขวาของประตูล็อบบี้)';   // บอกแขกหลังเช็คอินว่าเข้าห้องอย่างไร
+const LC_SAFE_NOTE = 'ตั้งรหัสเดียวกันที่ตู้เซฟกุญแจของห้องนี้ด้วย';   // เตือนแอดมินในการ์ดงานตั้งรหัส (ว่าง = ไม่แสดง)
 const LC_KEYPAD_NOTE = 'แตะหน้าจอกลอนให้ไฟติด กดรหัส แล้วกดปุ่มยืนยัน';      // วิธีกดรหัสที่กลอน (ว่าง = ไม่แสดง)
 const LC_AFTER_CHECKIN_ONLY = true;    // แขกขอรหัสล็อบบี้ได้หลังเช็คอินแล้วเท่านั้น
 // เวลาที่คาดว่าจะมาถึง (ลูกค้าเลือกในหน้าจอง ขั้นข้อมูลผู้เข้าพัก) แสดงให้แอดมินดูอย่างเดียว ไม่มีผลกับการออกรหัส
@@ -251,10 +252,11 @@ function lcAdminCard_(r, key, arrival) {
         lineRow_('แขก', unsafe_(r.guestName) + ' · ' + r.code),
         lineRow_('เข้าพัก', thShort_(strDate_(r.checkIn)) + ' – ' + thShort_(strDate_(r.checkOut))),
         lineRow_('มาถึงประมาณ', arrival || 'ไม่ได้ระบุ'),
+        LC_SAFE_NOTE ? lineRow_('ตู้เซฟ', LC_SAFE_NOTE + ' (' + roomLabel_(roomNo) + ')') : null,
         lineRow_('ใช้รหัสนี้', 'ตั้งรหัสนี้ในกลอน ทดสอบกด 1 ครั้ง แล้วกด [ตั้งในกลอนแล้ว]'),
         lineRow_('ใช้รหัสเอง', 'ตั้งรหัสที่ต้องการในกลอน แล้วกด [ใส่รหัสเอง] พิมพ์รหัสต่อท้ายแล้วส่ง'),
         { type: 'text', text: 'แขกขอรหัสได้หลังเช็คอิน และหลังแอดมินยืนยันว่าตั้งในกลอนแล้วเท่านั้น', size: 'xs', color: '#7A6E63', wrap: true, margin: 'md' }
-      ],
+      ].filter(Boolean),
       buttons: [
         { label: 'ตั้งในกลอนแล้ว', data: 'lc=set&id=' + r.id, primary: true, color: LG_GREEN_, group: 'set' },
         { label: 'ใส่รหัสเอง', data: 'lc=own&id=' + r.id, group: 'own' }
@@ -323,40 +325,117 @@ function lcAdminPostback_(ev, data) {
       'เช่น ' + lcCmd_(slot) + '482915 (ตัวเลข 6–8 หลัก)');
   }
   const who = lineDisplayName_(src) || 'แอดมิน';
+  const res = p.lc === 'set' ? lcActConfirm_(p.id, who) : p.lc === 'del' ? lcActRemoved_(p.id, who) : { msg: 'ไม่รู้จักคำสั่ง' };
+  lineReply_(ev.replyToken, res.msg);
+}
+
+/* =========================================================
+ * งานของแอดมิน (ใช้ร่วมกันระหว่าง LINE และหน้าแอดมินบนเว็บ)
+ * คืน { ok, msg } และแจ้งแขกเองเมื่อรหัสพร้อม/เปลี่ยน
+ * ========================================================= */
+/** ยืนยันว่าตั้งรหัสที่ระบบสุ่มในกลอนแล้ว */
+function lcActConfirm_(id, who) {
   const now = new Date();
   let notifyGuest = null;
-  const msg = withLock_(() => {
+  const res = withLock_(() => {
     const rows = lcRows_();
-    const r = rows.find(x => String(x.id) === String(p.id));
-    if (!r) return 'ไม่พบรายการนี้แล้ว';
+    const r = rows.find(x => String(x.id) === String(id));
+    if (!r) return { ok: false, msg: 'ไม่พบรายการนี้แล้ว' };
     const roomNo = String(r.roomNo).replace(/^'/, '');
-    if (p.lc === 'set') {
-      if (String(r.status) === 'active') return 'ช่อง ' + r.slot + ' ตั้งไว้แล้ว (โดย ' + (unsafe_(r.setBy) || '-') + ')';
-      if (String(r.status) !== 'pending') return 'รายการนี้ไม่ต้องตั้งแล้ว (สถานะ: ' + (LC_STATUS_TH_[r.status] || r.status) + ')';
-      const pin = lcPin_(r);
-      if (!/^\d{6,8}$/.test(pin)) return 'รหัสในแท็บ LobbyCodes ต้องเป็นตัวเลข 6–8 หลัก กรุณาแก้แล้วกดอีกครั้ง';
-      Object.assign(r, { status: 'active', setAt: now, setBy: safe_(who) });
-      lcWrite_(r);
-      // รหัสเก่าในช่องเดียวกันที่รอลบ ถูกรหัสใหม่ทับแล้ว
-      rows.filter(x => x.id !== r.id && String(x.slot) === String(r.slot) && String(x.status) === 'remove').forEach(x => {
-        Object.assign(x, { status: 'removed', removedAt: now, removedBy: safe_('ทับด้วยรหัสใหม่ · ' + who) });
-        lcWrite_(x);
-      });
-      notifyGuest = r.bookingId;
-      return '✅ ตั้งรหัสล็อบบี้ช่อง ' + r.slot + ' แล้ว · ' + roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) +
-        '\n' + lcGuestWhen_(r);
-    }
-    if (p.lc === 'del') {
-      if (String(r.status) === 'removed') return 'ช่อง ' + r.slot + ' ลบไปแล้ว';
-      if (String(r.status) !== 'remove') return 'รหัสนี้ยังใช้งานอยู่ ยังไม่ต้องลบ';
-      Object.assign(r, { status: 'removed', removedAt: now, removedBy: safe_(who) });
-      lcWrite_(r);
-      return '🗑 ลบรหัสล็อบบี้ช่อง ' + r.slot + ' แล้ว · ' + roomLabel_(roomNo);
-    }
-    return 'ไม่รู้จักคำสั่ง';
+    if (String(r.status) === 'active') return { ok: false, msg: 'ช่อง ' + r.slot + ' ตั้งไว้แล้ว (โดย ' + (unsafe_(r.setBy) || '-') + ')' };
+    if (String(r.status) !== 'pending') return { ok: false, msg: 'รายการนี้ไม่ต้องตั้งแล้ว (สถานะ: ' + (LC_STATUS_TH_[r.status] || r.status) + ')' };
+    const pin = lcPin_(r);
+    if (!/^\d{6,8}$/.test(pin)) return { ok: false, msg: 'รหัสในแท็บ LobbyCodes ต้องเป็นตัวเลข 6–8 หลัก กรุณาแก้แล้วกดอีกครั้ง' };
+    Object.assign(r, { status: 'active', setAt: now, setBy: safe_(who) });
+    lcWrite_(r);
+    lcCloseOld_(rows, r, who, now);
+    notifyGuest = r.bookingId;
+    return { ok: true, msg: '✅ ตั้งรหัสล็อบบี้ช่อง ' + r.slot + ' แล้ว · ' + roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) + '\n' + lcGuestWhen_(r) };
   });
-  lineReply_(ev.replyToken, msg);
   if (notifyGuest) lcNotifyGuest_(notifyGuest, false);
+  return res;
+}
+
+/** ยืนยันว่าลบรหัสของแขกที่ออกไปแล้วออกจากกลอนแล้ว */
+function lcActRemoved_(id, who) {
+  const now = new Date();
+  return withLock_(() => {
+    const r = lcRows_().find(x => String(x.id) === String(id));
+    if (!r) return { ok: false, msg: 'ไม่พบรายการนี้แล้ว' };
+    if (String(r.status) === 'removed') return { ok: false, msg: 'ช่อง ' + r.slot + ' ลบไปแล้ว' };
+    if (String(r.status) !== 'remove') return { ok: false, msg: 'รหัสนี้ยังใช้งานอยู่ ยังไม่ต้องลบ' };
+    Object.assign(r, { status: 'removed', removedAt: now, removedBy: safe_(who) });
+    lcWrite_(r);
+    return { ok: true, msg: '🗑 ลบรหัสล็อบบี้ช่อง ' + r.slot + ' แล้ว · ' + roomLabel_(String(r.roomNo).replace(/^'/, '')) };
+  });
+}
+
+/** รหัสเก่าในช่องเดียวกันที่รอลบ ถูกรหัสใหม่ทับแล้ว */
+function lcCloseOld_(rows, r, who, now) {
+  rows.filter(x => x.id !== r.id && String(x.slot) === String(r.slot) && String(x.status) === 'remove').forEach(x => {
+    Object.assign(x, { status: 'removed', removedAt: now, removedBy: safe_('ทับด้วยรหัสใหม่ · ' + who) });
+    lcWrite_(x);
+  });
+}
+
+/** ตรวจรหัสที่แอดมินใส่เอง คืนข้อความผิดพลาด (ว่าง = ใช้ได้) */
+function lcPinProblem_(pin) {
+  if (!/^\d{6,8}$/.test(pin)) return 'รหัสต้องเป็นตัวเลข 6–8 หลัก';
+  const weak = lcWeakPin_(pin);
+  return weak ? 'รหัส ' + pin + ' ' + weak + ' เดาง่ายเกินไป กรุณาใช้รหัสอื่น' : '';
+}
+
+/**
+ * แอดมินใส่รหัสเอง (ตั้งในกลอนแล้ว) target = { id } (แถวในแท็บ LobbyCodes) หรือ ช่องในกลอน / รหัสการจอง
+ */
+function lcActOwnPin_(target, pin, who) {
+  pin = String(pin || '').trim();
+  const bad = lcPinProblem_(pin);
+  if (bad) return { ok: false, msg: bad };
+  lcSweepSafe_();
+  const byId = target && typeof target === 'object';
+  const t = byId ? '' : String(target || '').trim();
+  const byCode = /^KM/i.test(t);
+  const key = byCode ? t.toUpperCase() : String(Number(t));
+  const now = new Date();
+  let notifyGuest = null, changed = false;
+  const res = withLock_(() => {
+    const rows = lcRows_();
+    const open = rows.filter(x => LC_OPEN_.indexOf(String(x.status)) >= 0 &&
+      (byId ? String(x.id) === String(target.id) : byCode ? String(x.code).toUpperCase() === key : String(x.slot) === key))
+      .sort((a, b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1));
+    const r = open[0];
+    if (!r) {
+      if (byId) return { ok: false, msg: 'รายการนี้ไม่ได้รอตั้งรหัสหรือใช้งานอยู่แล้ว กรุณารีเฟรชหน้า' };
+      if (!byCode) return { ok: false, msg: 'ช่อง ' + key + ' ไม่มีการจองที่รอตั้งรหัสหรือใช้งานอยู่\nพิมพ์ "งานล็อบบี้" เพื่อดูช่องที่รอตั้งรหัส' };
+      const b = readTable_('bookings').find(x => String(x.code).trim().toUpperCase() === key);
+      if (!b) return { ok: false, msg: 'ไม่พบการจอง ' + key };
+      const st = String(b.status);
+      if (st === 'pending') return { ok: false, msg: 'การจอง ' + key + ' ยังรอยืนยันการชำระเงิน อนุมัติก่อนแล้วระบบจะสร้างงานตั้งรหัสให้' };
+      if (st === 'cancelled' || st === 'checked_out') return { ok: false, msg: 'การจอง ' + key + ' ' + (STATUS_TH_[st] || st) + ' ไม่ต้องตั้งรหัสแล้ว' };
+      if (strDate_(b.checkIn) > addDays_(today_(), LC_PREP_DAYS)) {
+        return { ok: false, msg: 'การจอง ' + key + ' เข้าพัก ' + thShort_(strDate_(b.checkIn)) + ' ระบบจะส่งงานตั้งรหัสให้ ' + LC_PREP_DAYS +
+          ' วันก่อนเข้าพัก แล้วค่อยพิมพ์คำสั่งนี้อีกครั้ง' };
+      }
+      return { ok: false, msg: roomLabel_(b.roomNo) + ' ใช้ครบ 2 ช่องแล้ว (แขกคนก่อนยังไม่ได้ลบรหัส) รอแขกคนก่อนเช็คเอาท์แล้วลองใหม่' };
+    }
+    const dup = rows.find(x => x.id !== r.id && ['pending', 'active', 'remove'].indexOf(String(x.status)) >= 0 && lcPin_(x) === pin);
+    if (dup) return { ok: false, msg: 'รหัส ' + pin + ' ซ้ำกับรหัสช่อง ' + dup.slot + ' ที่ยังอยู่ในกลอน กรุณาใช้รหัสอื่น' };
+    const roomNo = String(r.roomNo).replace(/^'/, '');
+    const oldPin = lcPin_(r), wasActive = String(r.status) === 'active';
+    if (wasActive && oldPin === pin) return { ok: false, msg: 'ช่อง ' + r.slot + ' ใช้รหัส ' + pin + ' อยู่แล้ว' };
+    changed = wasActive;
+    Object.assign(r, { pin: pin, status: 'active', setAt: now, setBy: safe_(who + ' · ใส่รหัสเอง') });
+    lcWrite_(r);
+    lcCloseOld_(rows, r, who, now);
+    notifyGuest = r.bookingId;
+    return { ok: true, msg: '✅ ' + (wasActive ? 'เปลี่ยน' : 'บันทึก') + 'รหัสล็อบบี้ช่อง ' + r.slot + ' เป็น ' + pin + ' แล้ว\n' +
+      roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) + ' · ' + r.code +
+      (wasActive ? '\nอย่าลืมลบรหัสเดิม ' + oldPin + ' ออกจากกลอน (ถ้าตั้งรหัสใหม่ทับช่องเดิมแล้ว ไม่ต้องทำอะไรเพิ่ม)' : '') +
+      '\n' + lcGuestWhen_(r) };
+  });
+  if (notifyGuest) lcNotifyGuest_(notifyGuest, changed);
+  return res;
 }
 
 /** ข้อความบอกแอดมินว่าแขกจะได้รหัสเมื่อไร */
@@ -397,54 +476,10 @@ function lcAdminSetPin_(ev, target, pin) {
   const src = ev.source || {};
   const help = 'พิมพ์: ล็อบบี้ <ช่อง> <รหัส 6–8 หลัก> เช่น ล็อบบี้ 21 482915\nหรือใช้รหัสการจองแทนช่อง เช่น ล็อบบี้ KM261111BBBB 482915\nพิมพ์ "งานล็อบบี้" เพื่อดูช่องที่รอตั้งรหัส';
   if (!target || !pin) return lineReply_(ev.replyToken, help);
-  if (!/^\d{6,8}$/.test(pin)) return lineReply_(ev.replyToken, 'รหัสต้องเป็นตัวเลข 6–8 หลัก (PP9100 รับ 6–8 หลัก)\n' + help);
-  const weak = lcWeakPin_(pin);
-  if (weak) return lineReply_(ev.replyToken, 'รหัส ' + pin + ' ' + weak + ' เดาง่ายเกินไป กรุณาใช้รหัสอื่น');
-  lcSweepSafe_();
-  const byCode = /^KM/i.test(target);
-  const key = byCode ? target.toUpperCase() : String(Number(target));
-  const who = lineDisplayName_(src) || 'แอดมิน';
-  const now = new Date();
-  let notifyGuest = null, changed = false;
-  const msg = withLock_(() => {
-    const rows = lcRows_();
-    const open = rows.filter(x => LC_OPEN_.indexOf(String(x.status)) >= 0 &&
-      (byCode ? String(x.code).toUpperCase() === key : String(x.slot) === key))
-      .sort((a, b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1));
-    const r = open[0];
-    if (!r) {
-      if (!byCode) return 'ช่อง ' + key + ' ไม่มีการจองที่รอตั้งรหัสหรือใช้งานอยู่\nพิมพ์ "งานล็อบบี้" เพื่อดูช่องที่รอตั้งรหัส';
-      const b = readTable_('bookings').find(x => String(x.code).trim().toUpperCase() === key);
-      if (!b) return 'ไม่พบการจอง ' + key;
-      const st = String(b.status);
-      if (st === 'pending') return 'การจอง ' + key + ' ยังรอยืนยันการชำระเงิน อนุมัติก่อนแล้วระบบจะสร้างงานตั้งรหัสให้';
-      if (st === 'cancelled' || st === 'checked_out') return 'การจอง ' + key + ' ' + (STATUS_TH_[st] || st) + ' ไม่ต้องตั้งรหัสแล้ว';
-      if (strDate_(b.checkIn) > addDays_(today_(), LC_PREP_DAYS)) {
-        return 'การจอง ' + key + ' เข้าพัก ' + thShort_(strDate_(b.checkIn)) + ' ระบบจะส่งงานตั้งรหัสให้ ' + LC_PREP_DAYS +
-          ' วันก่อนเข้าพัก แล้วค่อยพิมพ์คำสั่งนี้อีกครั้ง';
-      }
-      return roomLabel_(b.roomNo) + ' ใช้ครบ 2 ช่องแล้ว (แขกคนก่อนยังไม่ได้ลบรหัส) รอแขกคนก่อนเช็คเอาท์แล้วลองใหม่';
-    }
-    const dup = rows.find(x => x.id !== r.id && ['pending', 'active', 'remove'].indexOf(String(x.status)) >= 0 && lcPin_(x) === pin);
-    if (dup) return 'รหัส ' + pin + ' ซ้ำกับรหัสช่อง ' + dup.slot + ' ที่ยังอยู่ในกลอน กรุณาใช้รหัสอื่น';
-    const roomNo = String(r.roomNo).replace(/^'/, '');
-    const oldPin = lcPin_(r), wasActive = String(r.status) === 'active';
-    if (wasActive && oldPin === pin) return 'ช่อง ' + r.slot + ' ใช้รหัส ' + pin + ' อยู่แล้ว';
-    changed = wasActive;
-    Object.assign(r, { pin: pin, status: 'active', setAt: now, setBy: safe_(who + ' · ใส่รหัสเอง') });
-    lcWrite_(r);
-    rows.filter(x => x.id !== r.id && String(x.slot) === String(r.slot) && String(x.status) === 'remove').forEach(x => {
-      Object.assign(x, { status: 'removed', removedAt: now, removedBy: safe_('ทับด้วยรหัสใหม่ · ' + who) });
-      lcWrite_(x);
-    });
-    notifyGuest = r.bookingId;
-    return '✅ ' + (wasActive ? 'เปลี่ยน' : 'บันทึก') + 'รหัสล็อบบี้ช่อง ' + r.slot + ' เป็น ' + pin + ' แล้ว\n' +
-      roomLabel_(roomNo) + ' · ' + unsafe_(r.guestName) + ' · ' + r.code +
-      (wasActive ? '\nอย่าลืมลบรหัสเดิม ' + oldPin + ' ออกจากกลอน (ถ้าตั้งรหัสใหม่ทับช่องเดิมแล้ว ไม่ต้องทำอะไรเพิ่ม)' : '') +
-      '\n' + lcGuestWhen_(r);
-  });
-  lineReply_(ev.replyToken, msg);
-  if (notifyGuest) lcNotifyGuest_(notifyGuest, changed);
+  const bad = lcPinProblem_(pin);
+  if (bad) return lineReply_(ev.replyToken, bad + (/6–8/.test(bad) ? ' (PP9100 รับ 6–8 หลัก)\n' + help : ''));
+  const res = lcActOwnPin_(target, pin, lineDisplayName_(src) || 'แอดมิน');
+  lineReply_(ev.replyToken, res.msg);
 }
 
 function lcAdminList_(ev) {
@@ -571,7 +606,7 @@ function lcGuestMsg_(b, st) {
     const st = scState_(b);
     const S = SC_STAY_INFO;
     const room = st.step === 'in' ? LC_ROOM_NOTE
-      : st.step === 'busy' ? 'ยังไม่พร้อม อยู่ระหว่างรอผู้เข้าพักก่อนหน้าเช็คเอาท์ ฝากสัมภาระไว้ที่ล็อบบี้ก่อนได้ เราจะแจ้งในแชทนี้เมื่อห้องพร้อม'
+      : st.step === 'busy' ? 'ยังไม่พร้อม อยู่ระหว่างรอผู้เข้าพักก่อนหน้าเช็คเอาท์ เราจะแจ้งในแชทนี้เมื่อห้องพร้อม'
       : st.step === 'open' ? 'ห้องพร้อมแล้ว กดปุ่ม "เช็คอิน" ด้านล่าง แล้วเข้าห้องได้เลย'
       : st.reason || '-';
     const rows = [
@@ -590,7 +625,6 @@ function lcGuestMsg_(b, st) {
     rows.push({ type: 'text', text: 'รหัสนี้ใช้เปิดประตูล็อบบี้ กรุณาอย่าส่งต่อให้ผู้อื่น', size: 'xs', color: '#7A6E63', wrap: true, margin: 'md' });
     const buttons = [];
     if (st.step === 'open' && lgCheckinUrl_(b)) buttons.push({ label: 'เช็คอิน', uri: lgCheckinUrl_(b), primary: true, color: LG_GREEN_ });
-    if (st.step === 'in' && lgCheckoutUrl_(b)) buttons.push({ label: 'เช็คเอาท์', uri: lgCheckoutUrl_(b), primary: true, color: LG_BROWN_ });
     return lineCard_({
       title: 'รหัสเข้าล็อบบี้', subtitle: roomLabel_(b.roomNo) + ' · การจอง ' + b.code,
       color: LG_DARK_, textColor: LG_PAPER_,
@@ -611,7 +645,7 @@ function lcGuestMsg_(b, st) {
         const ready = r && String(r.status) === 'active';
         if (!ready) lcAlertNotReady_(b, r);
         lgPushBooking_(b.id, [lgText_('เช็คอิน ' + b.code + ' เรียบร้อย ยินดีต้อนรับสู่ ' + HOTEL_NAME +
-          '\n' + roomLabel_(b.roomNo) + ' · ' + LC_ROOM_NOTE +
+          '\n' + roomLabel_(b.roomNo) + '\n' + LC_ROOM_NOTE +
           (ready ? '\nกดเมนู "รับรหัสประตู" ด้านล่างแชทเพื่อรับรหัสเข้าล็อบบี้ (กดดูซ้ำได้ตลอดการเข้าพัก)'
             : '\nรหัสเข้าล็อบบี้กำลังเตรียม เราแจ้งเจ้าหน้าที่แล้ว จะส่งข้อความในแชทนี้ทันทีที่พร้อม'))]);
       }
@@ -819,4 +853,152 @@ function checkLineNotify() {
     finally { linePushAdmins_ = origPush; }
     if (!built) log('การ์ดอนุมัติ ' + b.code + ': ❌ สร้างการ์ดไม่สำเร็จ ดูรายละเอียดใน Executions');
   });
+}
+
+/* =========================================================
+ * หน้าแอดมินบนเว็บ: ดูและจัดการรหัสล็อบบี้ (เหมือนใน LINE)
+ * ========================================================= */
+function lcWho_(me) { return (unsafe_(me.fullname) || me.username) + ' (หลังบ้าน)'; }
+
+function adminLobbyList(token) {
+  requireAdmin_(token);
+  lcSweepSafe_();
+  const bookings = {};
+  readTable_('bookings').forEach(b => { bookings[String(b.id)] = b; });
+  const today = today_();
+  const rows = lcRows_().filter(r => ['pending', 'active', 'remove'].indexOf(String(r.status)) >= 0).map(r => {
+    const b = bookings[String(r.bookingId)] || {};
+    const roomNo = String(r.roomNo).replace(/^'/, '');
+    return {
+      id: String(r.id), slot: String(r.slot), status: String(r.status), statusName: LC_STATUS_TH_[r.status] || String(r.status),
+      pin: lcPin_(r), code: String(r.code), guestName: unsafe_(r.guestName), roomNo: roomNo, roomName: roomLabel_(roomNo),
+      checkIn: strDate_(r.checkIn), checkOut: strDate_(r.checkOut), arrivalTime: lcArrivalText_(b.arrivalTime),
+      bookingStatus: String(b.status || ''), setBy: unsafe_(r.setBy), setAt: fmt_(r.setAt),
+      removeReason: String(r.status) === 'remove' ? lcRemoveReason_(r) : '',
+      arrivesToday: strDate_(r.checkIn) === today
+    };
+  });
+  const order = { pending: 0, remove: 1, active: 2 };
+  rows.sort((a, b) => order[a.status] - order[b.status] || a.checkIn.localeCompare(b.checkIn) || a.slot.localeCompare(b.slot));
+  return { enabled: LC_ENABLED, rows: rows, safeNote: LC_SAFE_NOTE, keypadNote: LC_KEYPAD_NOTE };
+}
+
+function lcWebResult_(res) {
+  if (!res.ok) throw new Error(res.msg);
+  return res.msg.replace(/^[✅🗑]\s*/u, '');
+}
+
+function adminLobbyConfirm(token, id) {
+  const me = requireAdmin_(token);
+  return lcWebResult_(lcActConfirm_(id, lcWho_(me)));
+}
+
+function adminLobbyOwnPin(token, id, pin) {
+  const me = requireAdmin_(token);
+  return lcWebResult_(lcActOwnPin_({ id: String(id) }, String(pin || '').replace(/\D/g, ''), lcWho_(me)));
+}
+
+function adminLobbyRemoved(token, id) {
+  const me = requireAdmin_(token);
+  return lcWebResult_(lcActRemoved_(id, lcWho_(me)));
+}
+
+Object.assign(API_ACTIONS, {
+  adminLobbyList: adminLobbyList,
+  adminLobbyConfirm: adminLobbyConfirm,
+  adminLobbyOwnPin: adminLobbyOwnPin,
+  adminLobbyRemoved: adminLobbyRemoved
+});
+
+/* =========================================================
+ * ความถูกต้องของแท็บ Bookings และยอดคืนเงิน
+ * - บันทึกข้อมูลตามชื่อหัวคอลัมน์จริงในชีต (ไม่ขึ้นกับลำดับไฟล์ใน Apps Script)
+ *   ป้องกันข้อมูลลงผิดคอลัมน์เมื่อแต่ละไฟล์เพิ่มคอลัมน์ใหม่ต่อท้าย
+ * - ยอดคืนเงินที่อ่านจากชีตไม่ถูกต้อง (เป็นวันที่ หรือมากกว่ายอดที่ลูกค้าจ่าย) ใช้ยอดที่ลูกค้าจ่ายแทน
+ * - รัน checkBookingSheet เพื่อตรวจและแก้ยอดคืนเงินที่ผิดในแถวเดิม
+ * ========================================================= */
+const LC_COL_FIX_ = {};
+
+(function () {
+  const origSheet = sheet_;
+  const synced = {};
+  sheet_ = function (key) {
+    const sh = origSheet(key);
+    if (synced[key] || !SHEETS[key] || !Array.isArray(SHEETS[key].headers)) return sh;
+    synced[key] = true;
+    try {
+      const want = SHEETS[key].headers;
+      const width = Math.max(sh.getLastColumn(), 1);
+      const cur = sh.getRange(1, 1, 1, width).getValues()[0].map(x => String(x).trim());
+      if (cur[0] !== want[0]) return sh;
+      while (cur.length && !cur[cur.length - 1]) cur.pop();
+      const merged = cur.slice();
+      want.forEach(h => {
+        if (merged.indexOf(h) >= 0) return;
+        merged.push(h);
+        sh.getRange(1, merged.length).setValue(h).setFontWeight('bold');
+      });
+      if (merged.join('|') !== want.join('|')) {
+        LC_COL_FIX_[key] = { code: want.slice(), sheet: merged.slice() };
+        want.splice.apply(want, [0, want.length].concat(merged));
+      }
+    } catch (e) { console.error('ตรวจหัวคอลัมน์ ' + key + ': ' + e); }
+    return sh;
+  };
+})();
+
+/** ยอดคืนเงินที่ใช้ได้ของแถวนี้ (ไม่เกินยอดที่ลูกค้าจ่าย) */
+function lcRefundAmount_(b) {
+  const total = Number(b && b.totalPrice) || 0;
+  const v = b && b.refundAmount;
+  const n = v instanceof Date ? NaN : Number(String(v === undefined || v === null ? '' : v).replace(/[^\d.]/g, ''));
+  if (n > 0 && (!total || n <= total)) return Math.round(n * 100) / 100;
+  return total;
+}
+
+(function () {
+  if (typeof requestRefund_ === 'function') {
+    const origRR = requestRefund_;
+    requestRefund_ = function (id, amount, reason, who) {
+      if (amount === null || amount === undefined) {
+        const x = readTable_('bookings').find(r => r.id === id);
+        if (x) amount = lcRefundAmount_(x);
+      }
+      return origRR(id, amount, reason, who);
+    };
+  }
+  const origPub2 = publicBooking_;
+  publicBooking_ = function (b) {
+    const o = origPub2(b);
+    if (b && 'refundAmount' in o && (b.refundStatus || b.refundAmount)) o.refundAmount = lcRefundAmount_(b);
+    return o;
+  };
+})();
+
+/** รันเองจากหน้า Apps Script: ตรวจลำดับคอลัมน์ในแท็บ Bookings และแก้ยอดคืนเงินที่ผิด */
+function checkBookingSheet() {
+  const sh = sheet_('bookings');
+  const fix = LC_COL_FIX_.bookings;
+  Logger.log(fix
+    ? '⚠️ ลำดับคอลัมน์ในโค้ดไม่ตรงกับชีต (ตอนนี้ระบบบันทึกตามหัวคอลัมน์ในชีตแล้ว)\nโค้ด: ' + fix.code.join(', ') + '\nชีต: ' + fix.sheet.join(', ')
+    : '✅ ลำดับคอลัมน์ในแท็บ Bookings ตรงกับโค้ด');
+  const heads = SHEETS.bookings.headers;
+  ['totalPrice', 'refundAmount'].forEach(h => {
+    const c = heads.indexOf(h) + 1;
+    if (c > 0 && sh.getMaxRows() > 1) sh.getRange(2, c, sh.getMaxRows() - 1, 1).setNumberFormat('#,##0.##');
+  });
+  let fixed = 0;
+  withLock_(() => {
+    readTable_('bookings').forEach(b => {
+      if (!b.refundStatus && !b.refundAmount) return;
+      const ok = lcRefundAmount_(b);
+      const v = b.refundAmount;
+      const same = !(v instanceof Date) && Number(v) === ok;
+      if (same) return;
+      Logger.log('แก้ยอดคืนเงิน ' + b.code + ': ' + (v instanceof Date ? 'วันที่ ' + fmt_(v) : String(v)) + ' → ' + money_(ok) + ' บาท');
+      setCell_('bookings', b._row, 'refundAmount', ok);
+      fixed++;
+    });
+  });
+  Logger.log(fixed ? 'แก้ยอดคืนเงินแล้ว ' + fixed + ' แถว' : '✅ ยอดคืนเงินทุกแถวถูกต้อง');
 }

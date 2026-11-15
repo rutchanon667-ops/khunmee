@@ -66,6 +66,7 @@ Khun Mhee · หลังบ้าน</a>
 <a href="#calendar" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ปฏิทินห้องพัก</a>
 <a href="#notify" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">การแจ้งเตือน</a>
 <a href="#reminders" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">เตือนก่อนเช็คอิน</a>
+<a href="#lobby" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">รหัสล็อบบี้</a>
 <a href="#bookings" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ข้อมูลลูกค้า</a>
 <a href="#stats" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">สถิติ</a>
 <a href="#pricing" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ราคาห้อง</a>
@@ -169,6 +170,38 @@ Khun Mhee · หลังบ้าน</a>
 </section>
 
 </div>
+
+<!-- Lobby codes -->
+<section id="lobby" aria-labelledby="h-lobby" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+<h2 id="h-lobby" style="margin: 0; font-size: 21px; font-weight: 600; display: flex; align-items: center; gap: 10px">รหัสเข้าล็อบบี้<template data-sc="if" value="{{lbTodo}}" hint-placeholder-val="{{ true }}"><span style="border-radius: 9999px; background: #E0242B; color: #FFFFFF; font-size: 13px; font-weight: 700; padding: 3px 10px">งานค้าง {{lbTodo}}</span></template></h2>
+<p style="margin: 0; font-size: 13px; color: #7A6E63">ตั้งรหัสในกลอนล็อบบี้และตู้เซฟก่อน แล้วค่อยกดยืนยันที่นี่</p>
+</div>
+<template data-sc="if" value="{{lbMsg}}" hint-placeholder-val="{{ false }}"><p style="margin: 14px 0 0; font-size: 14px; color: #7A6E63; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">{{lbMsg}}</p></template>
+<ul style="list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px">
+<template data-sc="for" list="{{lbRows}}" as="r" hint-placeholder-count="3">
+<li style="{{r.cardStyle}}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-size: 13px; font-weight: 700; color: #47413A; background: #EDE6D7; border-radius: 9999px; padding: 4px 10px">ช่อง {{r.slot}}</span>
+<span style="{{r.chipStyle}}">{{r.statusName}}</span>
+</div>
+<p style="margin: 10px 0 0; font-size: 16px; font-weight: 600">{{r.guestName}}</p>
+<p style="margin: 2px 0 0; font-size: 13px; color: #7A6E63">{{r.roomName}} · {{r.code}}</p>
+<p style="margin: 2px 0 0; font-size: 13px; color: #7A6E63">{{r.dates}}{{r.arr}}</p>
+<template data-sc="if" value="{{r.showPin}}" hint-placeholder-val="{{ true }}"><p style="margin: 12px 0 0; text-align: center; font-size: 32px; font-weight: 700; letter-spacing: 4px; font-variant-numeric: tabular-nums; color: #3A352F; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 8px 0">{{r.pin}}</p></template>
+<template data-sc="if" value="{{r.note}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: #5E554C">{{r.note}}</p></template>
+<template data-sc="if" value="{{r.canConfirm}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{r.confirm}}" disabled="{{r.busy}}" style="margin-top: 12px; width: 100%; min-height: 44px; border: 0; border-radius: 9999px; background: #4F7A52; color: #F6F3EE; font-size: 15px; font-weight: 600; cursor: pointer">ตั้งในกลอนและตู้เซฟแล้ว</button></template>
+<template data-sc="if" value="{{r.canOwn}}" hint-placeholder-val="{{ true }}">
+<form onSubmit="{{r.saveOwn}}" style="margin-top: 10px; display: flex; gap: 8px; align-items: stretch">
+<label style="flex: 1 1 auto; min-width: 0"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{r.ownLabel}} ช่อง {{r.slot}}</span><input type="text" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="{{r.ownLabel}} (6–8 หลัก)" value="{{r.own}}" onInput="{{r.setOwn}}" style="width: 100%; box-sizing: border-box; min-height: 44px; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 0 16px; font-size: 16px; background: #FFFDF9; color: #47413A; font-variant-numeric: tabular-nums"></label>
+<button type="submit" disabled="{{r.busy}}" style="flex: 0 0 auto; min-height: 44px; border: 1px solid #47413A; border-radius: 9999px; background: #FFFDF9; color: #47413A; padding: 0 16px; font-size: 14px; font-weight: 600; cursor: pointer">บันทึก</button>
+</form>
+</template>
+<template data-sc="if" value="{{r.canRemove}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{r.removed}}" disabled="{{r.busy}}" style="margin-top: 12px; width: 100%; min-height: 44px; border: 0; border-radius: 9999px; background: #B5443F; color: #FFFFFF; font-size: 15px; font-weight: 600; cursor: pointer">ลบรหัสออกจากกลอนแล้ว</button></template>
+</li>
+</template>
+</ul>
+</section>
 
 <!-- Occupancy calendar -->
 <section id="calendar" aria-labelledby="h-cal" style="position: relative; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
@@ -575,7 +608,7 @@ stRange: '1m', stFrom: '', stTo: '', stats: null, stLoading: false, stErr: '',
 pr: null, prLoading: false, prErr: '', roomEdit: {}, rf: null, rfErr: '', pvFrom: '', pv: null,
 // แจ้งเตือน: อ่านแล้ว/ลบแล้ว (เก็บในเบราว์เซอร์นี้) · ตารางการจอง: การจองใหม่ที่ยังไม่ได้แตะ
 readKeys: this.loadSet('km_read'), dismissed: this.loadSet('km_dismiss'), bkAck: this.loadSet('km_bk_ack'), bkInit: this.hasKey('km_bk_ack'),
-calFlash: '', pop: null, notifyMax: '', bookMax: '', dlg: null, ext: null };
+calFlash: '', pop: null, notifyMax: '', bookMax: '', dlg: null, ext: null, lobby: null, lbErr: '', lbOwn: {} };
 }
 /* กล่องถามยืนยันในหน้า (ใช้แทน window.confirm กันเผลอคลิก) */
 ask(opts) {
@@ -697,10 +730,10 @@ return false;
 load(quiet) {
 const t = kmToken.get();
 if (!quiet) this.setState({ loading: true, loadErr: '' });
-return Promise.all([kmApi('getDashboard', t), kmApi('listBookings', t)])
-.then(([dash, bookings]) => {
+return Promise.all([kmApi('getDashboard', t), kmApi('listBookings', t), kmApi('adminLobbyList', t).catch((e) => ({ err: e.message }))])
+.then(([dash, bookings, lobby]) => {
 const d = new Date();
-const patch = { dash, bookings, loading: false, loadErr: '', updated: String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') };
+const patch = { dash, bookings, lobby: lobby && !lobby.err ? lobby : null, lbErr: lobby && lobby.err ? lobby.err : '', loading: false, loadErr: '', updated: String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') };
 // เปิดครั้งแรกในเบราว์เซอร์นี้: การจองที่มีอยู่แล้วไม่นับเป็น "ใหม่"
 if (!this.state.bkInit) {
 const ack = {};
@@ -1187,11 +1220,40 @@ okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; f
 }
 const h = new Date().getHours();
 const me = s.me || {};
+const lb = s.lobby;
+const lbList = lb ? lb.rows : [];
+const lbTodo = lbList.filter((r) => r.status !== 'active').length;
+const lbMsg = s.lbErr ? (/ไม่รู้จักคำสั่ง/.test(s.lbErr) ? 'ยังไม่ได้อัปเดต LobbyCode.gs ใน Apps Script (คัดลอกเวอร์ชันล่าสุดแล้ว Deploy เป็นเวอร์ชันใหม่)' : 'โหลดรหัสล็อบบี้ไม่สำเร็จ: ' + s.lbErr)
+: !lb ? '' : !lb.enabled ? 'ระบบรหัสล็อบบี้ปิดอยู่ (LC_ENABLED = false)' : !lbList.length ? 'ยังไม่มีรหัสที่ต้องตั้งหรือลบ ระบบจะสร้างงานให้ 1 วันก่อนแขกเข้าพัก' : '';
+const lbChip = { pending: 'background: #E9C46A; color: #3A352F;', active: 'background: #DCE8DD; color: #2F5A33;', remove: 'background: #B5443F; color: #FFFFFF;' };
+const lbRows = lbList.map((r) => {
+const busy = s.acting === 'lb-' + r.id;
+const own = (s.lbOwn && s.lbOwn[r.id]) || '';
+const setOwnVal = (v) => this.setState({ lbOwn: Object.assign({}, this.state.lbOwn, { [r.id]: v }) });
+return { slot: r.slot, statusName: r.statusName, guestName: r.guestName, roomName: r.roomName, code: r.code,
+dates: kmDate.dm(r.checkIn) + ' – ' + kmDate.dm(r.checkOut), arr: r.arrivalTime ? ' · ถึง ' + r.arrivalTime : '',
+pin: r.pin, showPin: r.status !== 'remove', busy,
+note: r.status === 'pending' ? (lb.safeNote ? lb.safeNote + ' · ' : '') + 'ใช้รหัสนี้ หรือใส่รหัสของคุณเองด้านล่าง'
+: r.status === 'active' ? 'ตั้งโดย ' + (r.setBy || '-') + (r.setAt ? ' · ' + r.setAt : '') + (r.bookingStatus === 'checked_in' ? ' · แขกเช็คอินแล้ว' : ' · แขกรับรหัสได้หลังเช็คอิน')
+: 'ลบรหัส ' + r.pin + ' ออกจากกลอน · ' + r.removeReason,
+canConfirm: r.status === 'pending', canOwn: r.status !== 'remove', canRemove: r.status === 'remove',
+ownLabel: r.status === 'active' ? 'เปลี่ยนรหัส' : 'ใช้รหัสเอง', own,
+setOwn: (e) => setOwnVal(String(e.target.value).replace(/\D/g, '').slice(0, 8)),
+confirm: () => this.act(kmApi('adminLobbyConfirm', t, r.id), 'lb-' + r.id),
+removed: () => this.ask({ kind: 'danger', title: 'ลบรหัสช่อง ' + r.slot + ' ออกจากกลอนแล้ว ?', lines: [r.guestName + ' · ' + r.roomName, 'รหัส ' + r.pin],
+okLabel: 'ลบแล้ว', cancelLabel: 'กลับไป', onOk: () => this.act(kmApi('adminLobbyRemoved', t, r.id), 'lb-' + r.id) }),
+saveOwn: (e) => { if (e && e.preventDefault) e.preventDefault(); const v = String(own);
+if (!/^\d{6,8}$/.test(v)) return this.say('รหัสต้องเป็นตัวเลข 6–8 หลัก');
+this.act(kmApi('adminLobbyOwnPin', t, r.id, v), 'lb-' + r.id).then(() => setOwnVal('')); },
+chipStyle: 'border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; ' + (lbChip[r.status] || ''),
+cardStyle: 'background: #FFFDF9; border: 1px solid ' + (r.status === 'active' ? '#E2D8C6' : r.status === 'pending' ? '#E9C46A' : '#C88193') + '; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; min-width: 0' };
+});
 return {
 accent: this.props.accent ?? '#47413A',
 meName: me.fullname || me.username || '', greeting: (h < 12 ? 'สวัสดีตอนเช้า' : h < 17 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น') + (me.fullname ? ' คุณ' + me.fullname : ''),
 todayLong: dash ? kmDate.long(today) : 'กำลังโหลดข้อมูล…',
 updatedLabel: s.updated ? 'อัปเดตล่าสุด ' + s.updated + ' น.' : '', loading: s.loading, refreshLabel: s.loading ? 'กำลังโหลด…' : 'รีเฟรชข้อมูล',
+lbTodo: lbTodo || '', lbRows, lbMsg,
 refresh: () => this.load(), loadErr: s.loadErr, toast: s.toast,
 logout: () => { kmApi('logout', t).catch(() => {}); kmToken.set(null); kmToken.setUser(null); this.toLogin(); },
 kpis, notes, nFilters, bFilters, rows, reminders, weeks, legend,
