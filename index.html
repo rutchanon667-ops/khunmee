@@ -12,6 +12,18 @@ a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
 .pill:active,.btn:active{transform:scale(0.95)}
 .pill:hover{text-decoration:none}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #A1805D;outline-offset:2px}
+/* แกลเลอรีภาพขยาย: ชี้เมาส์ (คอม) หรือแตะ (มือถือ) ภาพนั้นจะขยาย ภาพอื่นหดลง */
+.xg{display:flex;gap:8px;width:100%;max-width:1024px;height:420px;margin-top:40px}
+.xg-item{position:relative;flex:1 1 0;min-width:0;padding:0;border:0;border-radius:14px;overflow:hidden;cursor:pointer;background:#EDE6D7;transition:flex-grow .5s ease}
+.xg-item img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.xg-item.on,.xg:hover .xg-item:hover{flex-grow:5}
+.xg:hover .xg-item.on:not(:hover){flex-grow:1}
+.xg-cap{position:absolute;left:0;right:0;bottom:0;padding:28px 16px 14px;text-align:left;font-size:15px;font-weight:600;color:#FFFDF9;background:linear-gradient(to top,rgba(58,53,47,.75),rgba(58,53,47,0));opacity:0;transition:opacity .3s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xg-item.on .xg-cap,.xg:hover .xg-item:hover .xg-cap{opacity:1}
+.xg:hover .xg-item.on:not(:hover) .xg-cap{opacity:0}
+.xg-item:focus-visible{outline:3px solid #A1805D;outline-offset:2px}
+@media (max-width:640px){.xg{height:340px;gap:6px}.xg-item{border-radius:10px}.xg-item.on{flex-grow:6}}
+@media (prefers-reduced-motion:reduce){.xg-item,.xg-cap{transition:none}}
 /* ค้นหาห้องว่าง: มือถือก่อน แล้วขยายเป็นแถวเดียวบนจอใหญ่ */
 .finder{width:100%;max-width:980px;box-sizing:border-box;margin-top:8px;display:grid;gap:12px;padding:14px;background:#FFFDF9;border:1px solid #E2D8C6;border-radius:24px;box-shadow:0 10px 30px rgba(71,65,58,.10);text-align:start}
 .f-dates{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;background:#F6F3EE;border:1px solid #E2D8C6;border-radius:18px}
@@ -250,7 +262,19 @@ Khun Mhee</a>
 <img src="images/reception-3.jpg" alt="เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block">
 <img src="images/reception-4.jpg" alt="พื้นที่นั่งเล่นใต้บันได มีเก้าอี้ไม้และน้องแมว" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; display: block">
 </div>
-</section><section class="tile" style="background: #47413A; color: #F6F3EE; padding: 80px 20px 0; text-align: center; display: flex; flex-direction: column; align-items: center">
+</section>
+
+<!-- Gallery: ภาพขยายเมื่อชี้/แตะ -->
+<section id="gallery" class="tile" aria-labelledby="h-gallery" style="padding: 80px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; background-color: #F6F3EE">
+<p style="margin: 0 0 8px; font-size: 21px; font-weight: 600; color: #A1805D">Gallery</p>
+<h2 id="h-gallery" class="display" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.2">บรรยากาศใน Khun Mhee</h2>
+<p style="margin: 12px 0 0; font-size: 20px; font-weight: 300; line-height: 1.5; color: #5E554C; max-width: 640px">ชี้หรือแตะที่ภาพเพื่อดูภาพใหญ่</p>
+<div class="xg" role="group" aria-label="ภาพบรรยากาศ">
+<template data-sc="for" list="{{gallery}}" as="g" hint-placeholder-count="6"><button type="button" class="{{g.cls}}" onClick="{{g.pick}}" aria-pressed="{{g.on}}" aria-label="{{g.cap}}"><img src="{{g.src}}" alt="{{g.alt}}" loading="lazy"><span class="xg-cap" aria-hidden="true">{{g.cap}}</span></button></template>
+</div>
+</section>
+
+<section class="tile" style="background: #47413A; color: #F6F3EE; padding: 80px 20px 0; text-align: center; display: flex; flex-direction: column; align-items: center">
 <h2 class="display" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.2">ทุกห้อง พาน้องมาด้วยได้</h2>
 <p class="lead" style="margin: 12px 0 0; font-size: 28px; font-weight: 400; line-height: 1.3; letter-spacing: 0.196px; color: #EDE6D7; max-width: 720px">ไม่มีห้องพิเศษ ไม่มีโซนแยก — เพราะเราออกแบบทั้งบ้านมาเพื่อคุณและสัตว์เลี้ยงตั้งแต่แรก</p>
 <div style="display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; justify-content: center">
@@ -371,7 +395,19 @@ const TH_M = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 
 const day = (d) => { const p = d.split('-').map(Number); return p[2] + ' ' + TH_M[p[1] - 1]; };
 const TH_D = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
 const sub = (d) => { const k = kmDate.diff(todayIso, d), w = kmDate.weekday(d); return k === 0 ? 'วันนี้ · ' + TH_D[w] : k === 1 ? 'พรุ่งนี้ · ' + TH_D[w] : 'วัน' + TH_DF[w]; };
+const GALLERY = [
+['images/room-shoji.jpg', 'ห้องโชจิ', 'ภาพห้องโชจิ'],
+['images/room-hinoki.jpg', 'ห้องฮิโนกิ', 'ภาพห้องฮิโนกิ'],
+['images/room-yane-1.jpg', 'ห้องยาเนะ', 'ภาพห้องยาเนะ'],
+['images/room-komorebi.jpg', 'ห้องโคโมเรบิ', 'ภาพห้องโคโมเรบิ'],
+['images/reception-3.jpg', 'ครัวและเคาน์เตอร์', 'เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์'],
+['images/bathroom-1.jpg', 'ห้องน้ำ', 'ภาพห้องน้ำ']
+];
+const gOn = this.state.gOn === undefined ? 0 : this.state.gOn;
+const gallery = GALLERY.map(([src, cap, alt], i) => ({ src, cap, alt, on: gOn === i, cls: 'xg-item' + (gOn === i ? ' on' : ''),
+pick: () => this.setState({ gOn: i }) }));
 return {
+gallery,
 todayIso, fIn, fOut, minOut: kmDate.add(fIn, 1),
 inDay: day(fIn), inSub: sub(fIn), inFull: kmDate.long(fIn),
 outDay: day(fOut), outSub: sub(fOut), outFull: kmDate.long(fOut),
