@@ -31,6 +31,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 .km-actions{display:flex;align-items:center;gap:8px}
 .km-pill{display:inline-flex;align-items:center;min-height:36px;padding:0 16px;border-radius:9999px;font-size:14px;white-space:nowrap;text-decoration:none;box-sizing:border-box}
 .km-pill-in{border:1px solid #4F7A52;color:#2F5A33 !important}
+.km-pill-map{display:none;gap:5px;border:1px solid #A1805D;background:#FFFDF9;color:#7D6043 !important}
 .km-pill-out{border:1px solid #7D6043;color:#7D6043 !important}
 .km-pill-rs{border:1px solid #5B4B8A;color:#5B4B8A !important}
 .km-pill-book{background:#3A352F;color:#F6F3EE !important;font-weight:600}
@@ -55,7 +56,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 /* ปุ่ม LINE ลอย (มือถือ) */
 .km-fab{display:none;position:fixed;right:12px;bottom:12px;z-index:20;align-items:center;gap:8px;background:#06C755;color:#FFFFFF !important;border-radius:9999px;padding:12px 16px;font-size:15px;font-weight:600;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.22)}
 @media (max-width:1100px){.km-navlinks{gap:18px;font-size:14px}}
-@media (max-width:960px){.km-navlinks{display:none}.km-sublinks{display:none}.km-bar2-in{justify-content:flex-end}}
+@media (max-width:960px){.km-pill-map{display:inline-flex}.km-navlinks{display:none}.km-sublinks{display:none}.km-bar2-in{justify-content:flex-end}}
 @media (max-width:860px){
  .km-hero{grid-template-columns:minmax(0,1fr) !important}
  .km-hero-img{min-height:320px !important}
@@ -73,6 +74,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  .km-bar2-in{padding:8px 12px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
  .km-bar2-in::-webkit-scrollbar{display:none}
  .km-pill{min-height:34px;padding:0 12px;font-size:13px}
+ .km-pill-book{order:-2}
+ .km-pill-map{order:-1}
  .km-h1{font-size:34px !important}
  #pets>div{padding:40px 22px !important}
  .km-quote{padding:32px 22px !important}
@@ -114,6 +117,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a href="#pet-rules">กติกาสัตว์เลี้ยง</a>
 </nav>
 <div class="km-actions">
+<a class="km-pill km-pill-map" href="#map"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>แผนที่</a>
 <a class="km-pill km-pill-in" href="checkin.html">เช็คอิน</a>
 <a class="km-pill km-pill-out" href="checkout.html">เช็คเอาท์</a>
 <a class="km-pill km-pill-rs" href="reschedule.html">เลื่อนวันพัก</a>
