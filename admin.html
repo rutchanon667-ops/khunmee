@@ -28,6 +28,9 @@ th{font-weight:600;text-align:left}
 .km-del:hover{background:#F3D9D6;color:#B5443F !important}
 .km-bar:hover{filter:brightness(1.08)}
 .km-flash{animation:kmFlash .6s ease-in-out .45s 3}
+.km-hl{background-color:#FCE4E2 !important;box-shadow:inset 0 0 0 3px #E0242B;border-radius:11px}
+.km-hl-n{color:#B5443F !important}
+.km-link{box-shadow:0 0 0 3px #FFFDF9,0 0 0 6px #E9A23B !important;position:relative;z-index:1}
 @keyframes kmFlash{50%{background-color:#E0242B;box-shadow:0 0 0 3px #E0242B;color:#FFFFFF}}
 .km-sticky th{white-space:nowrap;position:sticky;top:0;z-index:2;background:#F6F3EE;box-shadow:inset 0 -1px 0 #E6DDCB}
 #notify button:disabled{cursor:default;opacity:.45}
@@ -228,10 +231,10 @@ Khun Mhee · หลังบ้าน</a>
 <template data-sc="for" list="{{w.days}}" as="d" hint-placeholder-count="7"><span id="{{d.id}}" class="{{d.cls}}" style="{{d.bg}}"></span></template>
 </div>
 <div style="position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px">
-<template data-sc="for" list="{{w.days}}" as="d" hint-placeholder-count="7"><span class="{{d.cls}}" style="{{d.style}}">{{d.n}}</span></template>
+<template data-sc="for" list="{{w.days}}" as="d" hint-placeholder-count="7"><span class="{{d.ncls}}" style="{{d.style}}">{{d.n}}</span></template>
 </div>
 <div style="position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); column-gap: 8px; row-gap: 6px; margin-top: 8px; grid-auto-flow: row dense">
-<template data-sc="for" list="{{w.bars}}" as="b" hint-placeholder-count="2"><button type="button" data-bar="1" onClick="{{b.open}}" title="{{b.title}}" aria-label="{{b.aria}}" aria-expanded="{{b.expanded}}" aria-controls="cal-pop" class="km-bar" style="{{b.style}}">{{b.label}}</button></template>
+<template data-sc="for" list="{{w.bars}}" as="b" hint-placeholder-count="2"><button type="button" data-bar="1" data-bid="{{b.bid}}" data-link="{{b.link}}" onClick="{{b.open}}" title="{{b.title}}" aria-label="{{b.aria}}" aria-expanded="{{b.expanded}}" aria-controls="cal-pop" class="{{b.cls}}" style="{{b.style}}">{{b.label}}</button></template>
 </div>
 </div>
 </template>
@@ -243,14 +246,18 @@ Khun Mhee · หลังบ้าน</a>
 <p style="margin: 0; padding-right: 44px; font-size: 12px; color: #7A6E63; font-variant-numeric: tabular-nums">{{pop.code}}</p>
 <h3 id="cal-pop-h" style="margin: 2px 0 0; padding-right: 44px; font-size: 17px; font-weight: 600; line-height: 1.35">{{pop.name}}</h3>
 <p style="margin: 6px 0 0"><span style="{{pop.badge}}">{{pop.statusName}}</span></p>
+<template data-sc="if" value="{{pop.hasSegs}}" hint-placeholder-val="{{ false }}"><div style="margin: 10px 0 0; background: #FFFDF9; border: 1px solid #F0D9AE; border-radius: 11px; padding: 10px">
+<p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #8A5A12">ย้ายห้องระหว่างเข้าพัก (ห้องเดิมเต็ม) · กดเพื่อดูแต่ละช่วง</p>
+<div style="display: flex; flex-direction: column; gap: 6px"><template data-sc="for" list="{{pop.segs}}" as="sg" hint-placeholder-count="2"><button type="button" onClick="{{sg.open}}" aria-current="{{sg.cur}}" style="{{sg.style}}">{{sg.label}}</button></template></div>
+</div></template>
 <dl style="margin: 10px 0 0; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 4px 10px; font-size: 13px; line-height: 1.45">
 <template data-sc="for" list="{{pop.rows}}" as="r" hint-placeholder-count="6"><dt style="color: #7A6E63">{{r.l}}</dt><dd style="margin: 0; overflow-wrap: anywhere">{{r.v}}</dd></template>
 </dl>
 <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px">
-<template data-sc="if" value="{{pop.canCheckIn}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{pop.checkIn}}" disabled="{{pop.ciBusy}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #8B5E3C; color: #F6F3EE; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>{{pop.ciLabel}}</button></template>
+<template data-sc="if" value="{{pop.canCheckIn}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{pop.checkIn}}" disabled="{{pop.ciBusy}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #0E7C7B; color: #FFFFFF; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>{{pop.ciLabel}}</button></template>
 <template data-sc="if" value="{{pop.canExtend}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{pop.extend}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #3E6A9E; color: #FFFFFF; font-size: 14px; font-weight: 600">+ เพิ่มวันพัก</button></template>
 <template data-sc="if" value="{{pop.needApprove}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #6B4E1E; background: #F3E3B0; border-radius: 9px; padding: 8px 10px">ต้องอนุมัติสลิปก่อน จึงจะเช็คอินได้ (ปุ่มอนุมัติอยู่ในตารางการจอง)</p></template>
-<template data-sc="if" value="{{pop.isIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #4A3320; background: #EADBCB; border-radius: 9px; padding: 8px 10px">เช็คอินแล้ว · ระบบจะเช็คเอาท์ให้อัตโนมัติ 12:00 น. วันเช็คเอาท์</p></template>
+<template data-sc="if" value="{{pop.isIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #0A4F4E; background: #D7EEED; border-radius: 9px; padding: 8px 10px">เช็คอินแล้ว · ระบบจะเช็คเอาท์ให้อัตโนมัติ 12:00 น. วันเช็คเอาท์</p></template>
 <template data-sc="if" value="{{pop.tel}}" hint-placeholder-val="{{ true }}"><a href="{{pop.tel}}" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; background: #47413A; color: #F6F3EE; font-size: 13px; text-decoration: none">โทรหาลูกค้า</a></template>
 <template data-sc="if" value="{{pop.slipUrl}}" hint-placeholder-val="{{ true }}"><a href="{{pop.slipUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; border: 1px solid #DED4C1; color: #335A88; font-size: 13px; text-decoration: none">ดูสลิป ↗</a></template>
 <template data-sc="if" value="{{pop.receiptUrl}}" hint-placeholder-val="{{ false }}"><a href="{{pop.receiptUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; border: 1px solid #DED4C1; color: #2F6B45; font-size: 13px; text-decoration: none">ใบเสร็จ PDF ↗</a></template>
@@ -608,7 +615,7 @@ stRange: '1m', stFrom: '', stTo: '', stats: null, stLoading: false, stErr: '',
 pr: null, prLoading: false, prErr: '', roomEdit: {}, rf: null, rfErr: '', pvFrom: '', pv: null,
 // แจ้งเตือน: อ่านแล้ว/ลบแล้ว (เก็บในเบราว์เซอร์นี้) · ตารางการจอง: การจองใหม่ที่ยังไม่ได้แตะ
 readKeys: this.loadSet('km_read'), dismissed: this.loadSet('km_dismiss'), bkAck: this.loadSet('km_bk_ack'), bkInit: this.hasKey('km_bk_ack'),
-calFlash: '', pop: null, notifyMax: '', bookMax: '', dlg: null, ext: null, lobby: null, lbErr: '', lbOwn: {} };
+calFlash: '', calHL: this.loadHL(), linkHover: '', pop: null, notifyMax: '', bookMax: '', dlg: null, ext: null, lobby: null, lbErr: '', lbOwn: {} };
 }
 /* กล่องถามยืนยันในหน้า (ใช้แทน window.confirm กันเผลอคลิก) */
 ask(opts) {
@@ -694,9 +701,64 @@ const cell = document.getElementById('cal-d-' + date);
 const sec = document.getElementById('calendar');
 if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
 else if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+this.addHL(date);
 this.setState({ calFlash: date });
 this.flashT = setTimeout(() => this.setState({ calFlash: '' }), 3200);
 });
+}
+/* ไฮไลท์วันที่ค้างไว้หลังกระพริบ (หลายวันได้) จนกว่าจะชี้เมาส์หรือแตะที่ช่องวันนั้น · จำไว้ในเบราว์เซอร์นี้ */
+loadHL() {
+try { const v = JSON.parse(localStorage.getItem('km_cal_hl') || '{}'); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; }
+}
+saveHL(hl) {
+try { localStorage.setItem('km_cal_hl', JSON.stringify(hl)); } catch (e) {}
+}
+addHL(date) {
+const hl = Object.assign({}, this.state.calHL, { [date]: Date.now() });
+this.saveHL(hl);
+this.setState({ calHL: hl });
+}
+/* ชี้เมาส์/แตะ: ล้างไฮไลท์ของช่องวันที่อยู่ใต้นิ้ว (หลังกระพริบเสร็จแล้ว) และเรืองแถบที่เป็นการเข้าพักต่อเนื่อง */
+onPointer(e) {
+const hl = this.state.calHL || {};
+const keys = Object.keys(hl);
+if (keys.length) {
+const now = Date.now();
+const hit = keys.filter((d) => {
+if (now - hl[d] < 2400) return false;
+const el = document.getElementById('cal-d-' + d);
+if (!el) return false;
+const r = el.getBoundingClientRect();
+return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+});
+if (hit.length) {
+const next = Object.assign({}, hl);
+hit.forEach((d) => { delete next[d]; });
+this.saveHL(next);
+this.setState({ calHL: next });
+}
+}
+if (e.type === 'pointerover' || e.type === 'pointerdown') {
+const bar = e.target && e.target.closest ? e.target.closest('[data-link]') : null;
+const g = bar ? bar.getAttribute('data-link') : '';
+if (g !== (this.state.linkHover || '') && (g || e.type === 'pointerover')) this.setState({ linkHover: g });
+}
+}
+/* เปิดรายละเอียดการจองจากรายการอื่น (ช่วงการเข้าพักต่อเนื่อง) */
+openPopById(id) {
+const b = (this.state.bookings || []).find((x) => x.id === id);
+if (!b) return;
+const find = () => document.querySelector('[data-bar][data-bid="' + id + '"]');
+const show = () => {
+const el = find();
+if (!el) return this.setState({ pop: { id, x: 16, y: 16 } });
+const r = el.getBoundingClientRect();
+el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+this.openPop(id, { target: el, clientX: r.left + Math.min(r.width / 2, 120) });
+};
+if (find()) return show();
+const tp = this.today().split('-').map(Number), dp = b.checkIn.split('-').map(Number);
+this.setState({ monthOffset: (dp[0] * 12 + dp[1] - 1) - (tp[0] * 12 + tp[1] - 1), pop: null }, show);
 }
 /* กล่องรายละเอียดการจอง เด้งขึ้นตรงจุดที่คลิก/แตะแถบในปฏิทิน */
 openPop(id, e) {
@@ -717,6 +779,7 @@ componentDidMount() {
 if (!kmToken.get()) { this.toLogin(); return; }
 window.addEventListener('resize', () => this.scheduleFit());
 document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if (this.state.dlg) this.closeDlg(false); else if (this.state.ext && !this.state.ext.busy) this.setState({ ext: null }); });
+['pointermove', 'pointerdown', 'pointerover'].forEach((t) => document.addEventListener(t, (e) => this.onPointer(e), { passive: true }));
 this.load();
 this.loadStats('1m');
 this.loadPricing();
@@ -799,9 +862,9 @@ const short = (n) => String(n || '').replace(/^ห้อง/, '');
 const ST = {
 confirmed: { bg: '#4F7A52', fg: '#F6F3EE', name: 'อนุมัติการจองแล้ว' },
 pending: { bg: '#E9C46A', fg: '#3A352F', name: 'รอยืนยันการจอง' },
-checked_in: { bg: '#8B5E3C', fg: '#F6F3EE', name: 'เช็คอินแล้ว' },
+checked_in: { bg: '#0E7C7B', fg: '#FFFFFF', name: 'เช็คอินแล้ว' },
 soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'นับถอยหลังเช็คอิน' },
-checked_out: { bg: '#7A6E63', fg: '#F6F3EE', name: 'เช็คเอาท์แล้ว' },
+checked_out: { bg: '#C2560F', fg: '#FFFFFF', name: 'เช็คเอาท์แล้ว' },
 cancelled: { bg: '#B5443F', fg: '#FFF8F5', name: 'ยกเลิกการจอง' },
 refund: { bg: '#C0392B', fg: '#FFFFFF', name: 'ขอเงินคืน' }
 };
@@ -813,6 +876,14 @@ const stOf = (b) => (b.status === 'confirmed' && isSoon(b)) ? 'soon' : (ST[b.sta
 const countdown = (b) => { const n = kmDate.diff(today, b.checkIn); return n <= 0 ? 'เช็คอินวันนี้' : n === 1 ? 'พรุ่งนี้เช็คอิน' : 'อีก ' + n + ' วันเช็คอิน'; };
 const stName = (b, k) => k === 'soon' ? countdown(b) : ST[k].name;
 const bookings = s.bookings;
+const mvByCode = {};
+bookings.forEach((x) => { mvByCode[String(x.code)] = x; });
+const moveTag = (b) => {
+const prev = b.extendedFrom ? mvByCode[String(b.extendedFrom)] : null;
+if (prev && String(prev.roomNo) !== String(b.roomNo)) return 'ย้ายห้อง: ต่อจาก ' + rn(prev.roomNo) + ' (' + prev.code + ')';
+const next = bookings.find((x) => x.extendedFrom && String(x.extendedFrom) === String(b.code) && String(x.roomNo) !== String(b.roomNo) && x.status !== 'cancelled');
+return next ? 'ย้ายห้อง: ' + kmDate.dm(next.checkIn) + ' ไป' + rn(next.roomNo) + ' (' + next.code + ')' : '';
+};
 const live = bookings.filter((b) => b.status !== 'cancelled');
 
 const arrivals = dash ? dash.arrivals : [];
@@ -919,7 +990,7 @@ warn: 'ยกเลิกแล้วย้อนกลับไม่ได้ 
 this.ask(Object.assign({ lines: who, onOk: go }, D));
 };
 const setStatus = (b, st, label) => () => { ackBooking(b.id); confirmStatus(b, st); };
-const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #8B5E3C; color: #F6F3EE;' : kind === 'out' ? 'border: 0; background: #47413A; color: #F6F3EE;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
+const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #0E7C7B; color: #FFFFFF;' : kind === 'out' ? 'border: 0; background: #C2560F; color: #FFFFFF;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
 const refundAct = (b, res) => () => { ackBooking(b.id); this.ask({ kind: res === 'refunded' ? 'ok' : 'danger',
 title: res === 'refunded' ? 'ยืนยันว่าโอนเงินคืน ' + b.guestName + ' แล้ว ?' : 'ปิดคำขอคืนเงินของ ' + b.guestName + ' ?',
 text: res === 'none' ? 'ใช้เมื่อไม่ต้องคืนเงิน เช่น สลิปไม่ถูกต้อง หรือตกลงกับลูกค้าแล้ว' : '',
@@ -948,7 +1019,7 @@ slipUrl: b.slipUrl || '', noSlip: !b.slipUrl, receiptUrl: b.receiptUrl || '', st
 isNew: isNewRow, ack: () => ackBooking(b.id),
 refund: b.refundStatus === 'requested' ? 'ขอเงินคืน ' + rAmt : b.refundStatus === 'refunded' ? 'คืนเงินแล้ว ' + rAmt : '',
 refundStyle: 'display: inline-block; margin-top: 4px; border-radius: 9999px; padding: 3px 9px; font-size: 12px; font-weight: 700; white-space: nowrap; ' + (b.refundStatus === 'requested' ? 'background: #C0392B; color: #FFFFFF;' : 'background: #DCE8DD; color: #2F5A33;'),
-extra: [b.prevCheckIn ? 'เลื่อนจาก ' + kmDate.dm(b.prevCheckIn) + '–' + kmDate.dm(b.prevCheckOut) : '', b.extendedFrom ? 'ต่อจาก ' + b.extendedFrom : ''].filter(Boolean).join(' · '),
+extra: [b.prevCheckIn ? 'เลื่อนจาก ' + kmDate.dm(b.prevCheckIn) + '–' + kmDate.dm(b.prevCheckOut) : '', moveTag(b), b.extendedFrom && !moveTag(b) ? 'ต่อจาก ' + b.extendedFrom : ''].filter(Boolean).join(' · '),
 trStyle: 'border-top: 1px solid #E6DDCB; cursor: ' + (isNewRow ? 'pointer' : 'default') + ';' + (isNewRow ? ' background: #FFE9B0;' : ''),
 codeStyle: 'padding: 14px 12px 14px 12px; font-variant-numeric: tabular-nums; ' + (isNewRow ? 'color: #47413A; font-weight: 700;' : 'color: #7A6E63;'),
 badge: 'display: inline-block; border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';' + (k === 'cancelled' ? ' text-decoration: line-through;' : '') };
@@ -974,6 +1045,27 @@ const autoOn = !!(dash && dash.reminder && dash.reminder.enabled);
 const lineInfo = dash && dash.reminder ? dash.reminder.line : null;
 const lineOk = !!(lineInfo && lineInfo.configured && lineInfo.targets);
 
+// เพิ่มวันพักแล้วย้ายห้อง (ห้องเดิมเต็ม): การจองใหม่มี extendedFrom = รหัสการจองเดิม และอยู่คนละห้อง
+const moveLinks = { to: {}, from: {}, group: {}, chain: {} };
+(() => {
+const byCode = {};
+bookings.forEach((b) => { byCode[String(b.code)] = b; });
+bookings.forEach((b) => {
+const prev = b.extendedFrom ? byCode[String(b.extendedFrom)] : null;
+if (!prev || String(prev.roomNo) === String(b.roomNo) || b.status === 'cancelled') return;
+moveLinks.to[prev.id] = b;
+moveLinks.from[b.id] = prev;
+});
+const head = (b) => { let x = b, n = 0; while (moveLinks.from[x.id] && n++ < 20) x = moveLinks.from[x.id]; return x; };
+bookings.forEach((b) => {
+if (!moveLinks.to[b.id] && !moveLinks.from[b.id]) return;
+const h = head(b);
+moveLinks.group[b.id] = 'mv-' + h.id;
+const list = [h]; let x = h, n = 0;
+while (moveLinks.to[x.id] && n++ < 20) { x = moveLinks.to[x.id]; list.push(x); }
+moveLinks.chain[b.id] = list;
+});
+})();
 const tp = today.split('-').map(Number);
 const idx = tp[0] * 12 + (tp[1] - 1) + s.monthOffset;
 const Y = Math.floor(idx / 12), Mo = (idx % 12) + 1;
@@ -992,11 +1084,13 @@ const d = kmDate.add(wStart, c);
 const inM = d >= first && d <= last;
 const isToday = d === today;
 const flash = inM && s.calFlash === d;
-dayCells.push({ n: inM ? String(Number(d.slice(8, 10))) : '', id: inM ? 'cal-d-' + d : '', cls: flash ? 'km-flash' : '',
+const hl = inM && !!(s.calHL || {})[d];
+dayCells.push({ n: inM ? String(Number(d.slice(8, 10))) : '', id: inM ? 'cal-d-' + d : '', cls: (flash ? 'km-flash ' : '') + (hl ? 'km-hl' : ''), ncls: (flash ? 'km-flash ' : '') + (hl ? 'km-hl-n' : ''),
 bg: 'border-radius: 11px; background: ' + (!inM ? 'transparent' : isToday ? '#EADFC8' : '#EFE9DD') + ';',
 style: 'padding: 0 8px; height: 28px; display: flex; align-items: center; font-size: 15px; font-weight: ' + (isToday ? '700' : '600') + '; color: ' + (inM ? '#47413A' : 'transparent') + ';' + (isToday ? ' text-decoration: underline; text-underline-offset: 4px;' : '') });
 }
 const bars = [];
+const mv = moveLinks;
 bookings.slice().sort((a, b) => String(a.roomNo).localeCompare(String(b.roomNo)) || a.checkIn.localeCompare(b.checkIn)).forEach((b) => {
 const lastNight = kmDate.add(b.checkOut, -1);
 const from = [b.checkIn, wStart, first].sort().pop();
@@ -1006,12 +1100,13 @@ const k = stOf(b);
 const contL = from > b.checkIn, contR = to < lastNight;
 const rad = (contL ? '0' : '9px') + ' ' + (contR ? '0' : '9px') + ' ' + (contR ? '0' : '9px') + ' ' + (contL ? '0' : '9px');
 const picked = s.pop && s.pop.id === b.id;
-bars.push({ label: (contL ? '… ' : '') + (k === 'soon' ? countdown(b) + ' · ' : '') + short(rn(b.roomNo)) + ' · ' + String(b.guestName).split(' ')[0] + ' · ' + b.nights + ' คืน',
-title: b.guestName + ' · ' + rn(b.roomNo) + ' · ' + kmDate.dm(b.checkIn) + '–' + kmDate.dm(b.checkOut) + ' (' + b.nights + ' คืน) · ' + stName(b, k),
+const mvTo = mv.to[b.id], mvFrom = mv.from[b.id], grp = mv.group[b.id] || '';
+bars.push({ bid: b.id, link: grp, label: (contL ? '… ' : '') + (mvFrom && !contL ? 'ย้ายจาก' + short(rn(mvFrom.roomNo)) + ' ← ' : '') + (k === 'soon' && !mvFrom ? countdown(b) + ' · ' : '') + short(rn(b.roomNo)) + ' · ' + String(b.guestName).split(' ')[0] + ' · ' + b.nights + ' คืน' + (mvTo && !contR ? ' → ย้ายไป' + short(rn(mvTo.roomNo)) : ''),
+title: b.guestName + ' · ' + rn(b.roomNo) + ' · ' + kmDate.dm(b.checkIn) + '–' + kmDate.dm(b.checkOut) + ' (' + b.nights + ' คืน) · ' + stName(b, k) + (mvTo ? ' · ย้ายไป' + rn(mvTo.roomNo) + ' ' + kmDate.dm(mvTo.checkIn) : '') + (mvFrom ? ' · ย้ายจาก' + rn(mvFrom.roomNo) : ''),
 aria: 'ดูรายละเอียดการจอง ' + b.code + ' ' + b.guestName + ' ' + rn(b.roomNo) + ' ' + kmDate.dm(b.checkIn) + ' ถึง ' + kmDate.dm(b.checkOut),
 expanded: picked ? 'true' : 'false',
 open: (e) => { if (this.state.pop && this.state.pop.id === b.id) this.setState({ pop: null }); else this.openPop(b.id, e); },
-style: 'grid-column: ' + (kmDate.diff(wStart, from) + 1) + ' / span ' + (kmDate.diff(from, to) + 1) + '; height: 30px; border: 0; margin: 0; cursor: pointer; text-align: left; font-family: inherit; border-radius: ' + rad + '; padding: 0 10px; display: flex; align-items: center; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; min-width: 0; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';' + (k === 'cancelled' ? ' text-decoration: line-through;' : '') + (picked ? ' box-shadow: 0 0 0 3px #3A352F; position: relative; z-index: 1;' : '') });
+style: 'grid-column: ' + (kmDate.diff(wStart, from) + 1) + ' / span ' + (kmDate.diff(from, to) + 1) + '; height: 30px; border: 0; margin: 0; cursor: pointer; text-align: left; font-family: inherit; border-radius: ' + rad + '; padding: 0 10px; display: flex; align-items: center; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; min-width: 0; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';' + (k === 'cancelled' ? ' text-decoration: line-through;' : '') + (picked ? ' box-shadow: 0 0 0 3px #3A352F; position: relative; z-index: 1;' : ''), cls: 'km-bar' + (grp && s.linkHover === grp ? ' km-link' : '') });
 });
 weeks.push({ days: dayCells, bars });
 }
@@ -1034,13 +1129,14 @@ const rowsP = [
 ['ชำระ', PAYN[popB.payMethod] || popB.payMethod || '—']
 ];
 if (popB.prevCheckIn) rowsP.push(['วันพักเดิม', kmDate.short(popB.prevCheckIn) + ' – ' + kmDate.short(popB.prevCheckOut) + ' (เลื่อนแล้ว)']);
-if (popB.extendedFrom) rowsP.push(['ต่อจาก', popB.extendedFrom]);
+if (popB.extendedFrom && !moveLinks.from[popB.id]) rowsP.push(['ต่อจาก', popB.extendedFrom]);
 if (popB.refundStatus) rowsP.push(['คืนเงิน', (popB.refundStatus === 'requested' ? 'ขอเงินคืน ' : popB.refundStatus === 'refunded' ? 'คืนเงินแล้ว ' : 'ไม่ต้องคืน ') + '฿' + kmMoney(popB.refundAmount || popB.totalPrice)]);
 if (popB.note) rowsP.push(['หมายเหตุ', popB.note]);
 const ciBusy = s.acting === popB.id;
 const ciDays = kmDate.diff(today, popB.checkIn);
 const doCheckIn = () => confirmStatus(popB, 'checked_in');
-pop = { canExtend: popB.status === 'confirmed' || popB.status === 'checked_in', extend: () => this.openExt(popB), name: popB.guestName, code: popB.code, statusName: stName(popB, k), canCheckIn: popB.status === 'confirmed', checkIn: doCheckIn, ciBusy, ciLabel: ciBusy ? 'กำลังเช็คอิน…' : 'เช็คอิน', needApprove: popB.status === 'pending', isIn: popB.status === 'checked_in', rows: rowsP.map(([l, v]) => ({ l, v })),
+const chainP = moveLinks.chain[popB.id] || [];
+pop = { segs: chainP.map((x, i) => ({ label: (i ? '→ ' : '') + rn(x.roomNo) + ' · ' + kmDate.dm(x.checkIn) + '–' + kmDate.dm(x.checkOut) + ' (' + x.nights + ' คืน)', cur: x.id === popB.id, open: () => this.openPopById(x.id), style: 'display: block; width: 100%; text-align: left; min-height: 36px; padding: 6px 10px; border-radius: 9px; font-size: 13px; font-family: inherit; cursor: pointer; ' + (x.id === popB.id ? 'border: 2px solid #E9A23B; background: #FFF6E5; color: #3A352F; font-weight: 700;' : 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;') })), hasSegs: chainP.length > 1, canExtend: popB.status === 'confirmed' || popB.status === 'checked_in', extend: () => this.openExt(popB), name: popB.guestName, code: popB.code, statusName: stName(popB, k), canCheckIn: popB.status === 'confirmed', checkIn: doCheckIn, ciBusy, ciLabel: ciBusy ? 'กำลังเช็คอิน…' : 'เช็คอิน', needApprove: popB.status === 'pending', isIn: popB.status === 'checked_in', rows: rowsP.map(([l, v]) => ({ l, v })),
 tel: popB.phone ? 'tel:' + String(popB.phone).replace(/[^0-9+]/g, '') : '',
 slipUrl: popB.slipUrl || '', receiptUrl: popB.receiptUrl || '',
 badge: 'display: inline-block; border-radius: 9999px; padding: 3px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';',
@@ -1264,7 +1360,7 @@ nextMonth: () => this.setState({ monthOffset: Math.min(24, s.monthOffset + 1), p
 pop, hasPop: !!pop, closePop: () => this.setState({ pop: null }),
 hasDlg: !!s.dlg, dlg: s.dlg ? { title: s.dlg.title, text: s.dlg.text || '', warn: s.dlg.warn || '', lines: (s.dlg.lines || []).map((x) => ({ x })),
 okLabel: s.dlg.okLabel || 'ยืนยัน', cancelLabel: s.dlg.cancelLabel || 'ไม่ใช่ กลับไป',
-okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#8B5E3C', out: '#47413A', danger: '#B5443F', ok: '#4F7A52' }[s.dlg.kind] || '#47413A') + ';' } : null,
+okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#0E7C7B', out: '#C2560F', danger: '#B5443F', ok: '#4F7A52' }[s.dlg.kind] || '#47413A') + ';' } : null,
 dlgOk: () => this.closeDlg(true), dlgCancel: () => this.closeDlg(false),
 hasExt: !!ext, ext,
 extSetN: (e) => this.setExtN(e.target.value),

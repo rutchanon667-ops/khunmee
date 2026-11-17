@@ -138,7 +138,56 @@ function lcWants_(b, today) {
  * ตรวจงานทั้งหมด: สร้างรหัสใหม่ · ปิดรหัสที่หมดสิทธิ์ · ส่งงานให้แอดมิน
  * เรียกทุกชั่วโมง และทุกครั้งที่สถานะการจองเปลี่ยน
  * ========================================================= */
-function lcHourly() { return lcSweep_(); }
+function lcHourly() {
+  const n = lcSweep_();
+  try { lcMoveNotice_(); } catch (e) { console.error('LINE move notice: ' + e); }
+  return n;
+}
+
+/* =========================================================
+ * วันย้ายห้อง: ลูกค้าเพิ่มวันพักแล้วห้องเดิมเต็ม (การจองใหม่ extendedFrom = รหัสเดิม คนละห้อง)
+ * เช้าวันย้าย (ตั้งแต่ LG_REMIND_HOUR) ส่ง LINE ถึงแอดมิน 1 ครั้งต่อการจอง
+ * ========================================================= */
+function lcMoveNotice_() {
+  const hour = Number(Utilities.formatDate(new Date(), tz_(), 'H'));
+  if (hour < LG_REMIND_HOUR) return 0;
+  const today = today_();
+  const props = PropertiesService.getScriptProperties();
+  let sent = {};
+  try { sent = JSON.parse(props.getProperty('LC_MOVE_SENT') || '{}') || {}; } catch (e) { sent = {}; }
+  Object.keys(sent).forEach(k => { if (String(sent[k]) < today) delete sent[k]; });
+  const all = readTable_('bookings');
+  const byCode = {};
+  all.forEach(b => { byCode[String(b.code).trim().toUpperCase()] = b; });
+  const moves = all.filter(b => String(b.extendedFrom || '').trim() && strDate_(b.checkIn) === today &&
+      ['confirmed', 'checked_in'].indexOf(String(b.status)) >= 0 && !sent[String(b.code)])
+    .map(b => ({ b: b, prev: byCode[String(b.extendedFrom).trim().toUpperCase()] }))
+    .filter(x => x.prev && String(x.prev.roomNo).trim() !== String(x.b.roomNo).trim() && String(x.prev.status) !== 'cancelled');
+  if (!moves.length) return 0;
+  const rows = [];
+  moves.forEach((x, i) => {
+    if (i) rows.push({ type: 'separator', margin: 'lg', color: '#E6DDCB' });
+    rows.push({ type: 'text', text: unsafe_(x.b.guestName), weight: 'bold', size: 'md', color: '#47413A', wrap: true, margin: i ? 'lg' : 'none' });
+    rows.push(lineRow_('ย้ายจาก', roomLabel_(x.prev.roomNo) + ' · ' + String(x.prev.code)));
+    rows.push(lineRow_('ไปห้อง', roomLabel_(x.b.roomNo) + ' · ' + String(x.b.code)));
+    rows.push(lineRow_('ห้องใหม่', thShort_(strDate_(x.b.checkIn)) + ' – ' + thShort_(strDate_(x.b.checkOut)) + ' (' + x.b.nights + ' คืน)'));
+    rows.push(lineRow_('โทร', phoneText_(x.b.phone)));
+  });
+  rows.push({ type: 'text', wrap: true, size: 'xs', color: '#7A6E63', margin: 'lg',
+    text: 'แขกออกจากห้องเดิมก่อน ' + AUTO_CHECKOUT_HOUR + ':00 น. · เตรียมห้องใหม่ และตู้เซฟกุญแจของห้องใหม่ให้พร้อม' });
+  const adminUrl = lineProps_().adminUrl;
+  const n = linePushAdmins_([lineCard_({
+    title: 'วันนี้มีลูกค้าย้ายห้อง · ' + moves.length + ' ราย', subtitle: thShort_(today) + ' · เพิ่มวันพักแต่ห้องเดิมไม่ว่าง',
+    color: '#E9A23B', textColor: '#3A352F',
+    alt: 'วันนี้ย้ายห้อง: ' + moves.map(x => unsafe_(x.b.guestName) + ' ' + roomLabel_(x.prev.roomNo) + ' → ' + roomLabel_(x.b.roomNo)).join(', '),
+    rows: rows, buttons: adminUrl ? [{ label: 'เปิดแดชบอร์ด', uri: adminUrl, primary: true }] : []
+  })]);
+  if (n) {
+    moves.forEach(x => { sent[String(x.b.code)] = today; });
+    props.setProperty('LC_MOVE_SENT', JSON.stringify(sent));
+  }
+  return moves.length;
+}
 
 function lcSweepSafe_() {
   if (!LC_ENABLED) return 0;
