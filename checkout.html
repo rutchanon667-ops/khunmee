@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Khun Mhee – เช็คเอาท์ด้วยตัวเอง</title>
+<title>Khun Mee – เช็คเอาท์ด้วยตัวเอง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css?v=1">
@@ -224,7 +224,7 @@ kmCoCall('publicSelfCheckout', [s.info.code, s.phone.trim(), { rating: s.out.rat
 .then((r) => {
 this.remember(false);
 this.setState({ busy: false, info: r.info, out: { rating: 0, comment: '', confirm: false },
-done: { title: 'เช็คเอาท์เรียบร้อย', note: 'ขอบคุณที่มาพักกับ Khun Mhee นะคะ หวังว่าจะได้ต้อนรับคุณและน้อง ๆ อีกครั้ง' } });
+done: { title: 'เช็คเอาท์เรียบร้อย', note: 'ขอบคุณที่มาพักกับ Khun Mee นะคะ หวังว่าจะได้ต้อนรับคุณและน้อง ๆ อีกครั้ง' } });
 this.focus('h-done');
 })
 .catch((e) => this.setState({ busy: false, outErr: kmCoMsg(e), out: Object.assign({}, s.out, { confirm: false }) }));
@@ -255,7 +255,7 @@ chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 1
 if (step === 'done') {
 const at = String(info.checkedOutAt || '');
 out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว',
-note: 'การจองนี้เช็คเอาท์แล้ว' + (at.length >= 16 ? ' เมื่อ ' + kmDate.short(at.slice(0, 10)) + ' ' + at.slice(11, 16) + ' น.' : '') + ' ขอบคุณที่มาพักกับ Khun Mhee นะคะ' };
+note: 'การจองนี้เช็คเอาท์แล้ว' + (at.length >= 16 ? ' เมื่อ ' + kmDate.short(at.slice(0, 10)) + ' ' + at.slice(11, 16) + ' น.' : '') + ' ขอบคุณที่มาพักกับ Khun Mee นะคะ' };
 out.hasInfo = false;
 return out;
 }

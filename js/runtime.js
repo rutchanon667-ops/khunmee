@@ -1,4 +1,4 @@
-/* Khun Mhee – lightweight page runtime.
+/* Khun Mee – lightweight page runtime.
  * Renders the <template id="view"> markup with values from the page's Component class,
  * supporting {{holes}}, loops (data-sc="for"), conditions (data-sc="if") and on* events.
  * Re-renders on setState and patches the DOM with morphdom so inputs keep focus. */
