@@ -430,16 +430,18 @@ Khun Mhee · หลังบ้าน</a>
 <template data-sc="if" value="{{prErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60">{{prErr}}</p></template>
 <template data-sc="if" value="{{prLoading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">กำลังโหลดราคาห้อง…</p></template>
 
-<h3 style="margin: 24px 0 0; font-size: 17px; font-weight: 600">ราคาพื้นฐานต่อคืน</h3>
+<h3 style="margin: 24px 0 0; font-size: 17px; font-weight: 600">ชื่อห้องและราคาพื้นฐานต่อคืน</h3>
+<p style="margin: 4px 0 0; font-size: 13px; color: #7A6E63">แก้ชื่อห้องที่นี่ที่เดียว ชื่อใหม่จะขึ้นทุกหน้า (หน้าแรก หน้าจอง เช็คอิน ใบเสร็จ LINE) ภายในประมาณ 1 นาที</p>
 <div style="overflow-x: auto; margin-top: 8px">
-<table style="min-width: 640px; font-size: 14px">
+<table style="min-width: 820px; font-size: 14px">
 <thead><tr style="color: #7A6E63; font-size: 12px">
-<th style="padding: 8px 12px 8px 0">ห้อง</th><th style="padding: 8px 12px">ราคาต่อคืน (บาท)</th><th style="padding: 8px 12px">รับได้สูงสุด (คน)</th><th style="padding: 8px 12px">สถานะ</th><th style="padding: 8px 0 8px 12px"></th>
+<th style="padding: 8px 12px 8px 0">ห้อง</th><th style="padding: 8px 12px">ชื่อห้อง</th><th style="padding: 8px 12px">ราคาต่อคืน (บาท)</th><th style="padding: 8px 12px">รับได้สูงสุด (คน)</th><th style="padding: 8px 12px">สถานะ</th><th style="padding: 8px 0 8px 12px"></th>
 </tr></thead>
 <tbody>
 <template data-sc="for" list="{{prRooms}}" as="r" hint-placeholder-count="4">
 <tr style="border-top: 1px solid #E6DDCB">
-<td style="padding: 10px 12px 10px 0; font-weight: 600">{{r.label}}</td>
+<td style="padding: 10px 12px 10px 0; font-weight: 600; white-space: nowrap">ห้อง {{r.no}}</td>
+<td style="padding: 10px 12px"><input type="text" maxlength="60" value="{{r.name}}" onInput="{{r.setName}}" aria-label="{{r.nameAria}}" style="{{r.nameStyle}}"></td>
 <td style="padding: 10px 12px"><input type="number" min="0" step="50" inputmode="numeric" value="{{r.price}}" onInput="{{r.setPrice}}" aria-label="{{r.priceAria}}" style="{{r.priceStyle}}"></td>
 <td style="padding: 10px 12px"><input type="number" min="1" max="50" inputmode="numeric" value="{{r.cap}}" onInput="{{r.setCap}}" aria-label="{{r.capAria}}" style="{{r.capStyle}}"></td>
 <td style="padding: 10px 12px"><select value="{{r.status}}" onChange="{{r.setStatus}}" aria-label="{{r.statusAria}}" style="{{selectStyle}}"><option value="active">เปิดให้จอง</option><option value="inactive">ปิดชั่วคราว</option></select></td>
@@ -1220,17 +1222,18 @@ const prRooms = roomsList.map((r) => {
 const e = s.roomEdit[r.roomNo] || {};
 const price = e.price !== undefined ? e.price : String(r.pricePerNight);
 const cap = e.cap !== undefined ? e.cap : String(r.capacity);
+const name = e.name !== undefined ? e.name : String(r.name || '');
 const status = e.status !== undefined ? e.status : r.status;
-const dirty = price !== String(r.pricePerNight) || cap !== String(r.capacity) || status !== r.status;
+const dirty = price !== String(r.pricePerNight) || cap !== String(r.capacity) || status !== r.status || name.trim() !== String(r.name || '');
 const busy = s.acting === 'room' + r.roomNo;
 const set = (k) => (ev) => this.setState({ roomEdit: Object.assign({}, this.state.roomEdit, { [r.roomNo]: Object.assign({}, this.state.roomEdit[r.roomNo], { [k]: ev.target.value }) }) });
-return { label: roomLbl(r), price, cap, status, priceAria: 'ราคาต่อคืน ' + roomLbl(r), capAria: 'จำนวนคนสูงสุด ' + roomLbl(r), statusAria: 'สถานะ ' + roomLbl(r),
+return { label: roomLbl(r), no: r.roomNo, name, nameAria: 'ชื่อห้อง ' + r.roomNo, nameStyle: fieldStyle + ' width: 200px;', setName: set('name'), price, cap, status, priceAria: 'ราคาต่อคืน ' + roomLbl(r), capAria: 'จำนวนคนสูงสุด ' + roomLbl(r), statusAria: 'สถานะ ' + roomLbl(r),
 priceStyle: fieldStyle + ' width: 140px;', capStyle: fieldStyle + ' width: 90px;',
 setPrice: set('price'), setCap: set('cap'), setStatus: set('status'),
 saveDisabled: !dirty || busy, saveLabel: busy ? 'กำลังบันทึก…' : dirty ? 'บันทึก' : 'บันทึกแล้ว',
 saveStyle: dirty ? darkBtn : ghostBtn + ' color: #7A6E63;',
-save: () => this.actPrice(kmApi('updateRoom', t, r.roomNo, { pricePerNight: Number(price), capacity: Number(cap), status }), 'room' + r.roomNo)
-.then(() => { const re = Object.assign({}, this.state.roomEdit); delete re[r.roomNo]; this.setState({ roomEdit: re }); }, () => {}) };
+save: () => { if (!name.trim()) return this.say('กรุณาใส่ชื่อห้อง'); return this.actPrice(kmApi('updateRoom', t, r.roomNo, { name: name.trim(), pricePerNight: Number(price), capacity: Number(cap), status }), 'room' + r.roomNo)
+.then(() => { const re = Object.assign({}, this.state.roomEdit); delete re[r.roomNo]; this.setState({ roomEdit: re }); this.load(true); }, () => {}); } };
 });
 const adjText = (r) => r.adjustType === 'set' ? '฿' + kmMoney(r.amount) + '/คืน' : r.adjustType === 'fixed' ? (r.amount >= 0 ? '+฿' : '−฿') + kmMoney(Math.abs(r.amount)) : (r.amount >= 0 ? '+' : '−') + Math.abs(r.amount) + '%';
 const whenText = (r) => {
