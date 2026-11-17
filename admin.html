@@ -254,10 +254,10 @@ Khun Mhee · หลังบ้าน</a>
 <template data-sc="for" list="{{pop.rows}}" as="r" hint-placeholder-count="6"><dt style="color: #7A6E63">{{r.l}}</dt><dd style="margin: 0; overflow-wrap: anywhere">{{r.v}}</dd></template>
 </dl>
 <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px">
-<template data-sc="if" value="{{pop.canCheckIn}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{pop.checkIn}}" disabled="{{pop.ciBusy}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #0E7C7B; color: #FFFFFF; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>{{pop.ciLabel}}</button></template>
+<template data-sc="if" value="{{pop.canCheckIn}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{pop.checkIn}}" disabled="{{pop.ciBusy}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #8B5E3C; color: #FFFFFF; font-size: 14px; font-weight: 600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>{{pop.ciLabel}}</button></template>
 <template data-sc="if" value="{{pop.canExtend}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{pop.extend}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #3E6A9E; color: #FFFFFF; font-size: 14px; font-weight: 600">+ เพิ่มวันพัก</button></template>
 <template data-sc="if" value="{{pop.needApprove}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #6B4E1E; background: #F3E3B0; border-radius: 9px; padding: 8px 10px">ต้องอนุมัติสลิปก่อน จึงจะเช็คอินได้ (ปุ่มอนุมัติอยู่ในตารางการจอง)</p></template>
-<template data-sc="if" value="{{pop.isIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #0A4F4E; background: #D7EEED; border-radius: 9px; padding: 8px 10px">เช็คอินแล้ว · ระบบจะเช็คเอาท์ให้อัตโนมัติ 12:00 น. วันเช็คเอาท์</p></template>
+<template data-sc="if" value="{{pop.isIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; flex: 1 1 100%; font-size: 12px; color: #4A3320; background: #EADBCB; border-radius: 9px; padding: 8px 10px">เช็คอินแล้ว · ระบบจะเช็คเอาท์ให้อัตโนมัติ 12:00 น. วันเช็คเอาท์</p></template>
 <template data-sc="if" value="{{pop.tel}}" hint-placeholder-val="{{ true }}"><a href="{{pop.tel}}" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; background: #47413A; color: #F6F3EE; font-size: 13px; text-decoration: none">โทรหาลูกค้า</a></template>
 <template data-sc="if" value="{{pop.slipUrl}}" hint-placeholder-val="{{ true }}"><a href="{{pop.slipUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; border: 1px solid #DED4C1; color: #335A88; font-size: 13px; text-decoration: none">ดูสลิป ↗</a></template>
 <template data-sc="if" value="{{pop.receiptUrl}}" hint-placeholder-val="{{ false }}"><a href="{{pop.receiptUrl}}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 9999px; border: 1px solid #DED4C1; color: #2F6B45; font-size: 13px; text-decoration: none">ใบเสร็จ PDF ↗</a></template>
@@ -691,7 +691,7 @@ const b = measure('book-scroll', 'tbody > tr');
 if (n !== this.state.notifyMax || b !== this.state.bookMax) this.setState({ notifyMax: n, bookMax: b });
 }
 /* ไปที่ปฏิทินรายเดือน เดือนของวันที่นั้น แล้วให้วันนั้นกะพริบสีแดง 3 ครั้ง */
-goCalendar(date) {
+goCalendar(date, bid) {
 if (!date) return;
 const tp = this.today().split('-').map(Number), dp = date.split('-').map(Number);
 const off = (dp[0] * 12 + dp[1] - 1) - (tp[0] * 12 + tp[1] - 1);
@@ -701,7 +701,7 @@ const cell = document.getElementById('cal-d-' + date);
 const sec = document.getElementById('calendar');
 if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
 else if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-this.addHL(date);
+this.addHL(date, bid);
 this.setState({ calFlash: date });
 this.flashT = setTimeout(() => this.setState({ calFlash: '' }), 3200);
 });
@@ -713,31 +713,36 @@ try { const v = JSON.parse(localStorage.getItem('km_cal_hl') || '{}'); return v 
 saveHL(hl) {
 try { localStorage.setItem('km_cal_hl', JSON.stringify(hl)); } catch (e) {}
 }
-addHL(date) {
-const hl = Object.assign({}, this.state.calHL, { [date]: Date.now() });
+addHL(date, bid) {
+const old = (this.state.calHL || {})[date];
+const ids = (old && Array.isArray(old.ids) ? old.ids : []).filter((x) => x !== bid).concat(bid ? [bid] : []);
+const hl = Object.assign({}, this.state.calHL, { [date]: { t: Date.now(), ids } });
 this.saveHL(hl);
 this.setState({ calHL: hl });
 }
-/* ชี้เมาส์/แตะ: ล้างไฮไลท์ของช่องวันที่อยู่ใต้นิ้ว (หลังกระพริบเสร็จแล้ว) และเรืองแถบที่เป็นการเข้าพักต่อเนื่อง */
-onPointer(e) {
+/* ไฮไลท์ของวันนั้นหายเมื่อเปิดดูรายละเอียดการจองที่แจ้งเตือนไว้ (ชี้เมาส์เฉย ๆ ไม่หาย) */
+clearHLFor(id) {
 const hl = this.state.calHL || {};
-const keys = Object.keys(hl);
-if (keys.length) {
-const now = Date.now();
-const hit = keys.filter((d) => {
-if (now - hl[d] < 2400) return false;
-const el = document.getElementById('cal-d-' + d);
-if (!el) return false;
-const r = el.getBoundingClientRect();
-return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+const b = (this.state.bookings || []).find((x) => x.id === id);
+let changed = false;
+const next = {};
+Object.keys(hl).forEach((d) => {
+const v = hl[d];
+const ids = v && Array.isArray(v.ids) ? v.ids : [];
+if (ids.length) {
+const rest = ids.filter((x) => x !== id);
+if (rest.length !== ids.length) changed = true;
+if (rest.length) next[d] = Object.assign({}, v, { ids: rest });
+} else if (b && d >= b.checkIn && d <= b.checkOut) {
+changed = true;   // ไฮไลท์แบบเดิม (ไม่รู้ว่าเป็นการจองไหน): หายเมื่อเปิดการจองที่อยู่ในวันนั้น
+} else next[d] = v;
 });
-if (hit.length) {
-const next = Object.assign({}, hl);
-hit.forEach((d) => { delete next[d]; });
+if (!changed) return;
 this.saveHL(next);
 this.setState({ calHL: next });
 }
-}
+/* ชี้เมาส์/แตะแถบ: เรืองแถบที่เป็นการเข้าพักต่อเนื่อง (ย้ายห้อง) */
+onPointer(e) {
 if (e.type === 'pointerover' || e.type === 'pointerdown') {
 const bar = e.target && e.target.closest ? e.target.closest('[data-link]') : null;
 const g = bar ? bar.getAttribute('data-link') : '';
@@ -762,6 +767,7 @@ this.setState({ monthOffset: (dp[0] * 12 + dp[1] - 1) - (tp[0] * 12 + tp[1] - 1)
 }
 /* กล่องรายละเอียดการจอง เด้งขึ้นตรงจุดที่คลิก/แตะแถบในปฏิทิน */
 openPop(id, e) {
+this.clearHLFor(id);
 const sec = document.getElementById('calendar');
 const bar = e && e.target && e.target.closest ? e.target.closest('[data-bar]') : null;
 if (!sec || !bar) return this.setState({ pop: { id, x: 16, y: 16 } });
@@ -779,7 +785,7 @@ componentDidMount() {
 if (!kmToken.get()) { this.toLogin(); return; }
 window.addEventListener('resize', () => this.scheduleFit());
 document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if (this.state.dlg) this.closeDlg(false); else if (this.state.ext && !this.state.ext.busy) this.setState({ ext: null }); });
-['pointermove', 'pointerdown', 'pointerover'].forEach((t) => document.addEventListener(t, (e) => this.onPointer(e), { passive: true }));
+['pointerdown', 'pointerover'].forEach((t) => document.addEventListener(t, (e) => this.onPointer(e), { passive: true }));
 this.load();
 this.loadStats('1m');
 this.loadPricing();
@@ -862,9 +868,9 @@ const short = (n) => String(n || '').replace(/^ห้อง/, '');
 const ST = {
 confirmed: { bg: '#4F7A52', fg: '#F6F3EE', name: 'อนุมัติการจองแล้ว' },
 pending: { bg: '#E9C46A', fg: '#3A352F', name: 'รอยืนยันการจอง' },
-checked_in: { bg: '#0E7C7B', fg: '#FFFFFF', name: 'เช็คอินแล้ว' },
+checked_in: { bg: '#8B5E3C', fg: '#FFFFFF', name: 'เช็คอินแล้ว' },
 soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'นับถอยหลังเช็คอิน' },
-checked_out: { bg: '#C2560F', fg: '#FFFFFF', name: 'เช็คเอาท์แล้ว' },
+checked_out: { bg: '#7A6E63', fg: '#FFFFFF', name: 'เช็คเอาท์แล้ว' },
 cancelled: { bg: '#B5443F', fg: '#FFF8F5', name: 'ยกเลิกการจอง' },
 refund: { bg: '#C0392B', fg: '#FFFFFF', name: 'ขอเงินคืน' }
 };
@@ -943,7 +949,7 @@ liStyle: 'display: flex; gap: 4px; align-items: stretch; border-top: 1px solid #
 textStyle: 'margin: 3px 0 0; font-size: 15px; line-height: 1.5; color: #47413A; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;' + (n.unread ? ' font-weight: 600;' : ''),
 openLabel: n.text + ' · ไปที่ปฏิทินวันที่ ' + kmDate.dm(n.date),
 delLabel: 'ลบแจ้งเตือนนี้: ' + n.text,
-open: () => { markRead(n.key); this.goCalendar(n.date); },
+open: () => { markRead(n.key); this.goCalendar(n.date, n.b && n.b.id); },
 del: () => dismiss([n.key])
 }));
 const unread = allNotes.filter((n) => n.unread).length;
@@ -990,7 +996,7 @@ warn: 'ยกเลิกแล้วย้อนกลับไม่ได้ 
 this.ask(Object.assign({ lines: who, onOk: go }, D));
 };
 const setStatus = (b, st, label) => () => { ackBooking(b.id); confirmStatus(b, st); };
-const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #0E7C7B; color: #FFFFFF;' : kind === 'out' ? 'border: 0; background: #C2560F; color: #FFFFFF;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
+const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #8B5E3C; color: #FFFFFF;' : kind === 'out' ? 'border: 0; background: #7A6E63; color: #FFFFFF;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
 const refundAct = (b, res) => () => { ackBooking(b.id); this.ask({ kind: res === 'refunded' ? 'ok' : 'danger',
 title: res === 'refunded' ? 'ยืนยันว่าโอนเงินคืน ' + b.guestName + ' แล้ว ?' : 'ปิดคำขอคืนเงินของ ' + b.guestName + ' ?',
 text: res === 'none' ? 'ใช้เมื่อไม่ต้องคืนเงิน เช่น สลิปไม่ถูกต้อง หรือตกลงกับลูกค้าแล้ว' : '',
@@ -1360,7 +1366,7 @@ nextMonth: () => this.setState({ monthOffset: Math.min(24, s.monthOffset + 1), p
 pop, hasPop: !!pop, closePop: () => this.setState({ pop: null }),
 hasDlg: !!s.dlg, dlg: s.dlg ? { title: s.dlg.title, text: s.dlg.text || '', warn: s.dlg.warn || '', lines: (s.dlg.lines || []).map((x) => ({ x })),
 okLabel: s.dlg.okLabel || 'ยืนยัน', cancelLabel: s.dlg.cancelLabel || 'ไม่ใช่ กลับไป',
-okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#0E7C7B', out: '#C2560F', danger: '#B5443F', ok: '#4F7A52' }[s.dlg.kind] || '#47413A') + ';' } : null,
+okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#8B5E3C', out: '#7A6E63', danger: '#B5443F', ok: '#4F7A52' }[s.dlg.kind] || '#47413A') + ';' } : null,
 dlgOk: () => this.closeDlg(true), dlgCancel: () => this.closeDlg(false),
 hasExt: !!ext, ext,
 extSetN: (e) => this.setExtN(e.target.value),
