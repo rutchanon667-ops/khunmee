@@ -34,7 +34,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 .km-pill-map{display:none;gap:5px;border:1px solid #A1805D;background:#FFFDF9;color:#7D6043 !important}
 .km-pill-out{border:1px solid #7D6043;color:#7D6043 !important}
 .km-pill-rs{border:1px solid #5B4B8A;color:#5B4B8A !important}
-.km-pill-book{background:#3A352F;color:#F6F3EE !important;font-weight:600}
+.km-pill-book{background:#4F7A52;color:#FFFDF9 !important;font-weight:600}
+.km-pill-book:hover{background:#436A46}
 /* กล่องค้นหาห้องว่าง */
 .km-finder{margin-top:8px;background:#FFFDF9;border:1px solid #E2D8C6;border-radius:24px;padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 32px rgba(58,53,47,.08)}
 .km-finder-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -52,6 +53,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 .f-go:hover{background:#436A46}
 .f-note{margin:2px 0 0;font-size:14px;color:#5E554C;text-align:center}
 .f-note a{color:#5B4B8A;font-weight:600}
+.km-book-room:hover{background:#436A46 !important}
 .km-tile-link:hover{background:#E4DBC8 !important}
 /* ปุ่ม LINE ลอย (มือถือ) */
 .km-fab{display:none;position:fixed;right:12px;bottom:12px;z-index:20;align-items:center;gap:8px;background:#06C755;color:#FFFFFF !important;border-radius:9999px;padding:12px 16px;font-size:15px;font-weight:600;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.22)}
@@ -200,7 +202,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </div>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 14px; border-top: 1px solid #EDE6D7">
 <span style="font-size: 14px; color: #5E554C"><strong style="font-size: 18px; color: #3A352F">{{r.price}}</strong> {{r.per}}</span>
-<a href="booking.html" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 9999px; border: 1px solid #3A352F; color: #3A352F; text-decoration: none; font-size: 14px; font-weight: 600">จองห้องนี้</a>
+<a href="booking.html" class="km-book-room" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 9999px; border: 0; background: #4F7A52; color: #FFFDF9; text-decoration: none; font-size: 14px; font-weight: 600">จองห้องนี้</a>
 </div>
 </div>
 </article>
