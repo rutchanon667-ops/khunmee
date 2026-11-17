@@ -1329,7 +1329,7 @@ const setOwnVal = (v) => this.setState({ lbOwn: Object.assign({}, this.state.lbO
 return { slot: r.slot, statusName: r.statusName, guestName: r.guestName, roomName: r.roomName, code: r.code,
 dates: kmDate.dm(r.checkIn) + ' – ' + kmDate.dm(r.checkOut), arr: r.arrivalTime ? ' · ถึง ' + r.arrivalTime : '',
 pin: r.pin, showPin: r.status !== 'remove', busy,
-note: r.status === 'pending' ? (lb.safeNote ? lb.safeNote + ' · ' : '') + 'ใช้รหัสนี้ หรือใส่รหัสของคุณเองด้านล่าง'
+note: r.status === 'pending' ? (lb.safeNote ? 'ตู้เซฟ: ' + String(r.pin).slice(-4) + ' · ' + lb.safeNote + ' · ' : '') + 'ใช้รหัสนี้ หรือใส่รหัสของคุณเองด้านล่าง'
 : r.status === 'active' ? 'ตั้งโดย ' + (r.setBy || '-') + (r.setAt ? ' · ' + r.setAt : '') + (r.bookingStatus === 'checked_in' ? ' · แขกเช็คอินแล้ว' : ' · แขกรับรหัสได้หลังเช็คอิน')
 : 'ลบรหัส ' + r.pin + ' ออกจากกลอน · ' + r.removeReason,
 canConfirm: r.status === 'pending', canOwn: r.status !== 'remove', canRemove: r.status === 'remove',
