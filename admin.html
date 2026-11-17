@@ -870,7 +870,7 @@ confirmed: { bg: '#4F7A52', fg: '#F6F3EE', name: 'อนุมัติการ
 pending: { bg: '#E9C46A', fg: '#3A352F', name: 'รอยืนยันการจอง' },
 checked_in: { bg: '#8B5E3C', fg: '#FFFFFF', name: 'เช็คอินแล้ว' },
 soon: { bg: '#3E6A9E', fg: '#F6F3EE', name: 'นับถอยหลังเช็คอิน' },
-checked_out: { bg: '#7A6E63', fg: '#FFFFFF', name: 'เช็คเอาท์แล้ว' },
+checked_out: { bg: '#848484', fg: '#FFFFFF', name: 'เช็คเอาท์แล้ว' },
 cancelled: { bg: '#B5443F', fg: '#FFF8F5', name: 'ยกเลิกการจอง' },
 refund: { bg: '#C0392B', fg: '#FFFFFF', name: 'ขอเงินคืน' }
 };
@@ -996,7 +996,7 @@ warn: 'ยกเลิกแล้วย้อนกลับไม่ได้ 
 this.ask(Object.assign({ lines: who, onOk: go }, D));
 };
 const setStatus = (b, st, label) => () => { ackBooking(b.id); confirmStatus(b, st); };
-const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #8B5E3C; color: #FFFFFF;' : kind === 'out' ? 'border: 0; background: #7A6E63; color: #FFFFFF;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
+const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #8B5E3C; color: #FFFFFF;' : kind === 'out' ? 'border: 0; background: #848484; color: #FFFFFF;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
 const refundAct = (b, res) => () => { ackBooking(b.id); this.ask({ kind: res === 'refunded' ? 'ok' : 'danger',
 title: res === 'refunded' ? 'ยืนยันว่าโอนเงินคืน ' + b.guestName + ' แล้ว ?' : 'ปิดคำขอคืนเงินของ ' + b.guestName + ' ?',
 text: res === 'none' ? 'ใช้เมื่อไม่ต้องคืนเงิน เช่น สลิปไม่ถูกต้อง หรือตกลงกับลูกค้าแล้ว' : '',
@@ -1366,7 +1366,7 @@ nextMonth: () => this.setState({ monthOffset: Math.min(24, s.monthOffset + 1), p
 pop, hasPop: !!pop, closePop: () => this.setState({ pop: null }),
 hasDlg: !!s.dlg, dlg: s.dlg ? { title: s.dlg.title, text: s.dlg.text || '', warn: s.dlg.warn || '', lines: (s.dlg.lines || []).map((x) => ({ x })),
 okLabel: s.dlg.okLabel || 'ยืนยัน', cancelLabel: s.dlg.cancelLabel || 'ไม่ใช่ กลับไป',
-okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#8B5E3C', out: '#7A6E63', danger: '#B5443F', ok: '#4F7A52' }[s.dlg.kind] || '#47413A') + ';' } : null,
+okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + ({ in: '#8B5E3C', out: '#848484', danger: '#B5443F', ok: '#4F7A52' }[s.dlg.kind] || '#47413A') + ';' } : null,
 dlgOk: () => this.closeDlg(true), dlgCancel: () => this.closeDlg(false),
 hasExt: !!ext, ext,
 extSetN: (e) => this.setExtN(e.target.value),
