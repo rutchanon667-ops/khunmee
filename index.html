@@ -324,10 +324,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
 <span style="font-weight: 600">ห้องพัก</span>
-<a href="#rooms" style="color: #5E554C; text-decoration: none">ห้องโชจิ</a>
-<a href="#rooms" style="color: #5E554C; text-decoration: none">ห้องฮิโนกิ</a>
-<a href="#rooms" style="color: #5E554C; text-decoration: none">ห้องยาเนะ</a>
-<a href="#rooms" style="color: #5E554C; text-decoration: none">ห้องโคโมเรบิ</a>
+<template data-sc="for" list="{{rooms}}" as="fr" hint-placeholder-count="4"><a href="#rooms" style="color: #5E554C; text-decoration: none">{{fr.name}}</a></template>
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
 <span style="font-weight: 600">การจอง</span>
@@ -358,8 +355,9 @@ class Component extends DCLogic {
 componentDidMount() {
 kmApi('publicListRooms').then((rooms) => {
 const prices = {};
-rooms.forEach((r) => { prices[String(r.roomNo)] = Number(r.pricePerNight) || 0; });
-this.setState({ prices });
+const names = {};
+rooms.forEach((r) => { prices[String(r.roomNo)] = Number(r.pricePerNight) || 0; if (String(r.name || '').trim()) names[String(r.roomNo)] = String(r.name).trim(); });
+this.setState({ prices, names });
 }).catch(() => {});
 }
 priceOf(no) {
@@ -394,7 +392,7 @@ rooms: [
 { code: 'ROOM 02', name: 'ห้องฮิโนกิ', img: 'images/room-hinoki.jpg', alt: 'ห้องฮิโนกิ ผนังไม้และไฟหัวเตียง', desc: 'ผนังไม้ระแนงพร้อมไฟหัวเตียงอุ่น ๆ และโต๊ะทำงานติดหน้าต่าง' },
 { code: 'ROOM 03', name: 'ห้องยาเนะ', img: 'images/room-yane-1.jpg', alt: 'ห้องยาเนะ เพดานทรงจั่ว', desc: 'เพดานทรงจั่วสูงโปร่ง ผนังไม้ระแนง และโต๊ะเครื่องแป้งริมหน้าต่าง' },
 { code: 'ROOM 04', name: 'ห้องโคโมเรบิ', img: 'images/room-komorebi.jpg', alt: 'ห้องโคโมเรบิ หัวเตียงบุผ้าและกระจกทรงกลม', desc: 'หัวเตียงบุผ้านุ่ม กระจกทรงกลม ตู้เสื้อผ้า และทีวีสำหรับคืนสบาย ๆ' }
-].map((r, i) => Object.assign(r, this.priceOf(String(i + 1))))
+].map((r, i) => { const nm = (this.state.names || {})[String(i + 1)]; const o = Object.assign({}, r, this.priceOf(String(i + 1))); if (nm && nm !== r.name) { o.alt = nm + ' · ' + r.alt.replace(r.name, '').trim(); o.name = nm; } return o; })
 };
 }
 }
