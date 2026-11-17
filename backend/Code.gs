@@ -1,5 +1,5 @@
 /**********************************************************
- * Khun Mhee: ระบบหลังบ้าน (Google Apps Script + Google Sheets)
+ * Khun Mee: ระบบหลังบ้าน (Google Apps Script + Google Sheets)
  * - Login แอดมิน และจัดการผู้ใช้งาน
  * - จัดการการจองห้องพัก (แท็บ Bookings) และห้องพัก (แท็บ Rooms)
  * - แดชบอร์ดสรุปข้อมูล
@@ -35,7 +35,7 @@ const SESSION_SECONDS = 6 * 60 * 60;  // CacheService เก็บได้ส�
 const MAX_ATTEMPTS = 5;               // ใส่รหัสผิดได้กี่ครั้งก่อนล็อก
 const LOCK_SECONDS = 15 * 60;         // ล็อก 15 นาที
 
-const HOTEL_NAME = 'Khun Mhee';
+const HOTEL_NAME = 'Khun Mee';
 const REMINDER_HOUR = 9;              // ส่งแจ้งเตือนเช็คอินทุกวันเวลา 9 โมง (ตามเขตเวลาของชีต)
 const REMIND_DAYS_BEFORE = 1;         // แจ้งเตือนล่วงหน้ากี่วัน
 const SEND_GUEST_REMINDER = true;     // ส่งอีเมลเตือนถึงลูกค้าด้วย (ถ้าลูกค้าให้อีเมลไว้)
@@ -52,7 +52,7 @@ const PAYMENT = {
 
 /***** ข้อมูลที่พักที่แสดงบนใบเสร็จ (เว้นว่างได้) *****/
 const HOTEL_INFO = {
-  legalName: '',         // ชื่อผู้ออกใบเสร็จ เช่น 'Khun Mhee · Pet Friendly House'
+  legalName: '',         // ชื่อผู้ออกใบเสร็จ เช่น 'Khun Mee · Pet Friendly House'
   address: '',           // ที่อยู่
   phone: '',             // เบอร์โทร
   taxId: ''              // เลขประจำตัวผู้เสียภาษี (ถ้ามี)
@@ -60,7 +60,7 @@ const HOTEL_INFO = {
 
 const HOLD_MINUTES = 5;   // กันห้องไว้ให้ลูกค้าที่กำลังกรอกข้อมูล/ชำระเงิน (นาที)
 
-const SLIP_FOLDER_NAME = 'Khun Mhee · สลิปการโอน';   // โฟลเดอร์ใน Google Drive ที่เก็บสลิป
+const SLIP_FOLDER_NAME = 'Khun Mhee · สลิปการโอน';   // โฟลเดอร์ใน Google Drive ที่เก็บสลิป (คงชื่อเดิมไว้ ไม่ให้สลิปแยกเป็นโฟลเดอร์ใหม่)
 const MAX_SLIP_BYTES = 5 * 1024 * 1024;              // สลิปไม่เกิน 5 MB
 const PAY_METHODS = { bank: 'โอนผ่านบัญชีธนาคาร', qr: 'QR พร้อมเพย์' };
 

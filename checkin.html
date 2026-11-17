@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Khun Mhee – เช็คอินด้วยตัวเอง</title>
+<title>Khun Mee – เช็คอินด้วยตัวเอง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css?v=1">
 <style>
 body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
@@ -31,23 +32,21 @@ input,select,textarea{font-family:inherit}
 <template id="view">
 <div style="width: 100%; min-width: 0; background: #EDE6D7; min-height: 100vh">
 
-<header style="background: #3A352F; color: #F6F3EE; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box">
-<nav aria-label="เมนูหลัก" style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px">
-<a href="index.html" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DCC881" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
-Khun Mhee</a>
-<div class="navlinks" style="display: flex; gap: 32px">
-<a href="index.html" style="color: #EDE6D7">ห้องพัก</a>
-<a href="booking.html" style="color: #EDE6D7">จองห้องพัก</a>
-<a href="checkin.html" aria-current="page" style="color: #FFFFFF; font-weight: 600">เช็คอิน</a>
-<a href="checkout.html" style="color: #EDE6D7">เช็คเอาท์</a>
-<a href="index.html#contact" style="color: #EDE6D7">ติดต่อเรา</a>
+<header class="km-head">
+<div class="km-bar1">
+<a href="index.html" class="km-brand"><b>Khun Mee</b><small>PET FRIENDLY HOUSE</small></a>
+<a href="https://lin.ee/9aJsfpw" target="_blank" rel="noopener" class="km-line">LINE</a>
 </div>
-<a href="login.html" style="color: #EDE6D7">แอดมิน</a>
-</nav>
+<div class="km-bar2"><nav class="km-bar2-in" aria-label="เมนูหลัก">
+<a class="km-pill km-pill-book" href="booking.html">จองห้องพัก</a>
+<a class="km-pill" href="index.html">หน้าแรก</a>
+<a class="km-pill" href="checkin.html" aria-current="page">เช็คอิน</a>
+<a class="km-pill" href="checkout.html">เช็คเอาท์</a>
+<a class="km-pill" href="reschedule.html">เลื่อนวันพัก</a>
+</nav></div>
 </header>
 
-<main style="max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<main class="wrap" style="max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
 <div>
 <a href="index.html" style="font-size: 14px; color: #47413A">‹ กลับหน้าแรก</a>
 <h1 class="page-h" style="margin: 12px 0 0; font-size: 48px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px">{{pageTitle}}</h1>
@@ -145,7 +144,7 @@ Khun Mhee</a>
 <span style="font-size: 15px; font-weight: 600">{{idf.photoLabel}}</span>
 <span style="font-size: 13px; color: #5E554C">{{idf.photoSub}}</span>
 </label>
-<button type="button" role="checkbox" aria-checked="{{idf.accept}}" onClick="{{toggleAccept}}" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; background: transparent; border: 0; padding: 0; color: #47413A; font-size: 14px; line-height: 1.6"><span style="{{idf.boxStyle}}" aria-hidden="true">{{idf.tick}}</span><span>ยินยอมให้ Khun Mhee เก็บเลขบัตรและรูปบัตรเพื่อลงทะเบียนผู้เข้าพักตามกฎหมาย รูปบัตรจะถูกลบอัตโนมัติ {{idf.keepDays}} วันหลังเช็คเอาท์</span></button>
+<button type="button" role="checkbox" aria-checked="{{idf.accept}}" onClick="{{toggleAccept}}" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; background: transparent; border: 0; padding: 0; color: #47413A; font-size: 14px; line-height: 1.6"><span style="{{idf.boxStyle}}" aria-hidden="true">{{idf.tick}}</span><span>ยินยอมให้ Khun Mee เก็บเลขบัตรและรูปบัตรเพื่อลงทะเบียนผู้เข้าพักตามกฎหมาย รูปบัตรจะถูกลบอัตโนมัติ {{idf.keepDays}} วันหลังเช็คเอาท์</span></button>
 <template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
 <div style="display: flex; justify-content: flex-end">
 <button type="button" onClick="{{submitId}}" disabled="{{idf.busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 15px 30px; font-size: 18px; font-weight: 600">{{idf.submitLabel}}</button>
@@ -160,7 +159,7 @@ Khun Mhee</a>
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4C7 4 3 7.1 3 11c0 3.4 3 6.2 7.1 6.9l-.6 2.6 3.7-2.5C18 17.7 21 14.6 21 11c0-3.9-4-7-9-7z"></path></svg></span>
 <div style="flex: 1 1 auto; min-width: 0">
 <h2 id="h-line" style="margin: 0; font-size: 21px; font-weight: 600">เชื่อมการจองกับ LINE</h2>
-<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mhee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้หลังเช็คอิน</p>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ในแชท LINE ของ Khun Mee เราจะแจ้งเตือนก่อนวันเข้าพักและวันเช็คเอาท์ และส่ง{{doorLabel}}ให้หลังเช็คอิน</p>
 </div>
 </div>
 <div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 12px 16px">
@@ -169,7 +168,7 @@ Khun Mhee</a>
 </div>
 <div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
 <a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
-<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mhee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
+<span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
 </div>
 </section>
 </template>
@@ -421,7 +420,7 @@ chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 1
 Object.assign(out, this.lineVals(info, step), { copyBk: () => this.copyText(info.code, 'bkCopied'), copyBkLabel: s.bkCopied ? 'คัดลอกแล้ว' : 'คัดลอก' });
 
 if (step === 'done') {
-out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว', note: 'การจองนี้เช็คเอาท์แล้ว ขอบคุณที่มาพักกับ Khun Mhee นะคะ' };
+out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว', note: 'การจองนี้เช็คเอาท์แล้ว ขอบคุณที่มาพักกับ Khun Mee นะคะ' };
 out.hasInfo = false;
 return out;
 }
@@ -488,7 +487,7 @@ if (navigator.clipboard && code) navigator.clipboard.writeText(code).then(ok, ()
 door: {
 canLine: !!(window.kmLineChatUrl && window.kmLineChatUrl(info.line)),
 note: !(window.kmLineChatUrl && window.kmLineChatUrl(info.line)) ? 'กรุณาติดต่อ' + info.contact + ' เพื่อรับ' + kmDoorLabel()
-: kmDoorLabel() + 'ส่งให้ทางแชท LINE ของ Khun Mhee เท่านั้น ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ระบบจะส่งรหัสให้ทันที'
+: kmDoorLabel() + 'ส่งให้ทางแชท LINE ของ Khun Mee เท่านั้น ส่งรหัสการจอง เว้นวรรค ตามด้วยเบอร์โทรที่ใช้จอง ระบบจะส่งรหัสให้ทันที'
 }
 });
 return out;

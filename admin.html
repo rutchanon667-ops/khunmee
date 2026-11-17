@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Khun Mhee – Admin Dashboard</title>
+<title>Khun Mee – Admin Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
 <style>
@@ -19,6 +19,52 @@ th{font-weight:600;text-align:left}
  .kpis{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .side{flex-direction:row !important;flex-wrap:wrap !important}
  .side-extra{display:none !important}
+}
+
+/* ===== มือถือ (ไม่เกิน 600px) ===== */
+.cal-agenda,.cal-toggle{display:none}
+@media (max-width:833px){
+ .side{flex-wrap:nowrap !important;overflow-x:auto;max-width:none !important;flex:1 1 100% !important;gap:6px !important;scrollbar-width:none;position:sticky;top:0;z-index:15;background:#EDE6D7;padding:8px 0;margin:-8px 0}
+ .side::-webkit-scrollbar{display:none}
+ .side a{white-space:nowrap;flex:0 0 auto;border:1px solid #DED4C1}
+}
+@media (max-width:600px){
+ .adm-head{height:52px !important;padding:0 12px !important}
+ .adm-head .hd-me{display:none}
+ .adm-head .hd-sheet{display:none}
+ .adm-head .hd-out{font-size:12px !important;padding:6px 10px !important;white-space:nowrap}
+ .adm-head > a{font-size:13px !important;white-space:nowrap}
+ main section,#overview,section[aria-labelledby]{padding:18px 14px !important;border-radius:16px !important}
+ h1{font-size:28px !important;line-height:1.3 !important}
+ /* ปฏิทิน: รายการวันบนมือถือ */
+ .cal-grid{display:none}
+ .cal-agenda,.cal-toggle{display:block}
+ .cal-showgrid .cal-grid{display:block}
+ .cal-showgrid .cal-agenda{display:none}
+ /* ตารางการจองเป็นการ์ด */
+ .km-btable{min-width:0 !important;width:100%;display:block}
+ .km-btable thead{display:none}
+ .km-btable tbody{display:flex;flex-direction:column;gap:12px}
+ .km-btable tr{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;padding:14px !important;border:1px solid #E2D8C6 !important;border-radius:14px;background:#FFFDF9}
+ .km-btable td{display:block;padding:0 !important;white-space:normal !important;min-width:0;font-size:14px}
+ .km-btable td::before{content:attr(data-l);display:block;font-size:11px;font-weight:400;color:#7A6E63;margin-bottom:2px}
+ .km-btable td.bc-0,.km-btable td.bc-1{grid-column:1 / -1}
+ .km-btable td.bc-1{font-size:17px}
+ .km-btable td.bc-9,.km-btable td.bc-10{grid-column:1 / -1}
+ .km-btable td.bc-10 > div{max-width:none !important}
+ .km-btable td.bc-10 button{min-height:40px;padding:8px 14px !important;font-size:14px !important}
+ #book-scroll{max-height:none !important;overflow:visible !important}
+ /* ตารางชื่อห้องและราคาเป็นการ์ด */
+ .km-ptable{min-width:0 !important;width:100%;display:block}
+ .km-ptable thead{display:none}
+ .km-ptable tbody{display:flex;flex-direction:column;gap:12px}
+ .km-ptable tr{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;padding:14px !important;border:1px solid #E2D8C6 !important;border-radius:14px;background:#FFFDF9}
+ .km-ptable td{display:block;padding:0 !important;min-width:0}
+ .km-ptable td::before{content:attr(data-l);display:block;font-size:11px;color:#7A6E63;margin-bottom:4px}
+ .km-ptable td.pc-0::before,.km-ptable td.pc-5::before{display:none}
+ .km-ptable td.pc-1,.km-ptable td.pc-5{grid-column:1 / -1}
+ .km-ptable input,.km-ptable select{width:100% !important;box-sizing:border-box;min-height:44px}
+ .km-ptable td.pc-5 button{width:100%;min-height:44px}
 }
 /* การแจ้งเตือน / ปฏิทิน / ตารางการจอง */
 .km-bell:hover{background:rgba(246,243,238,.14)}
@@ -45,18 +91,18 @@ th{font-weight:600;text-align:left}
 <template id="view">
 <div style="width: 100%; min-width: 0; background: #EDE6D7; min-height: 100vh">
 
-<header style="background: #3A352F; color: #F6F3EE; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-sizing: border-box; font-size: 12px">
+<header class="adm-head" style="background: #3A352F; color: #F6F3EE; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-sizing: border-box; font-size: 12px">
 <a href="index.html" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
-Khun Mhee · หลังบ้าน</a>
+Khun Mee · หลังบ้าน</a>
 <div style="display: flex; align-items: center; gap: 16px">
 <button type="button" onClick="{{goNotify}}" aria-label="การแจ้งเตือน {{unread}} รายการที่ยังไม่อ่าน" class="km-bell" style="position: relative; background: transparent; border: 0; color: #F6F3EE; width: 48px; height: 48px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 9999px">
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F6F3EE" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
 <template data-sc="if" value="{{hasUnread}}" hint-placeholder-val="{{ true }}"><span class="km-badge" style="position: absolute; top: 0; right: -4px; min-width: 26px; height: 26px; border-radius: 9999px; background: #E0242B; color: #FFFFFF; font-size: 14px; font-weight: 700; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0 7px; box-sizing: border-box; border: 2px solid #3A352F; font-variant-numeric: tabular-nums">{{unreadBadge}}</span></template>
 </button>
-<template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="color: #F6F3EE; border: 1px solid #6B6258; border-radius: 8px; padding: 6px 10px; font-size: 12px">Google Sheets ↗</a></template>
-<span style="color: #EDE6D7">แอดมิน: {{meName}}</span>
-<button type="button" onClick="{{logout}}" style="background: transparent; border: 1px solid #6B6258; color: #F6F3EE; border-radius: 8px; padding: 6px 10px; font-size: 12px">ออกจากระบบ</button>
+<template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a class="hd-sheet" href="{{sheetUrl}}" target="_blank" rel="noopener" style="color: #F6F3EE; border: 1px solid #6B6258; border-radius: 8px; padding: 6px 10px; font-size: 12px">Google Sheets ↗</a></template>
+<span class="hd-me" style="color: #EDE6D7">แอดมิน: {{meName}}</span>
+<button type="button" class="hd-out" onClick="{{logout}}" style="background: transparent; border: 1px solid #6B6258; color: #F6F3EE; border-radius: 8px; padding: 6px 10px; font-size: 12px">ออกจากระบบ</button>
 </div>
 </header>
 
@@ -207,7 +253,7 @@ Khun Mhee · หลังบ้าน</a>
 </section>
 
 <!-- Occupancy calendar -->
-<section id="calendar" aria-labelledby="h-cal" style="position: relative; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
+<section id="calendar" class="{{calCls}}" aria-labelledby="h-cal" style="position: relative; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
 <h2 id="h-cal" style="margin: 0; font-size: 21px; font-weight: 600">ปฏิทินห้องพักรายเดือน</h2>
 <div style="display: flex; align-items: center; gap: 8px">
@@ -220,7 +266,21 @@ Khun Mhee · หลังบ้าน</a>
 <template data-sc="for" list="{{legend}}" as="lg" hint-placeholder-count="5"><span style="display: flex; align-items: center; gap: 6px"><span style="{{lg.dot}}"></span>{{lg.name}}</span></template>
 </div>
 <p style="margin: 10px 0 0; font-size: 12px; color: #7A6E63">{{checkoutNote}}</p>
-<div style="overflow-x: auto; margin-top: 16px">
+<button type="button" class="cal-toggle" onClick="{{toggleCalView}}" style="margin-top: 12px; min-height: 36px; padding: 0 14px; border-radius: 9999px; border: 1px solid #DED4C1; background: #FFFDF9; color: #47413A; font-size: 13px; font-family: inherit">{{calToggleLabel}}</button>
+<div class="cal-agenda" style="margin-top: 14px">
+<template data-sc="if" value="{{noAgenda}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0; font-size: 14px; color: #7A6E63">เดือนนี้ยังไม่มีการเช็คอินหรือเช็คเอาท์</p></template>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<template data-sc="for" list="{{agenda}}" as="ad" hint-placeholder-count="4">
+<li id="{{ad.id}}" class="{{ad.cls}}" style="background: #FFFDF9; border: 1px solid #E6DDCB; border-radius: 14px; padding: 12px">
+<p style="margin: 0 0 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px"><span style="{{ad.dStyle}}">{{ad.label}}</span><span style="font-size: 12px; color: #7A6E63">{{ad.stay}}</span></p>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<template data-sc="for" list="{{ad.items}}" as="it" hint-placeholder-count="1"><button type="button" data-bar="1" data-bid="{{it.bid}}" data-link="{{it.link}}" onClick="{{it.open}}" aria-label="{{it.aria}}" class="{{it.cls}}" style="{{it.style}}"><span style="{{it.tagStyle}}">{{it.tag}}</span><span style="overflow: hidden; text-overflow: ellipsis">{{it.label}}</span></button></template>
+</div>
+</li>
+</template>
+</ol>
+</div>
+<div class="cal-grid" style="overflow-x: auto; margin-top: 16px">
 <div style="min-width: 760px">
 <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; font-size: 13px; font-weight: 600; color: #7A6E63; padding: 0 0 8px">
 <span style="padding-left: 8px">อาทิตย์</span><span style="padding-left: 8px">จันทร์</span><span style="padding-left: 8px">อังคาร</span><span style="padding-left: 8px">พุธ</span><span style="padding-left: 8px">พฤหัสบดี</span><span style="padding-left: 8px">ศุกร์</span><span style="padding-left: 8px">เสาร์</span>
@@ -286,7 +346,7 @@ Khun Mhee · หลังบ้าน</a>
 </div>
 <p style="margin: 12px 0 0; font-size: 12px; color: #7A6E63">เรียงจากการจองล่าสุด · แถวสีเหลืองคือการจองใหม่ แตะหรือคลิกที่แถวเพื่อรับทราบ</p>
 <div id="book-scroll" style="{{bookBox}}">
-<table style="min-width: 1280px; font-size: 14px">
+<table class="km-btable" style="min-width: 1280px; font-size: 14px">
 <thead>
 <tr class="km-sticky" style="color: #7A6E63; font-size: 12px">
 <th style="padding: 10px 12px; font-weight: 600">เลขที่จอง</th>
@@ -305,17 +365,17 @@ Khun Mhee · หลังบ้าน</a>
 <tbody>
 <template data-sc="for" list="{{rows}}" as="b" hint-placeholder-count="6">
 <tr onClick="{{b.ack}}" style="{{b.trStyle}}">
-<td style="{{b.codeStyle}}"><template data-sc="if" value="{{b.isNew}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{b.ack}}" aria-label="การจองใหม่ กดเพื่อรับทราบ" style="display: inline-block; margin: 0 0 4px; border: 0; border-radius: 9999px; background: #E0242B; color: #FFFFFF; font-size: 11px; font-weight: 700; padding: 3px 9px; cursor: pointer">ใหม่</button><br></template>{{b.code}}</td>
-<td style="padding: 14px 12px; font-weight: 600">{{b.name}}</td>
-<td style="padding: 14px 12px; font-variant-numeric: tabular-nums">{{b.phone}}</td>
-<td style="padding: 14px 12px; white-space: nowrap">{{b.room}}</td>
-<td style="padding: 14px 12px; white-space: nowrap">{{b.ci}}<template data-sc="if" value="{{b.arr}}" hint-placeholder-val="{{ false }}"><br><span style="font-size: 12px; color: #7A6E63">ถึง {{b.arr}}</span></template></td>
-<td style="padding: 14px 12px; white-space: nowrap">{{b.co}}</td>
-<td style="padding: 14px 12px">{{b.pets}}</td>
-<td style="padding: 14px 12px; font-variant-numeric: tabular-nums; white-space: nowrap">{{b.total}}</td>
-<td style="padding: 14px 12px"><template data-sc="if" value="{{b.slipUrl}}" hint-placeholder-val="{{ false }}"><a href="{{b.slipUrl}}" target="_blank" rel="noopener" style="color: #3E6A9E; text-decoration: underline">ดูสลิป</a></template><template data-sc="if" value="{{b.noSlip}}" hint-placeholder-val="{{ true }}"><span style="color: #7A6E63">—</span></template><template data-sc="if" value="{{b.receiptUrl}}" hint-placeholder-val="{{ false }}"><br><a href="{{b.receiptUrl}}" target="_blank" rel="noopener" style="color: #2F6B45; text-decoration: underline; font-size: 13px">ใบเสร็จ PDF</a></template></td>
-<td style="padding: 14px 12px"><span style="{{b.badge}}">{{b.statusName}}</span><template data-sc="if" value="{{b.refund}}" hint-placeholder-val="{{ false }}"><br><span style="{{b.refundStyle}}">{{b.refund}}</span></template><template data-sc="if" value="{{b.extra}}" hint-placeholder-val="{{ false }}"><br><span style="display: inline-block; margin-top: 4px; font-size: 12px; color: #5B4B8A">{{b.extra}}</span></template></td>
-<td style="padding: 14px 0 14px 12px"><div style="display: flex; gap: 6px; flex-wrap: wrap; max-width: 240px"><template data-sc="for" list="{{b.actions}}" as="a" hint-placeholder-count="2"><button type="button" onClick="{{a.run}}" disabled="{{a.busy}}" style="{{a.style}}">{{a.label}}</button></template></div></td>
+<td data-l="เลขที่จอง" class="bc-0" style="{{b.codeStyle}}"><template data-sc="if" value="{{b.isNew}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{b.ack}}" aria-label="การจองใหม่ กดเพื่อรับทราบ" style="display: inline-block; margin: 0 0 4px; border: 0; border-radius: 9999px; background: #E0242B; color: #FFFFFF; font-size: 11px; font-weight: 700; padding: 3px 9px; cursor: pointer">ใหม่</button><br></template>{{b.code}}</td>
+<td data-l="ชื่อ-นามสกุล" class="bc-1" style="padding: 14px 12px; font-weight: 600">{{b.name}}</td>
+<td data-l="เบอร์โทร" class="bc-2" style="padding: 14px 12px; font-variant-numeric: tabular-nums">{{b.phone}}</td>
+<td data-l="ห้อง" class="bc-3" style="padding: 14px 12px; white-space: nowrap">{{b.room}}</td>
+<td data-l="เช็คอิน" class="bc-4" style="padding: 14px 12px; white-space: nowrap">{{b.ci}}<template data-sc="if" value="{{b.arr}}" hint-placeholder-val="{{ false }}"><br><span style="font-size: 12px; color: #7A6E63">ถึง {{b.arr}}</span></template></td>
+<td data-l="เช็คเอาท์" class="bc-5" style="padding: 14px 12px; white-space: nowrap">{{b.co}}</td>
+<td data-l="สัตว์เลี้ยง" class="bc-6" style="padding: 14px 12px">{{b.pets}}</td>
+<td data-l="ยอดรวม" class="bc-7" style="padding: 14px 12px; font-variant-numeric: tabular-nums; white-space: nowrap">{{b.total}}</td>
+<td data-l="สลิป / ใบเสร็จ" class="bc-8" style="padding: 14px 12px"><template data-sc="if" value="{{b.slipUrl}}" hint-placeholder-val="{{ false }}"><a href="{{b.slipUrl}}" target="_blank" rel="noopener" style="color: #3E6A9E; text-decoration: underline">ดูสลิป</a></template><template data-sc="if" value="{{b.noSlip}}" hint-placeholder-val="{{ true }}"><span style="color: #7A6E63">—</span></template><template data-sc="if" value="{{b.receiptUrl}}" hint-placeholder-val="{{ false }}"><br><a href="{{b.receiptUrl}}" target="_blank" rel="noopener" style="color: #2F6B45; text-decoration: underline; font-size: 13px">ใบเสร็จ PDF</a></template></td>
+<td data-l="สถานะ" class="bc-9" style="padding: 14px 12px"><span style="{{b.badge}}">{{b.statusName}}</span><template data-sc="if" value="{{b.refund}}" hint-placeholder-val="{{ false }}"><br><span style="{{b.refundStyle}}">{{b.refund}}</span></template><template data-sc="if" value="{{b.extra}}" hint-placeholder-val="{{ false }}"><br><span style="display: inline-block; margin-top: 4px; font-size: 12px; color: #5B4B8A">{{b.extra}}</span></template></td>
+<td data-l="จัดการ" class="bc-10" style="padding: 14px 0 14px 12px"><div style="display: flex; gap: 6px; flex-wrap: wrap; max-width: 240px"><template data-sc="for" list="{{b.actions}}" as="a" hint-placeholder-count="2"><button type="button" onClick="{{a.run}}" disabled="{{a.busy}}" style="{{a.style}}">{{a.label}}</button></template></div></td>
 </tr>
 </template>
 </tbody>
@@ -433,19 +493,19 @@ Khun Mhee · หลังบ้าน</a>
 <h3 style="margin: 24px 0 0; font-size: 17px; font-weight: 600">ชื่อห้องและราคาพื้นฐานต่อคืน</h3>
 <p style="margin: 4px 0 0; font-size: 13px; color: #7A6E63">แก้ชื่อห้องที่นี่ที่เดียว ชื่อใหม่จะขึ้นทุกหน้า (หน้าแรก หน้าจอง เช็คอิน ใบเสร็จ LINE) ภายในประมาณ 1 นาที</p>
 <div style="overflow-x: auto; margin-top: 8px">
-<table style="min-width: 820px; font-size: 14px">
+<table class="km-ptable" style="min-width: 820px; font-size: 14px">
 <thead><tr style="color: #7A6E63; font-size: 12px">
 <th style="padding: 8px 12px 8px 0">ห้อง</th><th style="padding: 8px 12px">ชื่อห้อง</th><th style="padding: 8px 12px">ราคาต่อคืน (บาท)</th><th style="padding: 8px 12px">รับได้สูงสุด (คน)</th><th style="padding: 8px 12px">สถานะ</th><th style="padding: 8px 0 8px 12px"></th>
 </tr></thead>
 <tbody>
 <template data-sc="for" list="{{prRooms}}" as="r" hint-placeholder-count="4">
 <tr style="border-top: 1px solid #E6DDCB">
-<td style="padding: 10px 12px 10px 0; font-weight: 600; white-space: nowrap">ห้อง {{r.no}}</td>
-<td style="padding: 10px 12px"><input type="text" maxlength="60" value="{{r.name}}" onInput="{{r.setName}}" aria-label="{{r.nameAria}}" style="{{r.nameStyle}}"></td>
-<td style="padding: 10px 12px"><input type="number" min="0" step="50" inputmode="numeric" value="{{r.price}}" onInput="{{r.setPrice}}" aria-label="{{r.priceAria}}" style="{{r.priceStyle}}"></td>
-<td style="padding: 10px 12px"><input type="number" min="1" max="50" inputmode="numeric" value="{{r.cap}}" onInput="{{r.setCap}}" aria-label="{{r.capAria}}" style="{{r.capStyle}}"></td>
-<td style="padding: 10px 12px"><select value="{{r.status}}" onChange="{{r.setStatus}}" aria-label="{{r.statusAria}}" style="{{selectStyle}}"><option value="active">เปิดให้จอง</option><option value="inactive">ปิดชั่วคราว</option></select></td>
-<td style="padding: 10px 0 10px 12px"><button type="button" onClick="{{r.save}}" disabled="{{r.saveDisabled}}" style="{{r.saveStyle}}">{{r.saveLabel}}</button></td>
+<td data-l="ห้อง" class="pc-0" style="padding: 10px 12px 10px 0; font-weight: 600; white-space: nowrap">ห้อง {{r.no}}</td>
+<td data-l="ชื่อห้อง" class="pc-1" style="padding: 10px 12px"><input type="text" maxlength="60" value="{{r.name}}" onInput="{{r.setName}}" aria-label="{{r.nameAria}}" style="{{r.nameStyle}}"></td>
+<td data-l="ราคาต่อคืน (บาท)" class="pc-2" style="padding: 10px 12px"><input type="number" min="0" step="50" inputmode="numeric" value="{{r.price}}" onInput="{{r.setPrice}}" aria-label="{{r.priceAria}}" style="{{r.priceStyle}}"></td>
+<td data-l="รับได้สูงสุด (คน)" class="pc-3" style="padding: 10px 12px"><input type="number" min="1" max="50" inputmode="numeric" value="{{r.cap}}" onInput="{{r.setCap}}" aria-label="{{r.capAria}}" style="{{r.capStyle}}"></td>
+<td data-l="สถานะ" class="pc-4" style="padding: 10px 12px"><select value="{{r.status}}" onChange="{{r.setStatus}}" aria-label="{{r.statusAria}}" style="{{selectStyle}}"><option value="active">เปิดให้จอง</option><option value="inactive">ปิดชั่วคราว</option></select></td>
+<td data-l="" class="pc-5" style="padding: 10px 0 10px 12px"><button type="button" onClick="{{r.save}}" disabled="{{r.saveDisabled}}" style="{{r.saveStyle}}">{{r.saveLabel}}</button></td>
 </tr>
 </template>
 </tbody>
@@ -699,7 +759,9 @@ const tp = this.today().split('-').map(Number), dp = date.split('-').map(Number)
 const off = (dp[0] * 12 + dp[1] - 1) - (tp[0] * 12 + tp[1] - 1);
 clearTimeout(this.flashT);
 this.setState({ monthOffset: off, calFlash: '', pop: null }, () => {
-const cell = document.getElementById('cal-d-' + date);
+const cellG = document.getElementById('cal-d-' + date);
+const cellA = document.getElementById('cal-a-' + date);
+const cell = cellG && cellG.offsetParent ? cellG : (cellA && cellA.offsetParent ? cellA : null);
 const sec = document.getElementById('calendar');
 if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
 else if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1118,6 +1180,35 @@ style: 'grid-column: ' + (kmDate.diff(wStart, from) + 1) + ' / span ' + (kmDate.
 });
 weeks.push({ days: dayCells, bars });
 }
+// มือถือ: ปฏิทินแบบรายการวัน (เฉพาะวันที่มีเช็คอิน/เช็คเอาท์ หรือวันที่ไฮไลท์)
+const TH_DOW = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+const agenda = [];
+for (let i = 0; i < days; i++) {
+const d = kmDate.add(first, i);
+const live2 = bookings.filter((b) => b.status !== 'cancelled');
+const ins = live2.filter((b) => b.checkIn === d);
+const outs = live2.filter((b) => b.checkOut === d);
+const stay = live2.filter((b) => b.checkIn < d && d < b.checkOut).length;
+const hl = !!(s.calHL || {})[d], fl = s.calFlash === d;
+if (!ins.length && !outs.length && !hl && d !== today) continue;
+const mk = (b, kind) => {
+const k = stOf(b);
+const mvTo = moveLinks.to[b.id], mvFrom = moveLinks.from[b.id], grp = moveLinks.group[b.id] || '';
+const extra = kind === 'in' && mvFrom ? ' · ย้ายจาก' + short(rn(mvFrom.roomNo)) : kind === 'out' && mvTo ? ' · ย้ายไป' + short(rn(mvTo.roomNo)) : '';
+return { bid: b.id, link: grp, tag: kind === 'in' ? 'เช็คอิน' : 'เช็คเอาท์',
+label: short(rn(b.roomNo)) + ' · ' + b.guestName + ' · ' + b.nights + ' คืน' + extra,
+aria: (kind === 'in' ? 'เช็คอิน ' : 'เช็คเอาท์ ') + b.guestName + ' ' + rn(b.roomNo) + ' ดูรายละเอียด',
+open: (e) => { if (this.state.pop && this.state.pop.id === b.id) this.setState({ pop: null }); else this.openPop(b.id, e); },
+cls: 'km-bar' + (grp && s.linkHover === grp ? ' km-link' : ''),
+tagStyle: 'flex: 0 0 auto; font-size: 11px; font-weight: 700; border-radius: 9999px; padding: 2px 8px; background: rgba(255,255,255,.22);',
+style: 'display: flex; align-items: center; gap: 8px; width: 100%; min-height: 40px; border: 0; border-radius: 10px; padding: 6px 10px; text-align: left; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; overflow: hidden; background: ' + ST[k].bg + '; color: ' + ST[k].fg + ';' + (s.pop && s.pop.id === b.id ? ' box-shadow: 0 0 0 3px #3A352F;' : '') };
+};
+agenda.push({ id: 'cal-a-' + d, cls: (fl ? 'km-flash ' : '') + (hl ? 'km-hl' : ''),
+label: 'วัน' + TH_DOW[kmDate.weekday(d)] + ' ' + kmDate.dm(d) + (d === today ? ' · วันนี้' : ''),
+dStyle: 'font-size: 15px; font-weight: 700; color: ' + (hl ? '#B5443F' : '#47413A') + ';',
+stay: stay ? 'พักอยู่ ' + stay + ' ห้อง' : '',
+items: outs.map((b) => mk(b, 'out')).concat(ins.map((b) => mk(b, 'in'))) });
+}
 // กล่องรายละเอียดการจองที่เลือกในปฏิทิน
 const popB = s.pop ? bookings.find((b) => b.id === s.pop.id) : null;
 const PAYN = { bank: 'โอนผ่านบัญชีธนาคาร', qr: 'QR พร้อมเพย์' };
@@ -1361,7 +1452,7 @@ updatedLabel: s.updated ? 'อัปเดตล่าสุด ' + s.updated + 
 lbTodo: lbTodo || '', lbRows, lbMsg,
 refresh: () => this.load(), loadErr: s.loadErr, toast: s.toast,
 logout: () => { kmApi('logout', t).catch(() => {}); kmToken.set(null); kmToken.setUser(null); this.toLogin(); },
-kpis, notes, nFilters, bFilters, rows, reminders, weeks, legend,
+kpis, notes, nFilters, bFilters, rows, reminders, weeks, legend, agenda, noAgenda: !agenda.length, calCls: s.calGrid ? 'cal-showgrid' : '', calToggleLabel: s.calGrid ? 'ดูแบบรายการวัน' : 'ดูแบบตารางทั้งเดือน', toggleCalView: () => this.setState({ calGrid: !this.state.calGrid }),
 monthTitle: kmDate.monthTitle(Y, Mo), noPrev: s.monthOffset <= -24, noNext: s.monthOffset >= 24,
 prevStyle: navBtn(s.monthOffset <= -24), nextStyle: navBtn(s.monthOffset >= 24),
 prevMonth: () => this.setState({ monthOffset: Math.max(-24, s.monthOffset - 1), pop: null }),

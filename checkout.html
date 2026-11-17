@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Khun Mhee – เช็คเอาท์ด้วยตัวเอง</title>
+<title>Khun Mee – เช็คเอาท์ด้วยตัวเอง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Noto+Sans+Thai:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css?v=1">
 <style>
 body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
@@ -30,24 +31,22 @@ input,select,textarea{font-family:inherit}
 <template id="view">
 <div style="width: 100%; min-width: 0; background: #EDE6D7; min-height: 100vh">
 
-<header style="background: #3A352F; color: #F6F3EE; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0 20px; box-sizing: border-box">
-<nav aria-label="เมนูหลัก" style="width: 100%; max-width: 1024px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px">
-<a href="index.html" style="color: #F6F3EE; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DCC881" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10" r="2"></circle><circle cx="9.5" cy="5.5" r="2"></circle><circle cx="14.5" cy="5.5" r="2"></circle><circle cx="18.5" cy="10" r="2"></circle><path d="M12 12c-3 0-5.5 3.5-5.5 6 0 1.6 1.3 2.5 2.8 2.5 1.1 0 1.8-.6 2.7-.6s1.6.6 2.7.6c1.5 0 2.8-.9 2.8-2.5 0-2.5-2.5-6-5.5-6z"></path></svg>
-Khun Mhee</a>
-<div class="navlinks" style="display: flex; gap: 32px">
-<a href="index.html" style="color: #EDE6D7">ห้องพัก</a>
-<a href="booking.html" style="color: #EDE6D7">จองห้องพัก</a>
-<a href="checkin.html" style="color: #EDE6D7">เช็คอิน</a>
-<a href="checkout.html" aria-current="page" style="color: #FFFFFF; font-weight: 600">เช็คเอาท์</a>
-<a href="index.html#contact" style="color: #EDE6D7">ติดต่อเรา</a>
+<header class="km-head">
+<div class="km-bar1">
+<a href="index.html" class="km-brand"><b>Khun Mee</b><small>PET FRIENDLY HOUSE</small></a>
+<a href="https://lin.ee/9aJsfpw" target="_blank" rel="noopener" class="km-line">LINE</a>
 </div>
-<a href="login.html" style="color: #EDE6D7">แอดมิน</a>
-</nav>
+<div class="km-bar2"><nav class="km-bar2-in" aria-label="เมนูหลัก">
+<a class="km-pill km-pill-book" href="booking.html">จองห้องพัก</a>
+<a class="km-pill" href="index.html">หน้าแรก</a>
+<a class="km-pill" href="checkin.html">เช็คอิน</a>
+<a class="km-pill" href="checkout.html" aria-current="page">เช็คเอาท์</a>
+<a class="km-pill" href="reschedule.html">เลื่อนวันพัก</a>
+</nav></div>
 </header>
 
 
-<main style="max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+<main class="wrap" style="max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
 <div>
 <a href="index.html" style="font-size: 14px; color: #47413A">‹ กลับหน้าแรก</a>
 <h1 class="page-h" style="margin: 12px 0 0; font-size: 48px; font-weight: 600; line-height: 1.2; letter-spacing: -0.28px">เช็คเอาท์ด้วยตัวเอง</h1>
@@ -225,7 +224,7 @@ kmCoCall('publicSelfCheckout', [s.info.code, s.phone.trim(), { rating: s.out.rat
 .then((r) => {
 this.remember(false);
 this.setState({ busy: false, info: r.info, out: { rating: 0, comment: '', confirm: false },
-done: { title: 'เช็คเอาท์เรียบร้อย', note: 'ขอบคุณที่มาพักกับ Khun Mhee นะคะ หวังว่าจะได้ต้อนรับคุณและน้อง ๆ อีกครั้ง' } });
+done: { title: 'เช็คเอาท์เรียบร้อย', note: 'ขอบคุณที่มาพักกับ Khun Mee นะคะ หวังว่าจะได้ต้อนรับคุณและน้อง ๆ อีกครั้ง' } });
 this.focus('h-done');
 })
 .catch((e) => this.setState({ busy: false, outErr: kmCoMsg(e), out: Object.assign({}, s.out, { confirm: false }) }));
@@ -256,7 +255,7 @@ chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 1
 if (step === 'done') {
 const at = String(info.checkedOutAt || '');
 out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว',
-note: 'การจองนี้เช็คเอาท์แล้ว' + (at.length >= 16 ? ' เมื่อ ' + kmDate.short(at.slice(0, 10)) + ' ' + at.slice(11, 16) + ' น.' : '') + ' ขอบคุณที่มาพักกับ Khun Mhee นะคะ' };
+note: 'การจองนี้เช็คเอาท์แล้ว' + (at.length >= 16 ? ' เมื่อ ' + kmDate.short(at.slice(0, 10)) + ' ' + at.slice(11, 16) + ' น.' : '') + ' ขอบคุณที่มาพักกับ Khun Mee นะคะ' };
 out.hasInfo = false;
 return out;
 }
