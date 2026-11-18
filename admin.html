@@ -81,6 +81,7 @@ th{font-weight:600;text-align:left}
 .km-del:hover{background:#F3D9D6;color:#B5443F !important}
 .km-bar:hover{filter:brightness(1.08)}
 .km-flash{animation:kmFlash .6s ease-in-out .45s 3}
+.kpi-btn{transition:box-shadow .15s,transform .15s}.kpi-btn:hover{box-shadow:0 4px 16px rgba(58,53,47,.12)}.kpi-btn:active{transform:scale(.98)}
 .km-hl{background-color:#FCE4E2 !important;box-shadow:inset 0 0 0 3px #E0242B;border-radius:11px}
 .km-hl-n{color:#B5443F !important}
 .km-link{box-shadow:0 0 0 3px #FFFDF9,0 0 0 6px #E9A23B !important;position:relative;z-index:1}
@@ -149,11 +150,11 @@ Khun Mee · หลังบ้าน</a>
 <!-- KPIs -->
 <div class="kpis" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
 <template data-sc="for" list="{{kpis}}" as="k" hint-placeholder-count="4">
-<div style="background: #F6F3EE; border-radius: 18px; padding: 20px 24px">
-<p style="margin: 0; font-size: 14px; color: #5E554C">{{k.label}}</p>
-<p style="margin: 8px 0 0; font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -0.28px">{{k.value}}<span style="font-size: 17px; font-weight: 400; color: #7A6E63">{{k.unit}}</span></p>
-<p style="margin: 8px 0 0; font-size: 12px; color: #7A6E63">{{k.sub}}</p>
-</div>
+<button type="button" class="kpi-btn" onClick="{{k.go}}" aria-label="{{k.aria}}" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; width: 100%; text-align: left; font: inherit; color: inherit; border: 0; background: #F6F3EE; border-radius: 18px; padding: 20px 24px; cursor: pointer">
+<span style="display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #5E554C">{{k.label}}<span aria-hidden="true" style="color: #A1805D; font-size: 16px">›</span></span>
+<span style="display: block; margin: 8px 0 0; font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -0.28px">{{k.value}}<span style="font-size: 17px; font-weight: 400; color: #7A6E63">{{k.unit}}</span></span>
+<span style="display: block; margin: 8px 0 0; font-size: 12px; color: #7A6E63">{{k.sub}}</span>
+</button>
 </template>
 </div>
 
@@ -906,7 +907,7 @@ const b = measure('book-scroll', 'tbody > tr');
 if (n !== this.state.notifyMax || b !== this.state.bookMax) this.setState({ notifyMax: n, bookMax: b });
 }
 /* ไปที่ปฏิทินรายเดือน เดือนของวันที่นั้น แล้วให้วันนั้นกะพริบสีแดง 3 ครั้ง */
-goCalendar(date, bid) {
+goCalendar(date, bid, flashOnly) {
 if (!date) return;
 const tp = this.today().split('-').map(Number), dp = date.split('-').map(Number);
 const off = (dp[0] * 12 + dp[1] - 1) - (tp[0] * 12 + tp[1] - 1);
@@ -918,7 +919,7 @@ const cell = cellG && cellG.offsetParent ? cellG : (cellA && cellA.offsetParent 
 const sec = document.getElementById('calendar');
 if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
 else if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-this.addHL(date, bid);
+if (!flashOnly) this.addHL(date, bid);
 this.setState({ calFlash: date });
 this.flashT = setTimeout(() => this.setState({ calFlash: '' }), 3200);
 });
@@ -932,7 +933,8 @@ try { localStorage.setItem('km_cal_hl', JSON.stringify(hl)); } catch (e) {}
 }
 addHL(date, bid) {
 const old = (this.state.calHL || {})[date];
-const ids = (old && Array.isArray(old.ids) ? old.ids : []).filter((x) => x !== bid).concat(bid ? [bid] : []);
+const add = (Array.isArray(bid) ? bid : [bid]).filter(Boolean);
+const ids = (old && Array.isArray(old.ids) ? old.ids : []).filter((x) => add.indexOf(x) < 0).concat(add);
 const hl = Object.assign({}, this.state.calHL, { [date]: { t: Date.now(), ids } });
 this.saveHL(hl);
 this.setState({ calHL: hl });
@@ -1116,10 +1118,14 @@ const pendingList = bookings.filter((b) => b.status === 'pending');
 const refundCount = bookings.filter((b) => b.refundStatus === 'requested').length;
 const names = (list) => list.length ? list.slice(0, 2).map((b) => b.guestName + ' · ' + rn(b.roomNo)).join(', ') + (list.length > 2 ? ' และอีก ' + (list.length - 2) : '') : 'ไม่มี';
 const kpis = [
-{ label: 'เช็คอินวันนี้', value: String(arrivals.length), unit: ' ห้อง', sub: names(arrivals) },
-{ label: 'เช็คเอาท์วันนี้', value: String(departures.length), unit: ' ห้อง', sub: names(departures) },
-{ label: 'ห้องว่างคืนนี้', value: dash ? String(dash.rooms - dash.occupied) : '–', unit: dash ? ' / ' + dash.rooms : '', sub: dash ? 'อัตราเข้าพัก ' + Math.round(dash.occupancy * 100) + '%' : '' },
-{ label: 'รอตรวจสลิป', value: String(pendingList.length), unit: ' รายการ', sub: (refundCount ? 'ขอเงินคืน ' + refundCount + ' รายการ · ' : '') + (dash ? 'รายได้เดือนนี้ ฿' + kmMoney(dash.revenueThisMonth) : '') }
+{ label: 'เช็คอินวันนี้', value: String(arrivals.length), unit: ' ห้อง', sub: names(arrivals),
+aria: 'เช็คอินวันนี้ ' + arrivals.length + ' ห้อง ดูในปฏิทิน', go: () => this.goCalendar(this.today(), arrivals.map((b) => b.id), !arrivals.length) },
+{ label: 'เช็คเอาท์วันนี้', value: String(departures.length), unit: ' ห้อง', sub: names(departures),
+aria: 'เช็คเอาท์วันนี้ ' + departures.length + ' ห้อง ดูในปฏิทิน', go: () => this.goCalendar(this.today(), departures.map((b) => b.id), !departures.length) },
+{ label: 'ห้องว่างคืนนี้', value: dash ? String(dash.rooms - dash.occupied) : '–', unit: dash ? ' / ' + dash.rooms : '', sub: dash ? 'อัตราเข้าพัก ' + Math.round(dash.occupancy * 100) + '%' : '',
+aria: 'ห้องว่างคืนนี้ ดูในปฏิทิน', go: () => this.goCalendar(this.today(), null, true) },
+{ label: 'รอตรวจสลิป', value: String(pendingList.length), unit: ' รายการ', aria: 'รอตรวจสลิป ' + pendingList.length + ' รายการ ดูในการแจ้งเตือน หมวดรอยืนยัน',
+go: () => this.setState({ nf: 'pending' }, () => { const n = document.getElementById('notify'); if (n) n.scrollIntoView({ behavior: 'smooth', block: 'start' }); }), sub: (refundCount ? 'ขอเงินคืน ' + refundCount + ' รายการ · ' : '') + (dash ? 'รายได้เดือนนี้ ฿' + kmMoney(dash.revenueThisMonth) : '') }
 ];
 
 const iconBase = 'flex: 0 0 36px; width: 36px; height: 36px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; ';
