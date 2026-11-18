@@ -128,6 +128,28 @@ input,select,textarea{font-family:inherit}
 </template>
 
 <template data-sc="if" value="{{isStep1}}" hint-placeholder-val="{{ true }}">
+<section id="lookup" class="card" aria-labelledby="h-lookup" style="background: #F6F3EE; border-radius: 18px; padding: 18px 24px; box-sizing: border-box">
+<button type="button" onClick="{{lk.toggle}}" aria-expanded="{{lk.open}}" aria-controls="lk-form" style="width: 100%; display: flex; align-items: center; gap: 14px; background: transparent; border: 0; padding: 0; text-align: left; color: #47413A">
+<span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 9999px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path><path d="M9 8h6M9 12h6"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column"><span id="h-lookup" style="font-size: 17px; font-weight: 600">จองไว้แล้ว? ดูสถานะและใบเสร็จ</span><span style="font-size: 13px; color: #7A6E63">กรอกรหัสการจองและเบอร์โทรที่ใช้จอง</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A6E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{lk.chevStyle}}"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<template data-sc="if" value="{{lk.open}}" hint-placeholder-val="{{ false }}">
+<form id="lk-form" onSubmit="{{lk.submit}}" style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px">
+<div class="fields2 bk-f2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">รหัสการจอง
+<input type="text" value="{{lk.code}}" onInput="{{lk.setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KM261118ABCD" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เบอร์โทรที่ใช้จอง
+<input type="tel" value="{{lk.phone}}" onInput="{{lk.setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #FFFDF9">
+</label>
+</div>
+<template data-sc="if" value="{{lk.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 10px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{lk.err}}</p></template>
+<button type="submit" disabled="{{lk.busy}}" style="align-self: flex-start; min-height: 46px; background: #47413A; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 0 24px; font-size: 16px; font-weight: 600">{{lk.label}}</button>
+<p style="margin: 0; font-size: 13px; color: #7A6E63">รหัสการจองขึ้นต้นด้วย KM อยู่ในอีเมลยืนยันและในแชท LINE</p>
+</form>
+</template>
+</section>
 <template data-sc="if" value="{{doneNote}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; display: flex; align-items: center; gap: 10px; background: #E7EFE5; border: 1px solid #A9C2A6; border-radius: 12px; padding: 12px 16px; font-size: 15px; line-height: 1.5; color: #35553A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 18px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{doneNote}}</p></template>
 <section aria-labelledby="h-room" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-room" style="margin: 0; font-size: 24px; font-weight: 600">1. เลือกห้องพัก</h2>
@@ -557,7 +579,8 @@ pay: 'bank', copied: false, lineCopied: false, slip: null, slipTried: false, sli
 busy: false, submitErr: '', saved: null, bkStatus: 'pending', receipt: null, checking: false, statusMsg: '', lastCheck: '',
 holdId: null, holdUntil: 0, holdBusy: false, holdErr: '', now: Date.now(), pdfBusy: false, pdfErr: '',
 refundStatus: '', refundAmount: 0, refundAcc: '', refundBusy: false, refundErr: '', refundSent: false,
-codeCopied: false, doneNote: ''
+codeCopied: false, doneNote: '',
+lkOpen: false, lkCode: '', lkPhone: '', lkBusy: false, lkErr: ''
 };
 }
 componentDidMount() {
@@ -566,6 +589,12 @@ try { saved = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch 
 // การจองที่ยืนยันแล้ว: ออกไปหน้าอื่นแล้วกลับมา = เริ่มจองใหม่ (ยกเว้นเพิ่งกดเปิดแชท LINE จากหน้านี้)
 if (saved && saved.status === 'confirmed' && !this.lineOutRecent()) { this.saveLocal(null); saved = null; }
 this.clearLineOut();
+// เปิดช่องดูการจองจากลิงก์ booking.html#lookup หรือ booking.html?code=KM...
+try {
+const q = new URLSearchParams(location.search);
+const qc = String(q.get('code') || '').trim().toUpperCase();
+if (location.hash === '#lookup' || qc) this.setState({ lkOpen: true, lkCode: /^[A-Z0-9]{4,30}$/.test(qc) ? qc : '' });
+} catch (e) {}
 if (saved && saved.code && saved.phone) {
 this.pollStart = Date.now();
 this.setState({ saved, step: saved.status === 'confirmed' ? 5 : 4, bkStatus: saved.status || 'pending',
@@ -659,6 +688,33 @@ try { return Date.now() - Number(sessionStorage.getItem('km_line_out') || 0) < 1
 }
 clearLineOut() { try { sessionStorage.removeItem('km_line_out'); } catch (e) {} }
 markLineOut() { try { sessionStorage.setItem('km_line_out', String(Date.now())); } catch (e) {} }
+lookup() {
+const s = this.state;
+const code = String(s.lkCode || '').toUpperCase().replace(/\s+/g, '');
+const phone = String(s.lkPhone || '').trim();
+if (!/^[A-Z0-9]{6,30}$/.test(code)) return this.setState({ lkErr: 'กรุณากรอกรหัสการจองให้ถูกต้อง เช่น KM261118ABCD' });
+if (phone.replace(/[^0-9]/g, '').length < 9) return this.setState({ lkErr: 'กรุณากรอกเบอร์โทรที่ใช้จอง 9–10 หลัก' });
+if (s.lkBusy) return;
+this.setState({ lkBusy: true, lkErr: '' });
+kmCall('publicGetBookingStatus', [code, phone], { retries: 1 }).then((b) => {
+const R = b.receipt || {};
+const room = (this.state.rooms || []).find((r) => String(r.roomNo) === String(b.roomNo));
+const done = ['confirmed', 'checked_in', 'checked_out'].indexOf(b.status) >= 0;
+const first = String(R.guestName || '').trim().split(/\s+/)[0] || '';
+const saved = { code: b.code, phone, first, email: R.email || '', pets: R.pets || '', arrival: '',
+roomNo: b.roomNo, roomName: R.roomName || (room ? room.name : 'ห้อง ' + b.roomNo), ci: b.checkIn, co: b.checkOut, nights: b.nights,
+guests: R.guests || '-', total: b.totalPrice, payName: R.payMethod || '', slipName: '', status: done ? 'confirmed' : 'pending', lookup: true };
+this.saveLocal(saved);
+this.release();
+this.lastPoll = Date.now(); this.pollStart = Date.now();
+const base = { lkBusy: false, lkOpen: false, lkCode: '', lkPhone: '', lkErr: '', doneNote: '', saved, statusMsg: '',
+f: Object.assign({}, this.state.f, { first, email: saved.email, phone, pets: saved.pets, arrival: '' }) };
+if (done) this.setState(Object.assign(base, { step: 5, bkStatus: 'confirmed', receipt: b.receipt || null }));
+else if (b.status === 'cancelled') this.setState(Object.assign(base, { step: 4, bkStatus: 'cancelled', refundStatus: b.refundStatus || '', refundAmount: Number(b.refundAmount) || 0 }));
+else this.setState(Object.assign(base, { step: 4, bkStatus: 'pending' }));
+window.scrollTo(0, 0);
+}).catch((e) => this.setState({ lkBusy: false, lkErr: String((e && e.message) || e) }));
+}
 resetBooking() {
 this.saveLocal(null); this.release(); this.reqNo = (this.reqNo || 0) + 1;
 this.setState({ refundStatus: '', refundAmount: 0, refundAcc: '', refundErr: '', refundSent: false, step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '', checking: false, doneNote: '',
@@ -682,8 +738,8 @@ Promise.race([kmCall('publicGetBookingStatus', [sv.code, sv.phone], { retries: 1
 if (req !== this.reqNo) return;
 const d = new Date();
 const lastCheck = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
-if (b.status === 'checked_out') { this.resetBooking(); return this.setState({ checking: false, lastCheck, doneNote: 'การเข้าพัก ' + sv.code + ' เช็คเอาท์เรียบร้อยแล้ว ขอบคุณที่มาพักกับเรา' }); }
-if (['confirmed', 'checked_in'].indexOf(b.status) >= 0) {
+if (b.status === 'checked_out' && !sv.lookup) { this.resetBooking(); return this.setState({ checking: false, lastCheck, doneNote: 'การเข้าพัก ' + sv.code + ' เช็คเอาท์เรียบร้อยแล้ว ขอบคุณที่มาพักกับเรา' }); }
+if (['confirmed', 'checked_in', 'checked_out'].indexOf(b.status) >= 0) {
 const saved = Object.assign({}, sv, { status: 'confirmed' });
 this.saveLocal(saved);
 if (this.state.step !== 5) window.scrollTo(0, 0);
@@ -893,6 +949,12 @@ copyBg: s.lineCopied ? '#47413A' : 'transparent', copyFg: s.lineCopied ? '#F6F3E
 url: lineUrl || '#', oa: chat ? decodeURIComponent(chat.split('/R/ti/p/')[1] || '') : ''
 },
 accent, rooms, months, steps, guestOpts, loading: s.loading, loadErr: s.loadErr, reload: () => this.load(),
+lk: { open: s.lkOpen, code: s.lkCode, phone: s.lkPhone, busy: s.lkBusy, err: s.lkErr,
+label: s.lkBusy ? 'กำลังค้นหา…' : 'ดูการจอง',
+chevStyle: 'flex: 0 0 18px; transition: transform .2s; transform: rotate(' + (s.lkOpen ? 180 : 0) + 'deg)',
+toggle: () => this.setState({ lkOpen: !this.state.lkOpen, lkErr: '' }),
+setCode: (e) => this.setState({ lkCode: e.target.value, lkErr: '' }), setPhone: (e) => this.setState({ lkPhone: e.target.value, lkErr: '' }),
+submit: (e) => { e.preventDefault(); this.lookup(); } },
 doneNote: s.doneNote || '', isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
 dateHint: s.loading ? 'กำลังโหลดวันว่าง…' : !s.ci ? 'แตะวันที่เพื่อเลือกวันเช็คอิน (ช่องสีชมพู "เต็ม" คือมีคนจองแล้ว)' : !s.co ? 'เช็คอิน ' + kmDate.short(s.ci) + ' แตะวันเช็คเอาท์' : 'เข้าพัก ' + nights + ' คืน · ' + kmDate.short(s.ci) + ' ถึง ' + kmDate.short(s.co),
 clearDates: () => this.setState({ ci: null, co: null, holdErr: '' }),
