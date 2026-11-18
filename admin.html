@@ -239,7 +239,7 @@ Khun Mee · หลังบ้าน</a>
 <template data-sc="for" list="{{lbRows}}" as="r" hint-placeholder-count="3">
 <li style="{{r.cardStyle}}">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
-<span style="{{r.dayStyle}}">{{r.dayLabel}}</span>
+<template data-sc="if" value="{{r.dayLabel}}" hint-placeholder-val="{{ true }}"><span style="{{r.dayStyle}}">{{r.dayLabel}}</span></template>
 <span style="{{r.chipStyle}}">{{r.statusName}}</span>
 </div>
 <p style="margin: 10px 0 0; font-size: 16px; font-weight: 600">{{r.guestName}}</p>
@@ -1579,14 +1579,11 @@ const lbChip = { pending: 'background: #E9C46A; color: #3A352F;', active: 'backg
 const lbToday = this.today(), lbTmr = kmDate.add(lbToday, 1);
 const lbRows = lbList.map((r) => {
 const busy = s.acting === 'lb-' + r.id;
-// ป้ายวันเช็คอิน: วันนี้ / พรุ่งนี้ / วันที่ · กำลังพักหรือออกแล้วบอกตามวันเช็คเอาท์
-const ci = String(r.checkIn || '').slice(0, 10), co = String(r.checkOut || '').slice(0, 10);
+// ป้ายวันเช็คอิน: แสดงเฉพาะเช็คอินวันนี้และพรุ่งนี้
+const ci = String(r.checkIn || '').slice(0, 10);
 const day = ci === lbToday ? ['เช็คอินวันนี้', 'background: #8B5E3C; color: #FFFFFF;']
-: ci === lbTmr ? ['เช็คอินพรุ่งนี้', 'background: #F1E3D3; color: #6B4423;']
-: ci > lbTmr ? ['เช็คอิน ' + kmDate.dm(ci), 'background: #EDE6D7; color: #47413A;']
-: co === lbToday ? ['เช็คเอาท์วันนี้', 'background: #848484; color: #FFFFFF;']
-: co > lbToday ? ['เข้าพักอยู่', 'background: #DCE8DD; color: #2F5A33;']
-: ['เช็คเอาท์แล้ว', 'background: #EDE6D7; color: #5E554C;'];
+: ci === lbTmr ? ['เช็คอินพรุ่งนี้', 'background: #3E6A9E; color: #FFFFFF;']
+: ['', ''];
 const own = (s.lbOwn && s.lbOwn[r.id]) || '';
 const setOwnVal = (v) => this.setState({ lbOwn: Object.assign({}, this.state.lbOwn, { [r.id]: v }) });
 return { slot: r.slot, dayLabel: day[0], dayStyle: 'font-size: 13px; font-weight: 700; border-radius: 9999px; padding: 4px 10px; white-space: nowrap; ' + day[1], statusName: r.statusName, guestName: r.guestName, roomName: r.roomName, code: r.code,
@@ -1604,7 +1601,7 @@ okLabel: 'ลบแล้ว', cancelLabel: 'กลับไป', onOk: () => th
 saveOwn: (e) => { if (e && e.preventDefault) e.preventDefault(); const v = String(own);
 if (!/^\d{6,8}$/.test(v)) return this.say('รหัสต้องเป็นตัวเลข 6–8 หลัก');
 this.act(kmApi('adminLobbyOwnPin', t, r.id, v), 'lb-' + r.id).then(() => setOwnVal('')); },
-chipStyle: 'border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; ' + (lbChip[r.status] || ''),
+chipStyle: 'margin-left: auto; border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; ' + (lbChip[r.status] || ''),
 cardStyle: 'background: #FFFDF9; border: 1px solid ' + (r.status === 'active' ? '#E2D8C6' : r.status === 'pending' ? '#E9C46A' : '#C88193') + '; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; min-width: 0' };
 });
 return {
