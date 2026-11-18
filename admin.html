@@ -126,7 +126,7 @@ Khun Mee · หลังบ้าน</a>
 <a href="#bookings" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ข้อมูลลูกค้า</a>
 <a href="#stats" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">สถิติ</a>
 <a href="#pricing" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ราคาห้อง</a>
-<a href="#photos" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">รูปภาพ</a>
+<a href="#photos" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">รูปภาพและวิดีโอ</a>
 <template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M4 9h16M4 15h16M10 3v18"></path></svg>เปิด Google Sheets<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 <template data-sc="if" value="{{slipFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{slipFolderUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #335A88; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>โฟลเดอร์สลิป (Drive)<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 <template data-sc="if" value="{{receiptFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{receiptFolderUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>โฟลเดอร์ใบเสร็จ (Drive)<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
@@ -621,14 +621,14 @@ Khun Mee · หลังบ้าน</a>
 <!-- Photos -->
 <section id="photos" aria-labelledby="h-photos" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap">
-<h2 id="h-photos" style="margin: 0; font-size: 21px; font-weight: 600">รูปภาพห้องพัก</h2>
+<h2 id="h-photos" style="margin: 0; font-size: 21px; font-weight: 600">รูปภาพและวิดีโอ</h2>
 <template data-sc="if" value="{{ph.folderUrl}}" hint-placeholder-val="{{ false }}"><a href="{{ph.folderUrl}}" target="_blank" rel="noopener" style="font-size: 14px; color: #335A88">เปิดโฟลเดอร์รูปใน Drive ↗<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 </div>
-<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รูปที่แสดงบนหน้าแรกและหน้าจอง แก้แล้วหน้าเว็บเปลี่ยนภายในประมาณ 1 นาที</p>
+<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รูปและวิดีโอที่แสดงบนหน้าแรกและหน้าจอง แก้แล้วหน้าเว็บเปลี่ยนภายในประมาณ 1 นาที</p>
 <template data-sc="if" value="{{ph.msg}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">{{ph.msg}}</p></template>
 <template data-sc="if" value="{{ph.needImport}}" hint-placeholder-val="{{ false }}">
 <div style="margin-top: 14px; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 14px; padding: 16px; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
-<p style="margin: 0; flex: 1 1 260px; font-size: 15px; line-height: 1.6">ตอนนี้หน้าเว็บใช้รูปเดิมที่อยู่ในเว็บ กด "นำเข้ารูปเดิมของเว็บ" 1 ครั้ง เพื่อเริ่มเพิ่ม ลบ และเรียงรูปจากที่นี่</p>
+<p style="margin: 0; flex: 1 1 260px; font-size: 15px; line-height: 1.6">ชุดรูปห้องพัก ห้องน้ำ และพื้นที่ส่วนกลาง ยังใช้รูปเดิมที่อยู่ในเว็บ กด "นำเข้ารูปเดิมของเว็บ" 1 ครั้ง เพื่อเริ่มเพิ่ม ลบ และเรียงรูปชุดเหล่านี้จากที่นี่</p>
 <button type="button" onClick="{{ph.import}}" disabled="{{ph.busy}}" style="min-height: 44px; border: 0; border-radius: 9999px; background: #47413A; color: #F6F3EE; padding: 0 20px; font-size: 15px; font-weight: 600; cursor: pointer">นำเข้ารูปเดิมของเว็บ</button>
 </div>
 </template>
@@ -637,15 +637,25 @@ Khun Mee · หลังบ้าน</a>
 <template data-sc="for" list="{{ph.sets}}" as="g" hint-placeholder-count="6"><button type="button" role="tab" aria-selected="{{g.on}}" onClick="{{g.pick}}" style="{{g.style}}">{{g.label}} <span style="opacity: .75">{{g.count}}</span></button></template>
 </div>
 <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center">
-<label style="{{ph.upStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"></path><path d="M4 20h16"></path></svg>{{ph.upLabel}}<input type="file" accept="image/*" multiple onChange="{{ph.upload}}" disabled="{{ph.busy}}" style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"></label>
+<template data-sc="if" value="{{ph.canUpload}}" hint-placeholder-val="{{ true }}"><label style="{{ph.upStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"></path><path d="M4 20h16"></path></svg>{{ph.upLabel}}<input type="file" accept="image/*" multiple onChange="{{ph.upload}}" disabled="{{ph.busy}}" style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"></label></template>
 <span style="font-size: 13px; color: #7A6E63">{{ph.hint}}</span>
 </div>
-<template data-sc="if" value="{{ph.empty}}" hint-placeholder-val="{{ false }}"><p style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">ชุดนี้ยังไม่มีรูป</p></template>
+<template data-sc="if" value="{{ph.canVideo}}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{ph.addVideo}}" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; max-width: 640px">
+<label style="flex: 1 1 260px; min-width: 0"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ลิงก์วิดีโอ YouTube</span><input type="url" inputmode="url" autocomplete="off" placeholder="วางลิงก์ YouTube เช่น https://youtu.be/…" value="{{ph.vUrl}}" onInput="{{ph.setVUrl}}" style="width: 100%; box-sizing: border-box; min-height: 44px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 16px; background: #FFFDF9; color: #47413A"></label>
+<button type="submit" disabled="{{ph.busy}}" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 0; border-radius: 9999px; background: #B5443F; color: #FFFFFF; padding: 0 18px; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg>{{ph.vLabel}}</button>
+</form>
+<p style="margin: 6px 0 0; font-size: 13px; color: #7A6E63">อัปวิดีโอขึ้น YouTube (ตั้งเป็น "ไม่เป็นสาธารณะ / Unlisted" ได้) แล้วกดแชร์ คัดลอกลิงก์มาวางที่นี่</p>
+</template>
+<template data-sc="if" value="{{ph.locked}}" hint-placeholder-val="{{ false }}"><p style="margin: 16px 0 0; font-size: 14px; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">กด "นำเข้ารูปเดิมของเว็บ" ด้านบนก่อน แล้วจึงเพิ่มหรือลบรูปในชุดนี้ได้</p></template>
+<template data-sc="if" value="{{ph.fallback}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 16px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap"><img src="{{ph.fallback}}" alt="รูปเดิมที่ใช้อยู่" style="width: 200px; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; border: 1px solid #E2D8C6"><p style="margin: 0; flex: 1 1 200px; font-size: 14px; color: #5E554C">ตอนนี้ใช้รูปเดิมของเว็บ (รูปนี้) · อัปโหลดรูปใหม่เพื่อเปลี่ยน</p></div></template>
+<template data-sc="if" value="{{ph.empty}}" hint-placeholder-val="{{ false }}"><p style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">{{ph.emptyText}}</p></template>
 <ul class="ph-grid" style="list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 12px">
 <template data-sc="for" list="{{ph.photos}}" as="p" hint-placeholder-count="4">
 <li style="background: #FFFDF9; border: {{p.border}}; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
-<button type="button" onClick="{{p.view}}" aria-label="ดูรูปที่ {{p.n}} ขนาดใหญ่" style="position: relative; display: block; padding: 0; border: 0; background: #E2D8C6; cursor: zoom-in">
-<img src="{{p.thumb}}" alt="รูปที่ {{p.n}}" loading="lazy" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover">
+<button type="button" onClick="{{p.view}}" aria-label="ดู{{p.kind}}ที่ {{p.n}} ขนาดใหญ่" style="position: relative; display: block; padding: 0; border: 0; background: #E2D8C6; cursor: zoom-in">
+<img src="{{p.thumb}}" alt="{{p.kind}}ที่ {{p.n}}" loading="lazy" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover">
+<template data-sc="if" value="{{p.video}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; border-radius: 9999px; background: rgba(255,255,255,.92); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#B5443F"></path></svg></span></template>
 <span style="position: absolute; left: 8px; top: 8px; min-width: 26px; height: 26px; border-radius: 9999px; background: rgba(58,53,47,.8); color: #FFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 6px; box-sizing: border-box">{{p.n}}</span>
 <template data-sc="if" value="{{p.cover}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; right: 8px; top: 8px; border-radius: 9999px; background: #4F7A52; color: #FFF; font-size: 12px; font-weight: 700; padding: 4px 10px">รูปปก</span></template>
 </button>
@@ -653,7 +663,7 @@ Khun Mee · หลังบ้าน</a>
 <button type="button" onClick="{{p.up}}" disabled="{{p.noUp}}" aria-label="เลื่อนรูปที่ {{p.n}} ไปก่อน" style="{{p.iconStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
 <button type="button" onClick="{{p.down}}" disabled="{{p.noDown}}" aria-label="เลื่อนรูปที่ {{p.n}} ไปทีหลัง" style="{{p.iconStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
 <template data-sc="if" value="{{p.canCover}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{p.setCover}}" disabled="{{p.busy}}" style="flex: 1 1 auto; min-height: 40px; border: 1px solid #4F7A52; border-radius: 9999px; background: transparent; color: #2F5A33; font-size: 13px; font-weight: 600; padding: 0 10px; cursor: pointer; white-space: nowrap">ตั้งเป็นรูปปก</button></template>
-<button type="button" onClick="{{p.del}}" disabled="{{p.busy}}" aria-label="ลบรูปที่ {{p.n}}" style="margin-left: auto; width: 40px; height: 40px; border: 1px solid #C88193; border-radius: 9999px; background: transparent; color: #9A4E60; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
+<button type="button" onClick="{{p.del}}" disabled="{{p.busy}}" aria-label="ลบ{{p.kind}}ที่ {{p.n}}" style="margin-left: auto; width: 40px; height: 40px; border: 1px solid #C88193; border-radius: 9999px; background: transparent; color: #9A4E60; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
 </div>
 </li>
 </template>
@@ -716,7 +726,7 @@ Khun Mee · หลังบ้าน</a>
 <script src="js/runtime.js"></script>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
-<script src="js/gallery.js?v=2"></script>
+<script src="js/gallery.js?v=3"></script>
 <script src="js/reschedule.js"></script>
 <script>
 class Component extends DCLogic {
@@ -784,31 +794,43 @@ phView(s) {
 const t = kmToken.get(), ph = s.ph, busy = !!s.phBusy;
 const msg = s.phErr ? (/ไม่รู้จักคำสั่ง/.test(s.phErr) ? 'ยังไม่ได้ติดตั้ง Photos.gs ใน Apps Script (เพิ่มไฟล์ Photos, รัน setupPhotos แล้ว Deploy เป็นเวอร์ชันใหม่) · ตอนนี้หน้าเว็บใช้รูปเดิมอยู่' : 'โหลดรูปไม่สำเร็จ: ' + s.phErr)
 : !ph ? 'กำลังโหลดรูป…' : '';
-const out = { msg, folderUrl: ph ? ph.folderUrl : '', needImport: !!(ph && !ph.managed), ready: !!(ph && ph.managed), busy,
-sets: [], photos: [], empty: false, upLabel: 'เพิ่มรูป', hint: '', upStyle: '', import: () => this.phAct(kmApi('adminPhotoImport', t)), upload: () => {} };
+const out = { msg, folderUrl: ph ? ph.folderUrl : '', needImport: !!(ph && !(ph.imported === undefined ? ph.managed : ph.imported)), ready: !!ph, busy,
+sets: [], photos: [], empty: false, upLabel: 'เพิ่มรูป', hint: '', upStyle: '', import: () => this.phAct(kmApi('adminPhotoImport', t)), upload: () => {},
+canUpload: false, canVideo: false, locked: false, fallback: '', emptyText: '', vUrl: s.phVUrl || '', vLabel: 'เพิ่มวิดีโอ', setVUrl: (e) => this.setState({ phVUrl: e.target.value }), addVideo: (e) => { if (e && e.preventDefault) e.preventDefault(); } };
 if (!out.ready) return out;
 const cur = ph.sets.find((g) => g.key === s.phSet) || ph.sets[0];
 out.sets = ph.sets.map((g) => ({ label: g.label, count: '(' + g.photos.length + ')', on: g.key === cur.key,
 pick: () => this.setState({ phSet: g.key }),
 style: 'min-height: 40px; padding: 0 14px; border-radius: 9999px; font-size: 14px; white-space: nowrap; cursor: pointer; ' + (g.key === cur.key ? 'background: #3A352F; color: #F6F3EE; border: 1px solid #3A352F; font-weight: 600;' : 'background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC;') }));
 const list = cur.photos, full = list.map((p) => p.full);
-out.empty = !list.length;
-out.photos = list.map((p, i) => ({ n: String(i + 1), thumb: p.thumb, cover: !!p.cover, busy,
+const imported = ph.imported === undefined ? ph.managed : ph.imported;
+out.locked = !!cur.gallery && !imported;
+out.canUpload = !cur.videoOnly && !out.locked;
+out.canVideo = !!cur.video && !out.locked;
+out.fallback = cur.single && !list.length ? cur.fallback : '';
+out.empty = !list.length && !out.fallback && !out.locked;
+out.emptyText = cur.videoOnly ? 'ยังไม่มีวิดีโอ ส่วน "ชมบรรยากาศ" ในหน้าแรกจะซ่อนไว้จนกว่าจะเพิ่มวิดีโอ' : 'ชุดนี้ยังไม่มีรูป';
+out.vLabel = cur.key === 'tour' && list.length ? 'เปลี่ยนวิดีโอ' : 'เพิ่มวิดีโอ';
+out.addVideo = (e) => { if (e && e.preventDefault) e.preventDefault(); const u = String(s.phVUrl || '').trim();
+if (!u) return this.say('วางลิงก์ YouTube ก่อน');
+this.phAct(kmApi('adminPhotoAddVideo', t, cur.key, u).then((m) => { this.setState({ phVUrl: '' }); return m; })); };
+if (out.locked) list.length = 0;
+out.photos = list.map((p, i) => ({ n: String(i + 1), thumb: p.thumb, cover: !!p.cover, busy, video: !!p.video, kind: p.video ? 'วิดีโอ' : 'รูป',
 border: p.cover ? '2px solid #4F7A52' : '1px solid #E2D8C6',
-canCover: cur.room && !p.cover,
+canCover: cur.room && !p.cover && !p.video,
 noUp: busy || i === 0, noDown: busy || i === list.length - 1,
 iconStyle: 'width: 40px; height: 40px; border: 1px solid #CFC3AC; border-radius: 9999px; background: transparent; color: #47413A; display: flex; align-items: center; justify-content: center; cursor: pointer;',
 view: () => window.kmGallery && kmGallery.open(full, i, cur.label),
 up: () => this.phAct(kmApi('adminPhotoMove', t, p.id, -1)),
 down: () => this.phAct(kmApi('adminPhotoMove', t, p.id, 1)),
 setCover: () => this.phAct(kmApi('adminPhotoCover', t, p.id)),
-del: () => this.ask({ kind: 'danger', title: 'ลบรูปที่ ' + (i + 1) + ' ของ' + cur.label + ' ?', lines: [p.cover ? 'รูปนี้เป็นรูปปก รูปถัดไปจะเป็นรูปปกแทน' : 'รูปจะหายจากหน้าเว็บภายในประมาณ 1 นาที', p.drive ? 'ไฟล์จะย้ายไปถังขยะของ Google Drive (กู้คืนได้ 30 วัน)' : ''].filter(String),
-okLabel: 'ลบรูป', cancelLabel: 'ยกเลิก', onOk: () => this.phAct(kmApi('adminPhotoDelete', t, p.id)) }) }));
+del: () => this.ask({ kind: 'danger', title: 'ลบ' + (p.video ? 'วิดีโอ' : 'รูป') + 'ที่ ' + (i + 1) + ' ของ' + cur.label + ' ?', lines: [p.cover ? 'รูปนี้เป็นรูปปก รูปถัดไปจะเป็นรูปปกแทน' : (cur.single && cur.fallback ? 'หน้าเว็บจะกลับไปใช้รูปเดิมของเว็บ' : (p.video ? 'วิดีโอ' : 'รูป') + 'จะหายจากหน้าเว็บภายในประมาณ 1 นาที'), p.drive ? 'ไฟล์จะย้ายไปถังขยะของ Google Drive (กู้คืนได้ 30 วัน)' : ''].filter(String),
+okLabel: p.video ? 'ลบวิดีโอ' : 'ลบรูป', cancelLabel: 'ยกเลิก', onOk: () => this.phAct(kmApi('adminPhotoDelete', t, p.id)) }) }));
 const up = s.phUp;
-out.upLabel = up ? 'กำลังอัปโหลด ' + up.done + '/' + up.total + '…' : 'เพิ่มรูป';
-out.hint = cur.room ? 'รูปปกแสดงบนการ์ดห้องในหน้าแรกและหน้าจอง · เลือกได้หลายรูปพร้อมกัน' : cur.key === 'extra' ? 'รูปชุดนี้ต่อท้ายรูปของทุกห้อง' : 'รูป 3 รูปแรกแสดงในส่วนห้องนั่งเล่นของหน้าแรก';
+out.upLabel = up ? 'กำลังอัปโหลด ' + up.done + '/' + up.total + '…' : cur.single ? (list.length ? 'เปลี่ยนรูป' : 'อัปโหลดรูปใหม่') : 'เพิ่มรูป';
+out.hint = out.locked ? '' : cur.videoOnly ? 'แสดงเป็นส่วน "ชมบรรยากาศ" ในหน้าแรก (วิดีโอ 1 คลิป ใส่ใหม่จะแทนคลิปเดิม)' : cur.single ? 'อัปโหลดรูปใหม่จะแทนรูปเดิม' : cur.room ? 'รูปปกแสดงบนการ์ดห้องในหน้าแรกและหน้าจอง · เลือกได้หลายรูปพร้อมกัน · ใส่วิดีโอ YouTube ได้' : cur.key === 'extra' ? 'รูปชุดนี้ต่อท้ายรูปของทุกห้อง' : 'รูป 3 รูปแรกแสดงในส่วนห้องนั่งเล่นของหน้าแรก · ใส่วิดีโอ YouTube ได้';
 out.upStyle = 'position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: ' + (busy ? 'wait' : 'pointer') + '; background: ' + (busy ? '#B8AFA3' : '#4F7A52') + '; color: #FFFFFF;';
-out.upload = (e) => { const f = Array.prototype.slice.call(e.target.files || []); const set = cur.key; e.target.value = ''; this.phUpload(f, set); };
+out.upload = (e) => { let f = Array.prototype.slice.call(e.target.files || []); const set = cur.key; e.target.value = ''; if (cur.single) f = f.slice(-1); this.phUpload(f, set); };
 return out;
 }
 ask(opts) {
