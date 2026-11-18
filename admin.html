@@ -239,11 +239,11 @@ Khun Mee · หลังบ้าน</a>
 <template data-sc="for" list="{{lbRows}}" as="r" hint-placeholder-count="3">
 <li style="{{r.cardStyle}}">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
-<span style="font-size: 13px; font-weight: 700; color: #47413A; background: #EDE6D7; border-radius: 9999px; padding: 4px 10px">ช่อง {{r.slot}}</span>
+<span style="{{r.dayStyle}}">{{r.dayLabel}}</span>
 <span style="{{r.chipStyle}}">{{r.statusName}}</span>
 </div>
 <p style="margin: 10px 0 0; font-size: 16px; font-weight: 600">{{r.guestName}}</p>
-<p style="margin: 2px 0 0; font-size: 13px; color: #7A6E63">{{r.roomName}} · {{r.code}}</p>
+<p style="margin: 2px 0 0; font-size: 13px; color: #7A6E63">{{r.roomName}} · {{r.code}} · <span style="white-space: nowrap">ช่องในกลอน {{r.slot}}</span></p>
 <p style="margin: 2px 0 0; font-size: 13px; color: #7A6E63">{{r.dates}}{{r.arr}}</p>
 <template data-sc="if" value="{{r.showPin}}" hint-placeholder-val="{{ true }}"><p style="margin: 12px 0 0; text-align: center; font-size: 32px; font-weight: 700; letter-spacing: 4px; font-variant-numeric: tabular-nums; color: #3A352F; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 8px 0">{{r.pin}}</p></template>
 <template data-sc="if" value="{{r.note}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: #5E554C">{{r.note}}</p></template>
@@ -1576,11 +1576,20 @@ const lbTodo = lbList.filter((r) => r.status !== 'active').length;
 const lbMsg = s.lbErr ? (/ไม่รู้จักคำสั่ง/.test(s.lbErr) ? 'ยังไม่ได้อัปเดต LobbyCode.gs ใน Apps Script (คัดลอกเวอร์ชันล่าสุดแล้ว Deploy เป็นเวอร์ชันใหม่)' : 'โหลดรหัสล็อบบี้ไม่สำเร็จ: ' + s.lbErr)
 : !lb ? '' : !lb.enabled ? 'ระบบรหัสล็อบบี้ปิดอยู่ (LC_ENABLED = false)' : !lbList.length ? 'ยังไม่มีรหัสที่ต้องตั้งหรือลบ ระบบจะสร้างงานให้ 1 วันก่อนแขกเข้าพัก' : '';
 const lbChip = { pending: 'background: #E9C46A; color: #3A352F;', active: 'background: #DCE8DD; color: #2F5A33;', remove: 'background: #B5443F; color: #FFFFFF;' };
+const lbToday = this.today(), lbTmr = kmDate.add(lbToday, 1);
 const lbRows = lbList.map((r) => {
 const busy = s.acting === 'lb-' + r.id;
+// ป้ายวันเช็คอิน: วันนี้ / พรุ่งนี้ / วันที่ · กำลังพักหรือออกแล้วบอกตามวันเช็คเอาท์
+const ci = String(r.checkIn || '').slice(0, 10), co = String(r.checkOut || '').slice(0, 10);
+const day = ci === lbToday ? ['เช็คอินวันนี้', 'background: #8B5E3C; color: #FFFFFF;']
+: ci === lbTmr ? ['เช็คอินพรุ่งนี้', 'background: #F1E3D3; color: #6B4423;']
+: ci > lbTmr ? ['เช็คอิน ' + kmDate.dm(ci), 'background: #EDE6D7; color: #47413A;']
+: co === lbToday ? ['เช็คเอาท์วันนี้', 'background: #848484; color: #FFFFFF;']
+: co > lbToday ? ['เข้าพักอยู่', 'background: #DCE8DD; color: #2F5A33;']
+: ['เช็คเอาท์แล้ว', 'background: #EDE6D7; color: #5E554C;'];
 const own = (s.lbOwn && s.lbOwn[r.id]) || '';
 const setOwnVal = (v) => this.setState({ lbOwn: Object.assign({}, this.state.lbOwn, { [r.id]: v }) });
-return { slot: r.slot, statusName: r.statusName, guestName: r.guestName, roomName: r.roomName, code: r.code,
+return { slot: r.slot, dayLabel: day[0], dayStyle: 'font-size: 13px; font-weight: 700; border-radius: 9999px; padding: 4px 10px; white-space: nowrap; ' + day[1], statusName: r.statusName, guestName: r.guestName, roomName: r.roomName, code: r.code,
 dates: kmDate.dm(r.checkIn) + ' – ' + kmDate.dm(r.checkOut), arr: r.arrivalTime ? ' · ถึง ' + r.arrivalTime : '',
 pin: r.pin, showPin: r.status !== 'remove', busy,
 note: r.status === 'pending' ? (lb.safeNote ? 'ตู้เซฟ: ' + String(r.pin).slice(-4) + ' · ' + lb.safeNote + ' · ' : '') + 'ใช้รหัสนี้ หรือใส่รหัสของคุณเองด้านล่าง'
