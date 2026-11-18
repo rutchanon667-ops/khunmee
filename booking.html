@@ -594,6 +594,13 @@ try {
 const q = new URLSearchParams(location.search);
 const qc = String(q.get('code') || '').trim().toUpperCase();
 if (location.hash === '#lookup' || qc) this.setState({ lkOpen: true, lkCode: /^[A-Z0-9]{4,30}$/.test(qc) ? qc : '' });
+// มาจากช่อง "ดูสถานะและใบเสร็จ" ในหน้าแรก: ค้นหาให้ทันที
+const hand = JSON.parse(sessionStorage.getItem('km_lookup') || 'null');
+sessionStorage.removeItem('km_lookup');
+if (hand && hand.code && hand.phone && Date.now() - Number(hand.t || 0) < 5 * 60000) {
+this.setState({ lkOpen: true, lkCode: String(hand.code), lkPhone: String(hand.phone) });
+setTimeout(() => this.lookup(), 0);
+}
 } catch (e) {}
 if (saved && saved.code && saved.phone) {
 this.pollStart = Date.now();

@@ -114,6 +114,12 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  #contact{margin-top:56px !important}
  .km-foot{padding:36px 24px 24px !important;gap:24px !important}
 }
+@media (max-width:600px){
+ .km-lookup{padding:14px !important}
+ .km-lookup #h-lookup{font-size:15px !important}
+ .km-lookup button[aria-controls]{gap:10px !important}
+ .km-lookup input{font-size:15px !important;padding:0 10px !important;letter-spacing:0 !important}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -176,6 +182,28 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a class="f-go" href="{{findHref}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>ค้นหาห้องว่าง · {{nightsLabel}}</a>
 <p class="f-note">จองไว้แล้วแต่อยากเปลี่ยนวัน? <a href="reschedule.html">เลื่อนวันพักได้ 1 ครั้ง ›</a></p>
 </form>
+<section id="lookup" class="km-lookup" aria-labelledby="h-lookup" style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 20px; padding: 16px 18px">
+<button type="button" onClick="{{lk.toggle}}" aria-expanded="{{lk.open}}" aria-controls="lk-form" style="width: 100%; display: flex; align-items: center; gap: 14px; background: transparent; border: 0; padding: 0; text-align: left; color: #3A352F; font-family: inherit; cursor: pointer">
+<span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 9999px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path><path d="M9 8h6M9 12h6"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column"><span id="h-lookup" style="font-size: 16px; font-weight: 600">จองไว้แล้ว? ดูสถานะและใบเสร็จ</span><span style="font-size: 13px; color: #7A6E63">กรอกรหัสการจองและเบอร์โทรที่ใช้จอง</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A6E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{lk.chevStyle}}"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<template data-sc="if" value="{{lk.open}}" hint-placeholder-val="{{ false }}">
+<form id="lk-form" onSubmit="{{lk.submit}}" style="margin-top: 14px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; min-width: 0">รหัสการจอง
+<input type="text" value="{{lk.code}}" onInput="{{lk.setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KM261118ABCD" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 12px; padding: 0 14px; font-size: 16px; color: #3A352F; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; min-width: 0">เบอร์โทรที่ใช้จอง
+<input type="tel" value="{{lk.phone}}" onInput="{{lk.setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 12px; padding: 0 14px; font-size: 16px; color: #3A352F; background: #FFFDF9">
+</label>
+</div>
+<template data-sc="if" value="{{lk.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 12px; padding: 10px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{lk.err}}</p></template>
+<button type="submit" style="min-height: 48px; background: #3A352F; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 0 24px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer">ดูการจอง</button>
+<p style="margin: 0; font-size: 13px; color: #7A6E63">รหัสการจองขึ้นต้นด้วย KM อยู่ในอีเมลยืนยันและในแชท LINE</p>
+</form>
+</template>
+</section>
 </div>
 <div class="km-hero-img" style="position: relative; border-radius: 28px; overflow: hidden; min-height: 560px; height: 100%; background: #E2D8C6">
 <img src="images/exterior-day.jpg" alt="ภาพด้านหน้าอาคาร Khun Mee ยามกลางวัน" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 62%">
@@ -356,7 +384,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
 <span style="font-weight: 600">การจอง</span>
 <a href="booking.html" style="color: #5E554C; text-decoration: none">จองห้องพัก</a>
-<a href="booking.html#lookup" style="color: #5E554C; text-decoration: none">ตรวจสอบการจอง / ใบเสร็จ</a>
+<a href="#lookup" onClick="{{lk.openNow}}" style="color: #5E554C; text-decoration: none">ตรวจสอบการจอง / ใบเสร็จ</a>
 <a href="reschedule.html" style="color: #5E554C; text-decoration: none">เลื่อนวันพัก</a>
 <a href="booking.html" style="color: #5E554C; text-decoration: none">ยกเลิกการจอง</a>
 </div>
@@ -387,6 +415,15 @@ rooms.forEach((r) => { prices[String(r.roomNo)] = Number(r.pricePerNight) || 0; 
 this.setState({ prices, names });
 }).catch(() => {});
 }
+/* ดูสถานะและใบเสร็จ: ส่งรหัสการจอง + เบอร์โทรไปหน้าจองผ่าน sessionStorage (ไม่ใส่เบอร์ในลิงก์) */
+lookup() {
+const code = String(this.state.lkCode || '').toUpperCase().replace(/\s+/g, '');
+const phone = String(this.state.lkPhone || '').trim();
+if (!/^[A-Z0-9]{6,30}$/.test(code)) return this.setState({ lkErr: 'กรุณากรอกรหัสการจองให้ถูกต้อง เช่น KM261118ABCD' });
+if (phone.replace(/[^0-9]/g, '').length < 9) return this.setState({ lkErr: 'กรุณากรอกเบอร์โทรที่ใช้จอง 9–10 หลัก' });
+try { sessionStorage.setItem('km_lookup', JSON.stringify({ code, phone, t: Date.now() })); } catch (e) {}
+location.href = 'booking.html?code=' + encodeURIComponent(code) + '#lookup';
+}
 priceOf(no) {
 const p = (this.state.prices || {})[no];
 return p ? { price: 'เริ่ม ฿' + kmMoney(p), per: '/ คืน' } : { price: 'สอบถามราคา', per: '' };
@@ -413,6 +450,11 @@ setIn: (e) => { const v = e.target.value; if (!v) return; const st = { fIn: v < 
 setOut: (e) => { const v = e.target.value; if (v) this.setState({ fOut: v }); },
 openPicker: (e) => { try { if (e.currentTarget.showPicker) e.currentTarget.showPicker(); } catch (_) {} },
 noSubmit: (e) => e.preventDefault(),
+lk: { open: !!this.state.lkOpen, code: this.state.lkCode || '', phone: this.state.lkPhone || '', err: this.state.lkErr || '',
+chevStyle: 'flex: 0 0 18px; transition: transform .2s; transform: rotate(' + (this.state.lkOpen ? 180 : 0) + 'deg)',
+toggle: () => this.setState({ lkOpen: !this.state.lkOpen, lkErr: '' }), openNow: () => this.setState({ lkOpen: true }),
+setCode: (e) => this.setState({ lkCode: e.target.value, lkErr: '' }), setPhone: (e) => this.setState({ lkPhone: e.target.value, lkErr: '' }),
+submit: (e) => { e.preventDefault(); this.lookup(); } },
 findHref: 'booking.html?in=' + fIn + '&out=' + fOut,
 rooms: [
 { code: 'ROOM 01', name: 'ห้องโชจิ', img: 'images/room-shoji.jpg', alt: 'ห้องโชจิ หัวเตียงลายตารางแบบประตูโชจิ', desc: 'หัวเตียงลายตารางแบบบานโชจิ ม้านั่งปลายเตียง และมุมเก้าอี้อ่านหนังสือ' },
