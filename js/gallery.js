@@ -10,10 +10,33 @@
   var root, track, counter, title, prevBtn, nextBtn, list = [], idx = 0, lastFocus = null, pushed = false, scrollY = 0;
 
   function uniq(a) { var o = []; a.forEach(function (x) { if (x && o.indexOf(x) < 0) o.push(x); }); return o; }
+
+  /* รายการรูปจากหลังบ้าน (Photos.gs) · ยังไม่ได้ตั้งค่า/โหลดไม่ได้ = ใช้รูปใน js/config.js */
+  var LIVE_KEY = 'km_gallery_v1', live = null;
+  try { var c0 = JSON.parse(localStorage.getItem(LIVE_KEY) || 'null'); if (c0 && c0.data && c0.data.managed && Date.now() - c0.t < 7 * 864e5) live = c0.data; } catch (e) {}
+  var baseRoomImage = window.kmRoomImage || function () { return ''; };
+  window.kmRoomImage = function (no) {
+    var c = live && live.covers && live.covers[String(no)];
+    return c || baseRoomImage(no);
+  };
+  function refresh() {
+    if (!window.kmApi || !/^https:\/\//.test(C.API_URL || '')) return;
+    window.kmApi('publicGallery').then(function (d) {
+      var next = d && d.managed ? d : null;
+      var changed = JSON.stringify(next) !== JSON.stringify(live);
+      live = next;
+      try { next ? localStorage.setItem(LIVE_KEY, JSON.stringify({ t: Date.now(), data: next })) : localStorage.removeItem(LIVE_KEY); } catch (e) {}
+      if (changed) { try { window.dispatchEvent(new Event('km-gallery')); } catch (e) {} }
+    }).catch(function () {});
+  }
   function roomList(no) {
+    var main = window.kmRoomImage(no);
+    if (live) return uniq([main].concat((live.sets || {})['room:' + no] || [], (live.sets || {}).extra || []));
     var g = (C.ROOM_GALLERY || {})[String(no)] || [];
-    var main = window.kmRoomImage ? window.kmRoomImage(no) : '';
     return uniq([main].concat(g, C.ROOM_GALLERY_EXTRA || []));
+  }
+  function livingList() {
+    return live ? ((live.sets || {}).living || []).slice() : (C.LIVING_GALLERY || []).slice();
   }
 
   function css() {
@@ -143,7 +166,7 @@
     if (!el) return;
     e.preventDefault();
     var kind = el.getAttribute('data-gallery');
-    var imgs = kind === 'living' ? (C.LIVING_GALLERY || []).slice()
+    var imgs = kind === 'living' ? livingList()
       : kind === 'room' ? roomList(el.getAttribute('data-room')) : [];
     var src = el.getAttribute('data-src') || ((el.querySelector('img') || {}).getAttribute ? el.querySelector('img').getAttribute('src') : '');
     if (src && imgs.indexOf(src) < 0) imgs.unshift(src);
@@ -151,5 +174,6 @@
     open(imgs, Math.max(0, imgs.indexOf(src)), el.getAttribute('data-title') || '');
   });
 
-  window.kmGallery = { open: open, close: close, roomList: roomList };
+  window.kmGallery = { open: open, close: close, roomList: roomList, living: livingList, refresh: refresh };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh); else setTimeout(refresh, 0);
 })();
