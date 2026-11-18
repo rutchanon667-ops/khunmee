@@ -25,6 +25,7 @@ input,select,textarea{font-family:inherit}
  .door{font-size:44px !important;letter-spacing:6px !important}
  .card{padding:24px 20px !important}
 }
+@media (max-width:600px){ body .ci-welcome{font-size:24px !important} }
 </style>
 </head>
 <body>
@@ -85,7 +86,7 @@ input,select,textarea{font-family:inherit}
 <template data-sc="if" value="{{hasInfo}}" hint-placeholder-val="{{ false }}">
 <section aria-labelledby="h-bk" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
 <div style="flex: 1 1 280px; min-width: 0">
-<div style="display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{bk.code}}</span><button type="button" onClick="{{copyBk}}" aria-label="คัดลอกรหัสการจอง {{bk.code}}" style="display: flex; align-items: center; gap: 6px; background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 6px 14px; font-size: 14px; min-height: 36px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>{{copyBkLabel}}</button></div>
+<div style="display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{bk.code}}</span><template data-sc="if" value="{{showCopyBk}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{copyBk}}" aria-label="คัดลอกรหัสการจอง {{bk.code}}" style="display: flex; align-items: center; gap: 6px; background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 6px 14px; font-size: 14px; min-height: 36px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>{{copyBkLabel}}</button></template></div>
 <h2 id="h-bk" style="margin: 2px 0 0; font-size: 22px; font-weight: 600">{{bk.room}}</h2>
 <p style="margin: 4px 0 0; font-size: 16px">{{bk.dates}}</p>
 </div>
@@ -176,12 +177,21 @@ input,select,textarea{font-family:inherit}
 <!-- 4. เข้าพักอยู่: รหัสประตูรับทาง LINE เท่านั้น (ไม่แสดงบนหน้าเว็บ) -->
 <template data-sc="if" value="{{inStay}}" hint-placeholder-val="{{ false }}">
 <section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
-<template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; font-size: 15px; color: #DCC881; font-weight: 600">เช็คอินเรียบร้อย ยินดีต้อนรับค่ะ</p></template>
+<template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p class="ci-welcome" style="margin: 0 0 6px; font-size: 28px; line-height: 1.35; color: #DCC881; font-weight: 700">เช็คอินเรียบร้อย<br>ยินดีต้อนรับค่ะ</p></template>
 <span style="width: 64px; height: 64px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
 <h2 id="h-door" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 600; line-height: 1.3; color: #FFFFFF">รับ{{doorLabel}}ทาง LINE</h2>
 <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #D9D1C5; max-width: 460px">{{door.note}}</p>
-<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><div style="margin-top: 4px; background: rgba(246,243,238,0.08); border: 1px solid #5E554C; border-radius: 12px; padding: 12px 18px"><p style="margin: 0; font-size: 13px; color: #D9D1C5">พิมพ์ในแชทแบบนี้</p><p style="margin: 2px 0 0; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #FFFFFF">{{line.sample}}</p></div></template>
+<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><div style="margin-top: 4px; background: rgba(246,243,238,0.08); border: 1px solid #5E554C; border-radius: 12px; padding: 12px 14px 12px 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px; text-align: left"><div style="flex: 1 1 190px; min-width: 0"><p style="margin: 0; font-size: 13px; color: #D9D1C5">พิมพ์ในแชทแบบนี้</p><p style="margin: 2px 0 0; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #FFFFFF">{{line.sample}}</p></div><button type="button" onClick="{{copyLine}}" aria-label="คัดลอกรหัสการจองและเบอร์โทร" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; background: {{copyLineBg}}; color: {{copyLineFg}}; border: 1px solid #F6F3EE; border-radius: 9999px; padding: 0 14px; font-size: 14px; font-weight: 600; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>{{copyLineLabel}}</button><span role="status" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{copyLineMsg}}</span></div></template>
 <template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><a class="pill" href="{{line.url}}" style="margin-top: 6px; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">รับ{{doorLabel}}ทาง LINE</a><p style="margin: 0; font-size: 13px; line-height: 1.6; color: #D9D1C5; max-width: 420px">กดปุ่มแล้ว LINE จะพิมพ์ข้อความให้ กดส่งได้เลย ครั้งต่อไปกดเมนู "รับรหัสประตู" ในแชทได้ทันที · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือ</p></template>
+</section>
+
+<section class="card" aria-labelledby="h-howto" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
+<h2 id="h-howto" style="margin: 0; font-size: 21px; font-weight: 600">เช็คอินได้ง่าย ๆ ด้วยตัวเอง เพียง 4 Step</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5E554C">ทำตามขั้นตอนผ่าน LINE OA ของที่พัก</p>
+<a href="images/checkin-steps-2400.jpg?v=2" target="_blank" rel="noopener" aria-label="เปิดภาพวิธีเช็คอินขนาดใหญ่ (แท็บใหม่)" style="display: block; border-radius: 14px; overflow: hidden; border: 1px solid #E2D8C6; background: #FFFFFF">
+<img src="images/checkin-steps-1200.jpg?v=2" srcset="images/checkin-steps-1200.jpg?v=2 1200w, images/checkin-steps-2400.jpg?v=2 2400w" sizes="(max-width: 720px) 100vw, 720px" width="1200" height="800" loading="lazy" alt="วิธีเช็คอินด้วยตัวเอง 4 ขั้นตอน: 1) เชื่อมการจองกับ LINE โดยส่งรหัสการจองและเบอร์โทรในแชท LINE OA 2) กดปุ่มเช็คอินในริชเมนู LINE OA กรอกรหัสการจองและเบอร์โทร แล้วกดเช็คอิน 3) หลังเช็คอินกดปุ่มรับรหัสเข้าล็อบบี้ทาง LINE 4) กดรับรหัสประตูในริชเมนู ระบบจะส่งรหัสเข้าล็อบบี้ ซึ่งเป็นรหัสเดียวกับตู้เซฟรับกุญแจห้องพัก ตู้เซฟอยู่ทางขวาของประตูล็อบบี้" style="display: block; width: 100%; height: auto">
+</a>
+<p style="margin: 0; font-size: 13px; color: #7A6E63">แตะที่ภาพเพื่อดูขนาดใหญ่</p>
 </section>
 
 <section class="card" aria-labelledby="h-stay" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
@@ -268,7 +278,7 @@ busy: false, findErr: '', info: null, justIn: false, copied: false,
 formErr: '',
 done: null,
 idf: { foreign: false, nationality: '', idNumber: '', photo: null, accept: false }, idTried: false, photoBusy: false,
-bkCopied: false
+bkCopied: false, lineCopied: false
 };
 }
 componentDidMount() {
@@ -417,7 +427,7 @@ const chip = { open: ['พร้อมเช็คอิน', '#E7EFE4', '#2F5A3
 in: ['เข้าพักอยู่', '#E7EFE4', '#2F5A33'], done: ['เช็คเอาท์แล้ว', '#E6DDCB', '#47413A'], missed: ['เลยวันเข้าพัก', '#F3D6DD', '#7E3E50'], cancelled: ['ยกเลิกแล้ว', '#F3D6DD', '#7E3E50'] }[step] || ['-', '#EDE6D7', '#47413A'];
 out.bk = { code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + info.nights + ' คืน)',
 chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
-Object.assign(out, this.lineVals(info, step), { copyBk: () => this.copyText(info.code, 'bkCopied'), copyBkLabel: s.bkCopied ? 'คัดลอกแล้ว' : 'คัดลอก' });
+Object.assign(out, this.lineVals(info, step), { copyBk: () => this.copyText(info.code, 'bkCopied'), copyBkLabel: s.bkCopied ? 'คัดลอกแล้ว' : 'คัดลอก', showCopyBk: step !== 'in' });
 
 if (step === 'done') {
 out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว', note: 'การจองนี้เช็คเอาท์แล้ว ขอบคุณที่มาพักกับ Khun Mee นะคะ' };
@@ -474,6 +484,8 @@ const stay = info.stay || {};
 const code = String(stay.doorCode || '');
 Object.assign(out, {
 inStay: true, justIn: s.justIn, contact: 'ติดต่อ' + info.contact,
+copyLine: () => this.copyText(out.line.sample, 'lineCopied'), copyLineLabel: s.lineCopied ? 'คัดลอกแล้ว' : 'คัดลอก',
+copyLineBg: s.lineCopied ? '#F6F3EE' : 'transparent', copyLineFg: s.lineCopied ? '#3A352F' : '#F6F3EE', copyLineMsg: s.lineCopied ? 'คัดลอกรหัสการจองและเบอร์โทรแล้ว' : '',
 stay: { room: info.roomName, doorCode: code || 'ติดต่อที่พัก', codeSpaced: code.split('').join(' '),
 wifiName: stay.wifiName || '', wifiPassword: stay.wifiPassword || '-',
 checkout: kmDate.short(info.checkOut) + ' ก่อน ' + (stay.checkoutTime || '12:00') + ' น.',
