@@ -41,6 +41,6 @@ h2{letter-spacing:0}
  body .actions{flex-direction:row !important;flex-wrap:nowrap !important;align-items:stretch !important;gap:10px !important}
  body .actions>button,body .actions>a{width:auto !important;padding-left:16px !important;padding-right:16px !important}
  body .actions>*:last-child{flex:1 1 auto}
- body .sum-img{display:none !important}
+ body .sum-img{aspect-ratio:21 / 9 !important;max-height:150px}
  body aside[aria-label="สรุปการจอง"]{padding:18px 16px !important;gap:12px !important}
 }
