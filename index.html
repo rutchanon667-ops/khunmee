@@ -86,7 +86,33 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 @media (max-width:520px){
  .km-brand span+span{display:none}
  .km-rooms{grid-template-columns:minmax(0,1fr) !important}
- .km-finder-row{grid-template-columns:minmax(0,1fr) !important}
+ .km-finder-row{gap:8px}
+ .f-tile .f-s{font-size:12px;white-space:normal;line-height:1.4}
+}
+.km-swipe-hint{display:none}
+@media (max-width:600px){
+ .km-swipe{--g:24px;display:flex !important;flex-direction:row !important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px !important;margin-left:calc(-1*var(--g));margin-right:calc(-1*var(--g));padding:0 var(--g) 8px !important;scroll-padding:0 var(--g);scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+ .km-swipe::-webkit-scrollbar{display:none}
+ .km-swipe>*{flex:0 0 80%;min-width:0;scroll-snap-align:start;box-sizing:border-box}
+ .km-swipe-sm>*{flex-basis:72%}
+ #pets .km-swipe{--g:22px}
+ .km-swipe-hint{display:block;margin:20px 0 -16px;text-align:right;font-size:13px;color:#7D6043}
+ #top{padding:28px 24px 24px !important}
+ .km-hero{gap:24px !important}
+ .km-hero-img{min-height:220px !important}
+ #rooms,#living{padding-top:56px !important}
+ #map{padding-top:56px !important}
+ #pets{margin-top:40px !important}
+ #pets .km-pets{gap:24px !important}
+ .km-liv-main{min-height:220px !important;max-height:260px}
+ .km-liv-card{padding:22px !important}
+ .km-liv-pair{gap:12px !important}
+ .km-liv-pair img{min-height:130px !important;max-height:150px}
+ .km-quote-box{min-height:300px !important}
+ section[aria-label="คำพูดจากเจ้าของบ้าน"]{margin-top:40px !important}
+ #map figure{margin-top:20px !important;padding:10px !important}
+ #contact{margin-top:56px !important}
+ .km-foot{padding:36px 24px 24px !important;gap:24px !important}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -162,7 +188,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </section>
 
 <section aria-label="ข้อมูลการเข้าพัก" style="max-width: 1240px; margin: 0 auto; padding: 0 24px">
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<div class="km-swipe km-swipe-sm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
 <div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">เช็คอิน 14:00 · เช็คเอาท์ 12:00</span><span style="font-size: 13px; color: #5E554C">เวลาเดียวกันทุกห้อง</span></span>
@@ -188,7 +214,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </div>
 <a href="booking.html" style="font-size: 15px; font-weight: 600; color: #7D6043">เช็คห้องว่าง ›</a>
 </div>
-<div class="km-rooms" style="margin-top: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+<p class="km-swipe-hint" aria-hidden="true">ปัดดูห้องอื่น ›</p>
+<div class="km-rooms km-swipe" style="margin-top: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
 <template data-sc="for" list="{{rooms}}" as="r" hint-placeholder-count="4">
 <article style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column">
 <img src="{{r.img}}" alt="{{r.alt}}" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block">
@@ -217,7 +244,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <p style="margin: 0; font-size: 14px; font-weight: 500; color: #DCC881; letter-spacing: 1.5px">FOR FOUR PAWS</p>
 <h2 id="h-pets" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ออกแบบมาเพื่อสี่ขา</h2>
 <p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.7; color: #DCD3C2">ไม่มีห้องพิเศษ ไม่มีโซนแยก เพราะเราออกแบบทั้งบ้านมาเพื่อคุณและสัตว์เลี้ยงตั้งแต่แรก</p>
-<div id="pet-rules" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px">
+<div id="pet-rules" class="km-swipe" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px">
 <div style="background: rgba(246, 243, 238, 0.08); border: 1px solid rgba(246, 243, 238, 0.16); border-radius: 16px; padding: 16px 18px">
 <p style="margin: 0; font-size: 15px; font-weight: 600">สมุดวัคซีนของน้อง</p>
 <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.6; color: #DCD3C2">กรุณาแสดงหลักฐานการฉีดวัคซีนที่เป็นปัจจุบันในวันเช็คอิน</p>
@@ -228,7 +255,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </div>
 </div>
 </div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
+<div class="km-swipe km-swipe-sm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
 <div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
 <span style="width: 48px; height: 48px; border-radius: 14px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c0-3 3-5 9-5s9 2 9 5v2H3z"></path><path d="M7 12V9a5 5 0 0 1 10 0v3"></path></svg></span>
 <h3 style="margin: 0; font-size: 17px; font-weight: 600">เบาะนอนและชามน้ำ</h3>
@@ -255,14 +282,14 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <section id="living" aria-labelledby="h-living" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 24px">
 <div class="km-living" style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: stretch">
-<img src="images/reception-1.jpg" alt="โถงต้อนรับผนังหินขัดกรอบไม้ และเคาน์เตอร์ไม้" style="width: 100%; height: 100%; min-height: 420px; object-fit: cover; border-radius: 28px; display: block">
+<img class="km-liv-main" src="images/reception-1.jpg" alt="โถงต้อนรับผนังหินขัดกรอบไม้ และเคาน์เตอร์ไม้" style="width: 100%; height: 100%; min-height: 420px; object-fit: cover; border-radius: 28px; display: block">
 <div style="display: flex; flex-direction: column; gap: 20px">
-<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 12px">
+<div class="km-liv-card" style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 12px">
 <p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1.5px">RECEPTION &amp; LIVING</p>
 <h2 id="h-living" class="km-serif km-h2" style="margin: 0; font-size: 34px; font-weight: 700; line-height: 1.35">ห้องนั่งเล่นที่ทุกคนใช้ร่วมกัน</h2>
 <p style="margin: 0; font-size: 16px; font-weight: 300; line-height: 1.7; color: #5E554C">ครัวเคาน์เตอร์ไม้ มุมนั่งเล่นโซฟาผ้าลินิน และบล็อกแก้วที่ให้แสงธรรมชาติตลอดวัน</p>
 </div>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; flex-grow: 1">
+<div class="km-liv-pair" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; flex-grow: 1">
 <img src="images/reception-3.jpg" alt="เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์" style="width: 100%; height: 100%; min-height: 180px; object-fit: cover; border-radius: 22px; display: block">
 <img src="images/bathroom-1.jpg" alt="ห้องน้ำพร้อมเรนชาวเวอร์และกระจกส่องหน้า" style="width: 100%; height: 100%; min-height: 180px; object-fit: cover; border-radius: 22px; display: block">
 </div>
@@ -271,7 +298,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </section>
 
 <section aria-label="คำพูดจากเจ้าของบ้าน" style="max-width: 1240px; margin: 72px auto 0; padding: 0 24px">
-<div style="position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; display: flex; align-items: flex-end; background: #3A352F">
+<div class="km-quote-box" style="position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; display: flex; align-items: flex-end; background: #3A352F">
 <img src="images/exterior-night.jpg" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55">
 <div class="km-quote" style="position: relative; padding: 48px; max-width: 760px; color: #FFFDF9; display: flex; flex-direction: column; gap: 18px">
 <p class="km-serif" style="margin: 0; font-size: 30px; font-weight: 600; line-height: 1.55">“เราอยากให้ที่นี่เป็นเหมือนบ้านต่างจังหวัดของเพื่อน ที่พาน้องมาด้วยได้โดยไม่ต้องขอโทษใคร”</p>
@@ -295,7 +322,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a href="images/map-khunmee.jpg" target="_blank" rel="noopener" aria-label="เปิดแผนที่ขนาดใหญ่ (แท็บใหม่)" style="display: block"><img src="images/map-khunmee.jpg" alt="แผนที่ KhunMee Hostel: ที่พักอยู่ระหว่างหลังมอ ซอย 18 และซอย 19 ติดถนนหลังมอ ใกล้ Doucu Cafe มีลานจอดรถฝั่งซอย 19 และอยู่ใต้ถนนโนนม่วง ใกล้โรงเรียนบ้านโนนม่วง" style="display: block; width: 100%; height: auto; border-radius: 18px"></a>
 <figcaption style="margin: 10px 4px 0; font-size: 13px; color: #7A6E63; text-align: center">แตะที่แผนที่เพื่อดูภาพขนาดใหญ่</figcaption>
 </figure>
-<div style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+<div class="km-swipe km-swipe-sm" style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
 <div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">หลังมอ ซอย 18</span><span style="font-size: 13px; color: #5E554C">ถนนหลังมอ · ใกล้ถนนโนนม่วง ขอนแก่น</span></span>
