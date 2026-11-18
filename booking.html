@@ -128,6 +128,7 @@ input,select,textarea{font-family:inherit}
 </template>
 
 <template data-sc="if" value="{{isStep1}}" hint-placeholder-val="{{ true }}">
+<template data-sc="if" value="{{doneNote}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; display: flex; align-items: center; gap: 10px; background: #E7EFE5; border: 1px solid #A9C2A6; border-radius: 12px; padding: 12px 16px; font-size: 15px; line-height: 1.5; color: #35553A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 18px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{doneNote}}</p></template>
 <section aria-labelledby="h-room" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-room" style="margin: 0; font-size: 24px; font-weight: 600">1. เลือกห้องพัก</h2>
 <p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ทุกห้องพาสัตว์เลี้ยงเข้าพักได้ มีห้องน้ำในตัว</p>
@@ -355,7 +356,7 @@ input,select,textarea{font-family:inherit}
 <span class="sr" role="status" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{line.copyMsg}}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
-<a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
+<a class="pill" href="{{line.url}}" onClick="{{line.out}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
 <span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
 </div>
 </section>
@@ -418,7 +419,7 @@ input,select,textarea{font-family:inherit}
 <span class="sr" role="status" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{line.copyMsg}}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
-<a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
+<a class="pill" href="{{line.url}}" onClick="{{line.out}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
 <span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
 </div>
 </section>
@@ -542,6 +543,7 @@ return attempt(0);
 }
 // ตรวจสถานะการจองอัตโนมัติ: ทุก 30 วินาทีใน 10 นาทีแรก แล้วทุก 1 นาทีจนครบ 30 นาที จากนั้นหยุด
 // (กลับมาที่หน้านี้ หรือกดปุ่ม "ตรวจสอบสถานะล่าสุด" จะเริ่มนับใหม่)
+const KM_DONE_POLL = 5 * 60000;   // หน้ายืนยันแล้ว: เช็คว่าเช็คเอาท์หรือยังทุก 5 นาที
 const KM_POLL_FAST = 30000, KM_POLL_SLOW = 60000, KM_POLL_FAST_FOR = 10 * 60000, KM_POLL_STOP_AFTER = 30 * 60000;
 
 class Component extends DCLogic {
@@ -555,12 +557,15 @@ pay: 'bank', copied: false, lineCopied: false, slip: null, slipTried: false, sli
 busy: false, submitErr: '', saved: null, bkStatus: 'pending', receipt: null, checking: false, statusMsg: '', lastCheck: '',
 holdId: null, holdUntil: 0, holdBusy: false, holdErr: '', now: Date.now(), pdfBusy: false, pdfErr: '',
 refundStatus: '', refundAmount: 0, refundAcc: '', refundBusy: false, refundErr: '', refundSent: false,
-codeCopied: false
+codeCopied: false, doneNote: ''
 };
 }
 componentDidMount() {
 let saved = null;
 try { saved = JSON.parse(localStorage.getItem('km_booking') || 'null'); } catch (e) {}
+// การจองที่ยืนยันแล้ว: ออกไปหน้าอื่นแล้วกลับมา = เริ่มจองใหม่ (ยกเว้นเพิ่งกดเปิดแชท LINE จากหน้านี้)
+if (saved && saved.status === 'confirmed' && !this.lineOutRecent()) { this.saveLocal(null); saved = null; }
+this.clearLineOut();
 if (saved && saved.code && saved.phone) {
 this.pollStart = Date.now();
 this.setState({ saved, step: saved.status === 'confirmed' ? 5 : 4, bkStatus: saved.status || 'pending',
@@ -572,11 +577,23 @@ this.tick = setInterval(() => {
 const s = this.state;
 this.setState({ now: Date.now() });
 if (s.step === 4 && s.bkStatus === 'pending' && !document.hidden && Date.now() - (this.lastPoll || 0) > this.pollGap()) this.checkStatus(true);
+// หน้ายืนยันแล้ว: เช็คทุก KM_DONE_POLL ถ้าเช็คเอาท์แล้วจะออกจากหน้านี้เอง
+if (s.step === 5 && s.saved && !document.hidden && Date.now() - (this.lastPoll || 0) > KM_DONE_POLL) this.checkStatus(true);
 }, 1000);
 // กลับมาที่หน้านี้ (เช่น หลังกดอนุมัติในแอป LINE) ให้เช็คสถานะทันที แม้การเช็คครั้งก่อนยังค้างอยู่
 const backNow = () => { if (!document.hidden && this.state.step === 4 && this.state.bkStatus === 'pending') { this.setState({ checking: false }); this.lastPoll = 0; this.pollStart = Date.now(); this.checkStatus(true); } };
 document.addEventListener('visibilitychange', backNow);
 window.addEventListener('pageshow', backNow);
+// กลับมาด้วยปุ่มย้อนกลับ (หน้าจากแคชของเบราว์เซอร์) ขณะอยู่หน้ายืนยันแล้ว = เริ่มจองใหม่
+window.addEventListener('pageshow', (ev) => {
+if (!ev.persisted || this.state.step !== 5) return;
+if (this.lineOutRecent()) { this.clearLineOut(); this.lastPoll = 0; return this.checkStatus(true); }
+this.resetBooking();
+});
+// สลับแอปหรือแท็บแล้วกลับมาที่หน้ายืนยันแล้ว: เช็คสถานะ (เว้นอย่างน้อย 30 วินาที)
+const backDone = () => { if (!document.hidden && this.state.step === 5 && this.state.saved && Date.now() - (this.lastPoll || 0) > 30000) this.checkStatus(true); };
+document.addEventListener('visibilitychange', backDone);
+window.addEventListener('focus', backDone);
 window.addEventListener('focus', backNow);
 window.addEventListener('pagehide', () => { if (this.state.holdId && this.state.step < 4) kmApiBeacon('publicReleaseHold', this.state.holdId); });
 }
@@ -637,6 +654,17 @@ const id = this.state.holdId;
 if (id) kmApi('publicReleaseHold', id).catch(() => {});
 this.setState({ holdId: null, holdUntil: 0 });
 }
+lineOutRecent() {
+try { return Date.now() - Number(sessionStorage.getItem('km_line_out') || 0) < 15 * 60 * 1000; } catch (e) { return false; }
+}
+clearLineOut() { try { sessionStorage.removeItem('km_line_out'); } catch (e) {} }
+markLineOut() { try { sessionStorage.setItem('km_line_out', String(Date.now())); } catch (e) {} }
+resetBooking() {
+this.saveLocal(null); this.release(); this.reqNo = (this.reqNo || 0) + 1;
+this.setState({ refundStatus: '', refundAmount: 0, refundAcc: '', refundErr: '', refundSent: false, step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '', checking: false, doneNote: '',
+f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '', arrival: '' } });
+this.refreshBooked(); window.scrollTo(0, 0);
+}
 saveLocal(obj) {
 try { obj ? localStorage.setItem('km_booking', JSON.stringify(obj)) : localStorage.removeItem('km_booking'); } catch (e) {}
 }
@@ -654,7 +682,8 @@ Promise.race([kmCall('publicGetBookingStatus', [sv.code, sv.phone], { retries: 1
 if (req !== this.reqNo) return;
 const d = new Date();
 const lastCheck = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
-if (['confirmed', 'checked_in', 'checked_out'].indexOf(b.status) >= 0) {
+if (b.status === 'checked_out') { this.resetBooking(); return this.setState({ checking: false, lastCheck, doneNote: 'การเข้าพัก ' + sv.code + ' เช็คเอาท์เรียบร้อยแล้ว ขอบคุณที่มาพักกับเรา' }); }
+if (['confirmed', 'checked_in'].indexOf(b.status) >= 0) {
 const saved = Object.assign({}, sv, { status: 'confirmed' });
 this.saveLocal(saved);
 if (this.state.step !== 5) window.scrollTo(0, 0);
@@ -859,12 +888,12 @@ doorLabel: window.kmDoorLabel ? kmDoorLabel() : 'รหัสประตู',
 lineShow: !!(chat && sv && (s.step === 5 || (s.step === 4 && st !== 'cancelled'))),
 line: {
 hid: s.step === 5 ? 'h-line5' : 'h-line4', sample: lineSample,
-copy: () => this.copyText(lineSample, 'lineCopied'), copyLabel: s.lineCopied ? 'คัดลอกแล้ว' : 'คัดลอก',
+out: () => this.markLineOut(), copy: () => this.copyText(lineSample, 'lineCopied'), copyLabel: s.lineCopied ? 'คัดลอกแล้ว' : 'คัดลอก',
 copyBg: s.lineCopied ? '#47413A' : 'transparent', copyFg: s.lineCopied ? '#F6F3EE' : '#47413A', copyMsg: s.lineCopied ? 'คัดลอกรหัสการจองและเบอร์โทรแล้ว' : '',
 url: lineUrl || '#', oa: chat ? decodeURIComponent(chat.split('/R/ti/p/')[1] || '') : ''
 },
 accent, rooms, months, steps, guestOpts, loading: s.loading, loadErr: s.loadErr, reload: () => this.load(),
-isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
+doneNote: s.doneNote || '', isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
 dateHint: s.loading ? 'กำลังโหลดวันว่าง…' : !s.ci ? 'แตะวันที่เพื่อเลือกวันเช็คอิน (ช่องสีชมพู "เต็ม" คือมีคนจองแล้ว)' : !s.co ? 'เช็คอิน ' + kmDate.short(s.ci) + ' แตะวันเช็คเอาท์' : 'เข้าพัก ' + nights + ' คืน · ' + kmDate.short(s.ci) + ' ถึง ' + kmDate.short(s.co),
 clearDates: () => this.setState({ ci: null, co: null, holdErr: '' }),
 prevMonths: () => shift(-1), nextMonths: () => shift(1), noPrev, noNext, prevStyle: navBtn(noPrev), nextStyle: navBtn(noNext),
@@ -984,8 +1013,7 @@ roomName: R.roomName, price: R.pricePerNight ? '฿' + money(R.pricePerNight) : 
 } : {},
 pdfBusy: s.pdfBusy || !R, pdfLabel: s.pdfBusy ? 'กำลังสร้าง PDF…' : 'ดาวน์โหลดใบเสร็จ (PDF)', pdfErr: s.pdfErr,
 downloadPdf: () => this.downloadPdf(),
-reset: () => { this.saveLocal(null); this.release(); this.setState({ refundStatus: '', refundAmount: 0, refundAcc: '', refundErr: '', refundSent: false, step: 1, ci: null, co: null, tried: false, pay: 'bank', slip: null, slipTried: false, copied: false, saved: null, receipt: null, bkStatus: 'pending', statusMsg: '', submitErr: '', holdErr: '',
-f: { first: '', last: '', phone: '', email: '', guests: '2', pets: 'สุนัข 1 ตัว', note: '', arrival: '' } }); this.refreshBooked(); window.scrollTo(0, 0); },
+reset: () => this.resetBooking(),
 sum: view ? {
 room: sv.roomName, img: kmRoomImage(sv.roomNo), ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
 priceNote: total > 0 ? 'ยอดชำระ ฿' + money(total) : 'ราคาจะแจ้งหลังยืนยัน'
