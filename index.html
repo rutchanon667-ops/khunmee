@@ -111,6 +111,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  .km-quote-box{min-height:300px !important}
  section[aria-label="คำพูดจากเจ้าของบ้าน"]{margin-top:40px !important}
  #map figure{margin-top:20px !important;padding:10px !important}
+ #tour{padding-top:48px !important}
+ #tour>div:last-child{border-radius:18px !important}
  #contact{margin-top:56px !important}
  .km-foot{padding:36px 24px 24px !important;gap:24px !important}
 }
@@ -206,7 +208,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </section>
 </div>
 <div class="km-hero-img" style="position: relative; border-radius: 28px; overflow: hidden; min-height: 560px; height: 100%; background: #E2D8C6">
-<img src="images/exterior-day.jpg" alt="ภาพด้านหน้าอาคาร Khun Mee ยามกลางวัน" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 62%">
+<button type="button" class="km-zoom" data-gallery="one" data-src="{{home.hero}}" data-title="Khun Mee" aria-label="ดูรูปหน้าบ้านขนาดใหญ่" style="position: absolute; inset: 0; height: 100%; border-radius: 0"><img src="{{home.hero}}" alt="ภาพด้านหน้าอาคาร Khun Mee" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 62%"></button>
 <div style="position: absolute; left: 20px; bottom: 20px; background: rgba(255, 253, 249, 0.94); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; gap: 12px">
 <span style="width: 40px; height: 40px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFDF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path><path d="M10 20v-5h4v5"></path></svg></span>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">4 ห้องพัก · พาน้องเข้าได้ทุกห้อง</span><span style="font-size: 13px; color: #7A6E63">ห้องน้ำในตัวพร้อมเรนชาวเวอร์</span></span>
@@ -246,7 +248,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <div class="km-rooms km-swipe" style="margin-top: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
 <template data-sc="for" list="{{rooms}}" as="r" hint-placeholder-count="4">
 <article style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column">
-<button type="button" class="km-zoom" data-gallery="room" data-room="{{r.no}}" data-title="{{r.name}}" aria-label="ดูรูป{{r.name}}ขนาดใหญ่ ({{r.photos}} รูป)"><img src="{{r.img}}" alt="{{r.alt}}" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block"><span class="km-zoom-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>{{r.photos}} รูป</span></button>
+<button type="button" class="km-zoom" data-gallery="room" data-room="{{r.no}}" data-title="{{r.name}}" aria-label="ดูรูป{{r.name}}ขนาดใหญ่ ({{r.tag}})"><img src="{{r.img}}" alt="{{r.alt}}" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block"><span class="km-zoom-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>{{r.tag}}</span></button>
 <div style="padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1">
 <span style="font-size: 12px; font-weight: 600; color: #7D6043; letter-spacing: 1.5px">{{r.code}}</span>
 <h3 class="km-serif" style="margin: 0; font-size: 22px; font-weight: 600">{{r.name}}</h3>
@@ -325,9 +327,25 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </div>
 </section>
 
+<template data-sc="if" value="{{tour.on}}" hint-placeholder-val="{{ false }}">
+<section id="tour" aria-labelledby="h-tour" style="max-width: 1240px; margin: 0 auto; padding: 72px 24px 0">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
+<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1.5px">VIDEO TOUR</p>
+<h2 id="h-tour" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ชมบรรยากาศ</h2>
+</div>
+<div style="margin-top: 24px; position: relative; aspect-ratio: 16 / 9; border-radius: 28px; overflow: hidden; background: #3A352F">
+<template data-sc="if" value="{{tour.playing}}" hint-placeholder-val="{{ false }}"><iframe src="{{tour.embed}}" title="วิดีโอชมบรรยากาศ Khun Mee" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe></template>
+<template data-sc="if" value="{{tour.poster}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{tour.play}}" aria-label="เล่นวิดีโอชมบรรยากาศ" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #3A352F; cursor: pointer">
+<img src="{{tour.thumb}}" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; opacity: .85; display: block">
+<span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 84px; height: 84px; border-radius: 9999px; background: rgba(255,253,249,.94); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(0,0,0,.25)"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#3A352F"></path></svg></span>
+</button></template>
+</div>
+</section>
+</template>
+
 <section aria-label="คำพูดจากเจ้าของบ้าน" style="max-width: 1240px; margin: 72px auto 0; padding: 0 24px">
 <div class="km-quote-box" style="position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; display: flex; align-items: flex-end; background: #3A352F">
-<img src="images/exterior-night.jpg" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55">
+<img src="{{home.quote}}" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55">
 <div class="km-quote" style="position: relative; padding: 48px; max-width: 760px; color: #FFFDF9; display: flex; flex-direction: column; gap: 18px">
 <p class="km-serif" style="margin: 0; font-size: 30px; font-weight: 600; line-height: 1.55">“เราอยากให้ที่นี่เป็นเหมือนบ้านต่างจังหวัดของเพื่อน ที่พาน้องมาด้วยได้โดยไม่ต้องขอโทษใคร”</p>
 <p style="margin: 0; font-size: 15px; color: #EDE6D7">คุณหมี, เจ้าของบ้าน</p>
@@ -347,7 +365,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>เปิดใน Google Maps</a>
 </div>
 <figure style="margin: 32px 0 0; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 28px; padding: 16px; box-sizing: border-box">
-<a href="images/map-khunmee.jpg" target="_blank" rel="noopener" aria-label="เปิดแผนที่ขนาดใหญ่ (แท็บใหม่)" style="display: block"><img src="images/map-khunmee.jpg" alt="แผนที่ KhunMee Hostel: ที่พักอยู่ระหว่างหลังมอ ซอย 18 และซอย 19 ติดถนนหลังมอ ใกล้ Doucu Cafe มีลานจอดรถฝั่งซอย 19 และอยู่ใต้ถนนโนนม่วง ใกล้โรงเรียนบ้านโนนม่วง" style="display: block; width: 100%; height: auto; border-radius: 18px"></a>
+<a href="{{home.map}}" target="_blank" rel="noopener" data-gallery="one" data-src="{{home.map}}" data-title="แผนที่ Khun Mee" aria-label="ดูแผนที่ขนาดใหญ่" style="display: block; cursor: zoom-in"><img src="{{home.map}}" alt="แผนที่ KhunMee Hostel: ที่พักอยู่ระหว่างหลังมอ ซอย 18 และซอย 19 ติดถนนหลังมอ ใกล้ Doucu Cafe มีลานจอดรถฝั่งซอย 19 และอยู่ใต้ถนนโนนม่วง ใกล้โรงเรียนบ้านโนนม่วง" style="display: block; width: 100%; height: auto; border-radius: 18px"></a>
 <figcaption style="margin: 10px 4px 0; font-size: 13px; color: #7A6E63; text-align: center">แตะที่แผนที่เพื่อดูภาพขนาดใหญ่</figcaption>
 </figure>
 <div class="km-swipe km-swipe-sm" style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
@@ -405,7 +423,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <script src="js/runtime.js"></script>
 <script src="js/config.js?v=2"></script>
 <script src="js/api.js"></script>
-<script src="js/gallery.js?v=2"></script>
+<script src="js/gallery.js?v=3"></script>
 <script>
 class Component extends DCLogic {
 componentDidMount() {
@@ -458,6 +476,17 @@ toggle: () => this.setState({ lkOpen: !this.state.lkOpen, lkErr: '' }), openNow:
 setCode: (e) => this.setState({ lkCode: e.target.value, lkErr: '' }), setPhone: (e) => this.setState({ lkPhone: e.target.value, lkErr: '' }),
 submit: (e) => { e.preventDefault(); this.lookup(); } },
 findHref: 'booking.html?in=' + fIn + '&out=' + fOut,
+home: {
+hero: window.kmGallery ? kmGallery.single('hero', 'images/exterior-day.jpg') : 'images/exterior-day.jpg',
+quote: window.kmGallery ? kmGallery.single('quote', 'images/exterior-night.jpg') : 'images/exterior-night.jpg',
+map: window.kmGallery ? kmGallery.single('map', 'images/map-khunmee.jpg') : 'images/map-khunmee.jpg'
+},
+tour: (() => {
+const id = window.kmGallery ? kmGallery.tourId() : '';
+const playing = !!id && this.state.tourPlay === id;
+return { on: !!id, playing, poster: !!id && !playing, thumb: id ? kmGallery.ytThumb(id) : '', embed: id ? kmGallery.ytEmbed(id, true) : '',
+play: () => this.setState({ tourPlay: id }) };
+})(),
 livingCount: (window.kmGallery ? kmGallery.living() : ((window.KM_CONFIG || {}).LIVING_GALLERY || [])).length || 1,
 liv: (() => {
 const ALT = { 'images/reception-1.jpg': 'โถงต้อนรับผนังหินขัดกรอบไม้ และเคาน์เตอร์ไม้', 'images/reception-3.jpg': 'เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์', 'images/bathroom-1.jpg': 'ห้องน้ำพร้อมเรนชาวเวอร์และกระจกส่องหน้า' };
@@ -471,7 +500,7 @@ rooms: [
 { code: 'ROOM 02', name: 'ห้องฮิโนกิ', img: 'images/room-hinoki.jpg', alt: 'ห้องฮิโนกิ ผนังไม้และไฟหัวเตียง', desc: 'ผนังไม้ระแนงพร้อมไฟหัวเตียงอุ่น ๆ และโต๊ะทำงานติดหน้าต่าง' },
 { code: 'ROOM 03', name: 'ห้องยาเนะ', img: 'images/room-yane-1.jpg', alt: 'ห้องยาเนะ เพดานทรงจั่ว', desc: 'เพดานทรงจั่วสูงโปร่ง ผนังไม้ระแนง และโต๊ะเครื่องแป้งริมหน้าต่าง' },
 { code: 'ROOM 04', name: 'ห้องโคโมเรบิ', img: 'images/room-komorebi.jpg', alt: 'ห้องโคโมเรบิ หัวเตียงบุผ้าและกระจกทรงกลม', desc: 'หัวเตียงบุผ้านุ่ม กระจกทรงกลม ตู้เสื้อผ้า และทีวีสำหรับคืนสบาย ๆ' }
-].map((r, i) => { const nm = (this.state.names || {})[String(i + 1)]; const o = Object.assign({}, r, this.priceOf(String(i + 1))); if (nm && nm !== r.name) { o.alt = nm + ' · ' + r.alt.replace(r.name, '').trim(); o.name = nm; } o.no = String(i + 1); o.img = window.kmRoomImage ? kmRoomImage(o.no) : o.img; o.photos = window.kmGallery ? kmGallery.roomList(o.no).length : 1; return o; })
+].map((r, i) => { const nm = (this.state.names || {})[String(i + 1)]; const o = Object.assign({}, r, this.priceOf(String(i + 1))); if (nm && nm !== r.name) { o.alt = nm + ' · ' + r.alt.replace(r.name, '').trim(); o.name = nm; } o.no = String(i + 1); o.img = window.kmRoomImage ? kmRoomImage(o.no) : o.img; const all = window.kmGallery ? kmGallery.roomList(o.no) : [o.img]; const nv = all.filter((x) => /^yt:/.test(x)).length; o.photos = all.length; o.tag = (all.length - nv) + ' รูป' + (nv ? ' · ▶ วิดีโอ ' + nv : ''); return o; })
 };
 }
 }

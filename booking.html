@@ -537,7 +537,7 @@ input,select,textarea{font-family:inherit}
 <script src="js/runtime.js"></script>
 <script src="js/config.js?v=2"></script>
 <script src="js/api.js"></script>
-<script src="js/gallery.js?v=2"></script>
+<script src="js/gallery.js?v=3"></script>
 <script src="js/reschedule.js"></script>
 <script>
 /*
@@ -1086,11 +1086,11 @@ pdfBusy: s.pdfBusy || !R, pdfLabel: s.pdfBusy ? 'กำลังสร้าง 
 downloadPdf: () => this.downloadPdf(),
 reset: () => this.resetBooking(),
 sum: view ? {
-room: sv.roomName, img: kmRoomImage(sv.roomNo), roomNo: String(sv.roomNo), gal: 'room', photos: 'ดูรูป ' + (window.kmGallery ? kmGallery.roomList(sv.roomNo).length : 1) + ' รูป', ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
+room: sv.roomName, img: kmRoomImage(sv.roomNo), roomNo: String(sv.roomNo), gal: 'room', photos: 'ดูรูป ' + (window.kmGallery ? kmGallery.countLabel(kmGallery.roomList(sv.roomNo)) : '1 รูป'), ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
 priceNote: total > 0 ? 'ยอดชำระ ฿' + money(total) : 'ราคาจะแจ้งหลังยืนยัน'
 } : {
 room: room ? room.name : (s.loading ? 'กำลังโหลด…' : 'ยังไม่ได้เลือกห้อง'), img: room ? kmRoomImage(room.roomNo) : (window.KM_CONFIG || {}).DEFAULT_ROOM_IMAGE,
-roomNo: room ? String(room.roomNo) : '', gal: room ? 'room' : 'one', photos: room ? 'ดูรูป ' + (window.kmGallery ? kmGallery.roomList(room.roomNo).length : 1) + ' รูป' : 'ดูรูป',
+roomNo: room ? String(room.roomNo) : '', gal: room ? 'room' : 'one', photos: room ? 'ดูรูป ' + (window.kmGallery ? kmGallery.countLabel(kmGallery.roomList(room.roomNo)) : '1 รูป') : 'ดูรูป',
 ci: s.ci ? kmDate.short(s.ci) : '—', co: s.co ? kmDate.short(s.co) : '—', nights: nights ? nights + ' คืน' : '—', guests: guests + ' ท่าน',
 priceNote: variesByNight
 ? 'ราคาตามวัน: ' + nightly.map((n) => kmDate.dm(n.date) + ' ฿' + money(n.price)).join(', ')

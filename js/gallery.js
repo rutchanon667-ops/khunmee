@@ -29,15 +29,31 @@
       if (changed) { try { window.dispatchEvent(new Event('km-gallery')); } catch (e) {} }
     }).catch(function () {});
   }
+  // ชุดรูปห้อง/ห้องน้ำ/พื้นที่ส่วนกลาง ใช้จากหลังบ้านเมื่อนำเข้าแล้ว (imported) · ข้อมูลเก่าที่ไม่มี imported ถือว่านำเข้าแล้ว
+  function galleryLive() { return !!(live && live.imported !== false); }
+  function sets() { return (live && live.sets) || {}; }
+  function isVideo(x) { return /^yt:/.test(String(x || '')); }
   function roomList(no) {
     var main = window.kmRoomImage(no);
-    if (live) return uniq([main].concat((live.sets || {})['room:' + no] || [], (live.sets || {}).extra || []));
+    if (galleryLive()) return uniq([main].concat(sets()['room:' + no] || [], sets().extra || []));
     var g = (C.ROOM_GALLERY || {})[String(no)] || [];
     return uniq([main].concat(g, C.ROOM_GALLERY_EXTRA || []));
   }
   function livingList() {
-    return live ? ((live.sets || {}).living || []).slice() : (C.LIVING_GALLERY || []).slice();
+    return galleryLive() ? (sets().living || []).slice() : (C.LIVING_GALLERY || []).slice();
   }
+  /** รูปเดี่ยวในหน้าแรก (hero / quote / map) จากหลังบ้าน หรือรูปเดิม */
+  function single(key, fallback) {
+    var a = (sets()[key] || []).filter(function (x) { return !isVideo(x); });
+    return a[0] || fallback;
+  }
+  /** รหัส YouTube ของวิดีโอชมบรรยากาศ ('' = ไม่มี) */
+  function tourId() {
+    var v = (sets().tour || []).filter(isVideo)[0];
+    return v ? v.slice(3) : '';
+  }
+  function ytThumb(id) { return 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg'; }
+  function ytEmbed(id, auto) { return 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&playsinline=1&modestbranding=1' + (auto ? '&autoplay=1' : ''); }
 
   function css() {
     var st = document.createElement('style');
@@ -53,6 +69,12 @@
       '.kmg-track::-webkit-scrollbar{display:none}' +
       '.kmg-slide{flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:0 12px 12px;box-sizing:border-box}' +
       '.kmg-slide img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;user-select:none;-webkit-user-drag:none}' +
+      '.kmg-vid{position:relative;width:min(100%,calc((100dvh - 150px) * 16 / 9));aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}' +
+      '.kmg-vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}' +
+      '.kmg-play{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer}' +
+      '.kmg-play img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;border-radius:0;opacity:.85}' +
+      '.kmg-play span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:9999px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center}' +
+      '.km-zoom .km-zoom-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:9999px;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;pointer-events:none}' +
       '.kmg-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:9999px;border:0;background:rgba(246,243,238,.16);color:#FFF;display:none;align-items:center;justify-content:center;cursor:pointer}' +
       '.kmg-nav:hover{background:rgba(246,243,238,.3)}.kmg-nav:disabled{opacity:.25;cursor:default}' +
       '.kmg-prev{left:16px}.kmg-next{right:16px}' +
@@ -90,11 +112,17 @@
     prevBtn.addEventListener('click', function () { go(idx - 1); });
     nextBtn.addEventListener('click', function () { go(idx + 1); });
     // แตะพื้นที่ว่างรอบรูป = ปิด
-    track.addEventListener('click', function (e) { if (e.target.tagName !== 'IMG') close(); });
+    track.addEventListener('click', function (e) {
+      var play = e.target.closest && e.target.closest('.kmg-play');
+      if (play) { e.stopPropagation(); playAt(play); return; }
+      if (e.target.tagName !== 'IMG' && !(e.target.closest && e.target.closest('.kmg-vid'))) close();
+    });
     var t = null;
     track.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(sync, 60); }, { passive: true });
     window.addEventListener('resize', function () { if (!root.hidden) track.scrollLeft = idx * track.clientWidth; });
-    root.addEventListener('keydown', function (e) {
+    // ฟังที่ document: โฟกัสอาจหลุดจากหน้าต่างรูป (เช่น หลังเล่นวิดีโอ) แต่ Esc และลูกศรต้องยังใช้ได้
+    document.addEventListener('keydown', function (e) {
+      if (!root || root.hidden) return;
       if (e.key === 'Escape') { e.preventDefault(); close(); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); go(idx + 1); }
@@ -112,7 +140,7 @@
   function sync() {
     var w = track.clientWidth || 1;
     var i = Math.max(0, Math.min(list.length - 1, Math.round(track.scrollLeft / w)));
-    if (i !== idx) { idx = i; }
+    if (i !== idx) { idx = i; stopVideos(); }
     paint();
   }
   function paint() {
@@ -124,7 +152,7 @@
   }
   function go(i) {
     if (i < 0 || i >= list.length) return;
-    idx = i;
+    idx = i; stopVideos();
     track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
     paint();
   }
@@ -135,6 +163,7 @@
     list = imgs.slice(); idx = Math.max(0, Math.min(imgs.length - 1, start || 0));
     title.textContent = name || '';
     track.innerHTML = list.map(function (src, i) {
+      if (isVideo(src)) return '<div class="kmg-slide">' + poster(src.slice(3), i) + '</div>';
       return '<div class="kmg-slide"><img src="' + src.replace(/"/g, '&quot;') + '" alt="' + (name ? name.replace(/"/g, '&quot;') + ' ' : '') + 'รูปที่ ' + (i + 1) + ' จาก ' + list.length + '"' + (Math.abs(i - idx) > 1 ? ' loading="lazy"' : '') + ' draggable="false"></div>';
     }).join('');
     lastFocus = document.activeElement;
@@ -148,6 +177,25 @@
       root.querySelector('.kmg-x').focus();
     });
     try { history.pushState({ kmGallery: 1 }, ''); pushed = true; } catch (e) { pushed = false; }
+  }
+
+  var PLAY_SVG = '<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#3A352F"></path></svg>';
+  function poster(id, i) {
+    return '<div class="kmg-vid"><button type="button" class="kmg-play" data-yt="' + id + '" aria-label="เล่นวิดีโอ (รายการที่ ' + (i + 1) + ')">' +
+      '<img src="' + ytThumb(id) + '" alt="" loading="lazy"><span>' + PLAY_SVG + '</span></button></div>';
+  }
+  function playAt(btn) {
+    var id = btn.getAttribute('data-yt'), box = btn.parentNode;
+    box.innerHTML = '<iframe src="' + ytEmbed(id, true) + '" title="วิดีโอ" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+  }
+  /* หยุดวิดีโอที่เล่นอยู่ (กลับเป็นภาพตัวอย่าง) เมื่อปัดไปรายการอื่นหรือปิดหน้าต่าง */
+  function stopVideos() {
+    if (!track) return;
+    [].slice.call(track.querySelectorAll('.kmg-vid iframe')).forEach(function (f) {
+      var m = String(f.getAttribute('src')).match(/embed\/([\w-]{11})/);
+      var box = f.parentNode, i = [].indexOf.call(track.children, box.parentNode);
+      if (m) box.outerHTML = poster(m[1], i);
+    });
   }
 
   function close(fromPop) {
@@ -174,6 +222,8 @@
     open(imgs, Math.max(0, imgs.indexOf(src)), el.getAttribute('data-title') || '');
   });
 
-  window.kmGallery = { open: open, close: close, roomList: roomList, living: livingList, refresh: refresh };
+  window.kmGallery = { open: open, close: close, roomList: roomList, living: livingList, refresh: refresh,
+    single: single, tourId: tourId, ytThumb: ytThumb, ytEmbed: ytEmbed, isVideo: isVideo,
+    countLabel: function (l) { var v = (l || []).filter(isVideo).length; return ((l || []).length - v) + ' รูป' + (v ? ' · ▶ วิดีโอ ' + v : ''); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh); else setTimeout(refresh, 0);
 })();
