@@ -1331,7 +1331,7 @@ const contL = from > b.checkIn, contR = to < lastNight;
 const rad = (contL ? '0' : '9px') + ' ' + (contR ? '0' : '9px') + ' ' + (contR ? '0' : '9px') + ' ' + (contL ? '0' : '9px');
 const picked = s.pop && s.pop.id === b.id;
 const mvTo = mv.to[b.id], mvFrom = mv.from[b.id], grp = mv.group[b.id] || '';
-bars.push({ bid: b.id, link: grp, label: (contL ? '… ' : '') + (mvFrom && !contL ? 'ย้ายจาก' + short(rn(mvFrom.roomNo)) + ' ← ' : '') + (k === 'soon' && !mvFrom ? countdown(b) + ' · ' : '') + short(rn(b.roomNo)) + ' · ' + String(b.guestName).split(' ')[0] + ' · ' + b.nights + ' คืน' + (mvTo && !contR ? ' → ย้ายไป' + short(rn(mvTo.roomNo)) : ''),
+bars.push({ bid: b.id, link: grp, label: (contL ? '… ' : '') + String(b.guestName).trim() + ' · ' + rn(b.roomNo) + (grp ? ' ⇄' : ''),   // ชื่อ นามสกุล · ห้อง (⇄ = ย้ายห้อง)
 title: b.guestName + ' · ' + rn(b.roomNo) + ' · ' + kmDate.dm(b.checkIn) + '–' + kmDate.dm(b.checkOut) + ' (' + b.nights + ' คืน) · ' + stName(b, k) + (mvTo ? ' · ย้ายไป' + rn(mvTo.roomNo) + ' ' + kmDate.dm(mvTo.checkIn) : '') + (mvFrom ? ' · ย้ายจาก' + rn(mvFrom.roomNo) : ''),
 aria: 'ดูรายละเอียดการจอง ' + b.code + ' ' + b.guestName + ' ' + rn(b.roomNo) + ' ' + kmDate.dm(b.checkIn) + ' ถึง ' + kmDate.dm(b.checkOut),
 expanded: picked ? 'true' : 'false',
@@ -1354,9 +1354,8 @@ if (!ins.length && !outs.length && !hl && d !== today) continue;
 const mk = (b, kind) => {
 const k = stOf(b);
 const mvTo = moveLinks.to[b.id], mvFrom = moveLinks.from[b.id], grp = moveLinks.group[b.id] || '';
-const extra = kind === 'in' && mvFrom ? ' · ย้ายจาก' + short(rn(mvFrom.roomNo)) : kind === 'out' && mvTo ? ' · ย้ายไป' + short(rn(mvTo.roomNo)) : '';
 return { bid: b.id, link: grp, tag: kind === 'in' ? 'เช็คอิน' : 'เช็คเอาท์',
-label: short(rn(b.roomNo)) + ' · ' + b.guestName + ' · ' + b.nights + ' คืน' + extra,
+label: String(b.guestName).trim() + ' · ' + rn(b.roomNo) + (grp ? ' ⇄' : ''),
 aria: (kind === 'in' ? 'เช็คอิน ' : 'เช็คเอาท์ ') + b.guestName + ' ' + rn(b.roomNo) + ' ดูรายละเอียด',
 open: (e) => { if (this.state.pop && this.state.pop.id === b.id) this.setState({ pop: null }); else this.openPop(b.id, e); },
 cls: 'km-bar' + (grp && s.linkHover === grp ? ' km-link' : ''),
