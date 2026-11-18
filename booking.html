@@ -6,7 +6,7 @@
 <title>Khun Mee – Booking</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=1">
+<link rel="stylesheet" href="css/site.css?v=2">
 <style>
 body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
@@ -507,7 +507,7 @@ input,select,textarea{font-family:inherit}
 
 <!-- Summary -->
 <aside class="bk-sum" aria-label="สรุปการจอง" style="flex: 1 1 320px; min-width: 0; background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
-<img class="sum-img" src="{{sum.img}}" alt="{{sum.room}}" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block">
+<button type="button" class="km-zoom" data-gallery="{{sum.gal}}" data-room="{{sum.roomNo}}" data-title="{{sum.room}}" aria-label="ดูรูป{{sum.room}}ขนาดใหญ่" style="border-radius: 8px; overflow: hidden"><img class="sum-img" src="{{sum.img}}" alt="{{sum.room}}" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block"><span class="km-zoom-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>{{sum.photos}}</span></button>
 <div>
 <p style="margin: 0; font-size: 12px; color: #7A6E63">ห้องที่เลือก</p>
 <p style="margin: 2px 0 0; font-size: 21px; font-weight: 600">{{sum.room}}</p>
@@ -535,8 +535,9 @@ input,select,textarea{font-family:inherit}
 </template>
 <script src="js/morphdom.min.js"></script>
 <script src="js/runtime.js"></script>
-<script src="js/config.js"></script>
+<script src="js/config.js?v=2"></script>
 <script src="js/api.js"></script>
+<script src="js/gallery.js?v=1"></script>
 <script src="js/reschedule.js"></script>
 <script>
 /*
@@ -1084,10 +1085,11 @@ pdfBusy: s.pdfBusy || !R, pdfLabel: s.pdfBusy ? 'กำลังสร้าง 
 downloadPdf: () => this.downloadPdf(),
 reset: () => this.resetBooking(),
 sum: view ? {
-room: sv.roomName, img: kmRoomImage(sv.roomNo), ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
+room: sv.roomName, img: kmRoomImage(sv.roomNo), roomNo: String(sv.roomNo), gal: 'room', photos: 'ดูรูป ' + (window.kmGallery ? kmGallery.roomList(sv.roomNo).length : 1) + ' รูป', ci: kmDate.short(sv.ci), co: kmDate.short(sv.co), nights: sv.nights + ' คืน', guests: sv.guests + ' ท่าน',
 priceNote: total > 0 ? 'ยอดชำระ ฿' + money(total) : 'ราคาจะแจ้งหลังยืนยัน'
 } : {
 room: room ? room.name : (s.loading ? 'กำลังโหลด…' : 'ยังไม่ได้เลือกห้อง'), img: room ? kmRoomImage(room.roomNo) : (window.KM_CONFIG || {}).DEFAULT_ROOM_IMAGE,
+roomNo: room ? String(room.roomNo) : '', gal: room ? 'room' : 'one', photos: room ? 'ดูรูป ' + (window.kmGallery ? kmGallery.roomList(room.roomNo).length : 1) + ' รูป' : 'ดูรูป',
 ci: s.ci ? kmDate.short(s.ci) : '—', co: s.co ? kmDate.short(s.co) : '—', nights: nights ? nights + ' คืน' : '—', guests: guests + ' ท่าน',
 priceNote: variesByNight
 ? 'ราคาตามวัน: ' + nightly.map((n) => kmDate.dm(n.date) + ' ฿' + money(n.price)).join(', ')

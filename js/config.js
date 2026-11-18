@@ -12,6 +12,18 @@ window.KM_CONFIG = {
   },
   DEFAULT_ROOM_IMAGE: 'images/room-yane-2.jpg',
 
+  // รูปขนาดใหญ่ (แตะรูปห้องแล้วปัดดูได้) · เพิ่มรูปของแต่ละห้องต่อท้ายในรายการได้เลย
+  ROOM_GALLERY: {
+    '1': ['images/room-shoji.jpg'],
+    '2': ['images/room-hinoki.jpg'],
+    '3': ['images/room-yane-1.jpg', 'images/room-yane-2.jpg', 'images/room-yane-3.webp'],
+    '4': ['images/room-komorebi.jpg']
+  },
+  // รูปที่ต่อท้ายทุกห้อง (ห้องน้ำในตัว) · ไม่ต้องการให้เปลี่ยนเป็น []
+  ROOM_GALLERY_EXTRA: ['images/bathroom-1.jpg', 'images/bathroom-2.jpg'],
+  // พื้นที่ส่วนกลาง (ห้องนั่งเล่นที่ทุกคนใช้ร่วมกัน)
+  LIVING_GALLERY: ['images/reception-1.jpg', 'images/reception-2.jpg', 'images/reception-3.jpg', 'images/reception-4.jpg', 'images/bathroom-1.jpg', 'images/bathroom-2.jpg'],
+
   // LINE ID ของ LINE OA เช่น '@khunmhee' (ดูที่หน้าแรกของ LINE OA Manager)
   // ใส่ไว้แล้วปุ่ม "รับรหัสประตูทาง LINE" จะแสดงเสมอ แม้ระบบหลังบ้านยังไม่ได้ตั้ง LINE_OA_ID
   LINE_OA_ID: '@413bzbdc',
