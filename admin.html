@@ -29,6 +29,13 @@ th{font-weight:600;text-align:left}
  .side a{white-space:nowrap;flex:0 0 auto;border:1px solid #DED4C1}
 }
 @media (max-width:600px){
+ .ph-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important}
+ .ph-grid li>div{padding:6px !important;gap:4px !important}
+ .ph-grid li>div>button{width:36px !important;height:36px !important}
+ .ph-grid li>div>button:not([aria-label]){width:auto !important;flex:1 1 100% !important;order:3;min-height:36px !important}
+ .ph-sets{flex-wrap:nowrap !important;overflow-x:auto;margin-left:-16px;margin-right:-16px;padding:0 16px 4px;scrollbar-width:none}
+ .ph-sets::-webkit-scrollbar{display:none}
+ .ph-sets>button{flex:0 0 auto}
  .adm-head{height:52px !important;padding:0 12px !important}
  .adm-head .hd-me{display:none}
  .adm-head .hd-sheet{display:none}
@@ -119,6 +126,7 @@ Khun Mee · หลังบ้าน</a>
 <a href="#bookings" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ข้อมูลลูกค้า</a>
 <a href="#stats" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">สถิติ</a>
 <a href="#pricing" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">ราคาห้อง</a>
+<a href="#photos" style="padding: 10px 14px; border-radius: 8px; color: #5E554C">รูปภาพ</a>
 <template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M4 9h16M4 15h16M10 3v18"></path></svg>เปิด Google Sheets<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 <template data-sc="if" value="{{slipFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{slipFolderUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #335A88; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>โฟลเดอร์สลิป (Drive)<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
 <template data-sc="if" value="{{receiptFolderUrl}}" hint-placeholder-val="{{ true }}"><a href="{{receiptFolderUrl}}" target="_blank" rel="noopener" style="padding: 10px 14px; border-radius: 8px; color: #2F6B45; display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>โฟลเดอร์ใบเสร็จ (Drive)<span aria-hidden="true">↗</span><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
@@ -610,6 +618,50 @@ Khun Mee · หลังบ้าน</a>
 </div>
 </section>
 
+<!-- Photos -->
+<section id="photos" aria-labelledby="h-photos" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap">
+<h2 id="h-photos" style="margin: 0; font-size: 21px; font-weight: 600">รูปภาพห้องพัก</h2>
+<template data-sc="if" value="{{ph.folderUrl}}" hint-placeholder-val="{{ false }}"><a href="{{ph.folderUrl}}" target="_blank" rel="noopener" style="font-size: 14px; color: #335A88">เปิดโฟลเดอร์รูปใน Drive ↗<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">(เปิดในแท็บใหม่)</span></a></template>
+</div>
+<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รูปที่แสดงบนหน้าแรกและหน้าจอง แก้แล้วหน้าเว็บเปลี่ยนภายในประมาณ 1 นาที</p>
+<template data-sc="if" value="{{ph.msg}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: #5E554C; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">{{ph.msg}}</p></template>
+<template data-sc="if" value="{{ph.needImport}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 14px; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 14px; padding: 16px; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center">
+<p style="margin: 0; flex: 1 1 260px; font-size: 15px; line-height: 1.6">ตอนนี้หน้าเว็บใช้รูปเดิมที่อยู่ในเว็บ กด "นำเข้ารูปเดิมของเว็บ" 1 ครั้ง เพื่อเริ่มเพิ่ม ลบ และเรียงรูปจากที่นี่</p>
+<button type="button" onClick="{{ph.import}}" disabled="{{ph.busy}}" style="min-height: 44px; border: 0; border-radius: 9999px; background: #47413A; color: #F6F3EE; padding: 0 20px; font-size: 15px; font-weight: 600; cursor: pointer">นำเข้ารูปเดิมของเว็บ</button>
+</div>
+</template>
+<template data-sc="if" value="{{ph.ready}}" hint-placeholder-val="{{ true }}">
+<div class="ph-sets" role="tablist" aria-label="ชุดรูป" style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap">
+<template data-sc="for" list="{{ph.sets}}" as="g" hint-placeholder-count="6"><button type="button" role="tab" aria-selected="{{g.on}}" onClick="{{g.pick}}" style="{{g.style}}">{{g.label}} <span style="opacity: .75">{{g.count}}</span></button></template>
+</div>
+<div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center">
+<label style="{{ph.upStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"></path><path d="M4 20h16"></path></svg>{{ph.upLabel}}<input type="file" accept="image/*" multiple onChange="{{ph.upload}}" disabled="{{ph.busy}}" style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden"></label>
+<span style="font-size: 13px; color: #7A6E63">{{ph.hint}}</span>
+</div>
+<template data-sc="if" value="{{ph.empty}}" hint-placeholder-val="{{ false }}"><p style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">ชุดนี้ยังไม่มีรูป</p></template>
+<ul class="ph-grid" style="list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 12px">
+<template data-sc="for" list="{{ph.photos}}" as="p" hint-placeholder-count="4">
+<li style="background: #FFFDF9; border: {{p.border}}; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+<button type="button" onClick="{{p.view}}" aria-label="ดูรูปที่ {{p.n}} ขนาดใหญ่" style="position: relative; display: block; padding: 0; border: 0; background: #E2D8C6; cursor: zoom-in">
+<img src="{{p.thumb}}" alt="รูปที่ {{p.n}}" loading="lazy" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover">
+<span style="position: absolute; left: 8px; top: 8px; min-width: 26px; height: 26px; border-radius: 9999px; background: rgba(58,53,47,.8); color: #FFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 6px; box-sizing: border-box">{{p.n}}</span>
+<template data-sc="if" value="{{p.cover}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; right: 8px; top: 8px; border-radius: 9999px; background: #4F7A52; color: #FFF; font-size: 12px; font-weight: 700; padding: 4px 10px">รูปปก</span></template>
+</button>
+<div style="padding: 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap">
+<button type="button" onClick="{{p.up}}" disabled="{{p.noUp}}" aria-label="เลื่อนรูปที่ {{p.n}} ไปก่อน" style="{{p.iconStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
+<button type="button" onClick="{{p.down}}" disabled="{{p.noDown}}" aria-label="เลื่อนรูปที่ {{p.n}} ไปทีหลัง" style="{{p.iconStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
+<template data-sc="if" value="{{p.canCover}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{p.setCover}}" disabled="{{p.busy}}" style="flex: 1 1 auto; min-height: 40px; border: 1px solid #4F7A52; border-radius: 9999px; background: transparent; color: #2F5A33; font-size: 13px; font-weight: 600; padding: 0 10px; cursor: pointer; white-space: nowrap">ตั้งเป็นรูปปก</button></template>
+<button type="button" onClick="{{p.del}}" disabled="{{p.busy}}" aria-label="ลบรูปที่ {{p.n}}" style="margin-left: auto; width: 40px; height: 40px; border: 1px solid #C88193; border-radius: 9999px; background: transparent; color: #9A4E60; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
+</div>
+</li>
+</template>
+</ul>
+</template>
+</section>
+
+
 </main>
 </div>
 </div>
@@ -664,6 +716,7 @@ Khun Mee · หลังบ้าน</a>
 <script src="js/runtime.js"></script>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
+<script src="js/gallery.js?v=2"></script>
 <script src="js/reschedule.js"></script>
 <script>
 class Component extends DCLogic {
@@ -680,6 +733,84 @@ readKeys: this.loadSet('km_read'), dismissed: this.loadSet('km_dismiss'), bkAck:
 calFlash: '', calHL: this.loadHL(), linkHover: '', pop: null, notifyMax: '', bookMax: '', dlg: null, ext: null, lobby: null, lbErr: '', lbOwn: {} };
 }
 /* กล่องถามยืนยันในหน้า (ใช้แทน window.confirm กันเผลอคลิก) */
+/* รูปภาพห้องพัก (Photos.gs) */
+loadPhotos() {
+return kmApi('adminPhotoList', kmToken.get()).then((ph) => {
+const set = this.state.phSet && ph.sets.some((g) => g.key === this.state.phSet) ? this.state.phSet : (ph.sets[0] || {}).key;
+this.setState({ ph, phSet: set, phErr: '' });
+}).catch((e) => { if (!this.fail(e)) this.setState({ phErr: e.message }); });
+}
+phAct(promise) {
+this.setState({ phBusy: true });
+return promise.then((msg) => { this.setState({ phBusy: false }); if (typeof msg === 'string' && msg !== 'ok') this.say(msg); return this.loadPhotos(); })
+.catch((e) => { if (!this.fail(e)) { this.setState({ phBusy: false }); this.say(e.message); } });
+}
+/* ย่อรูปเป็น JPEG ด้านยาวไม่เกิน 1600px ก่อนส่ง (รูปจากมือถือมักใหญ่ 3–8 MB) */
+phShrink(file) {
+return new Promise((ok, no) => {
+const url = URL.createObjectURL(file);
+const img = new Image();
+img.onload = () => {
+const max = 1600, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+const c = document.createElement('canvas');
+c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+const g = c.getContext('2d'); g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+URL.revokeObjectURL(url);
+ok({ name: file.name || 'photo.jpg', mimeType: 'image/jpeg', base64: c.toDataURL('image/jpeg', 0.85).split(',')[1] });
+};
+img.onerror = () => { URL.revokeObjectURL(url); no(new Error('เปิดไฟล์ ' + (file.name || '') + ' ไม่ได้ กรุณาเลือกไฟล์รูป JPG หรือ PNG')); };
+img.src = url;
+});
+}
+phUpload(files, set) {
+files = Array.prototype.slice.call(files || []).filter((f) => /^image\//.test(f.type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || ''));
+if (!files.length) return;
+const t = kmToken.get();
+let done = 0, failed = [];
+this.setState({ phBusy: true, phUp: { done: 0, total: files.length } });
+const next = (i) => {
+if (i >= files.length) {
+this.setState({ phBusy: false, phUp: null });
+this.say(failed.length ? 'อัปโหลดสำเร็จ ' + done + ' รูป · ไม่สำเร็จ ' + failed.length + ' รูป: ' + failed[0] : 'อัปโหลดรูปแล้ว ' + done + ' รูป');
+return this.loadPhotos();
+}
+return this.phShrink(files[i]).then((f) => kmApi('adminPhotoUpload', t, set, f))
+.then(() => { done++; }, (e) => { if (this.fail(e)) throw e; failed.push(e.message); })
+.then(() => { this.setState({ phUp: { done: i + 1, total: files.length } }); return next(i + 1); });
+};
+next(0).catch(() => this.setState({ phBusy: false, phUp: null }));
+}
+phView(s) {
+const t = kmToken.get(), ph = s.ph, busy = !!s.phBusy;
+const msg = s.phErr ? (/ไม่รู้จักคำสั่ง/.test(s.phErr) ? 'ยังไม่ได้ติดตั้ง Photos.gs ใน Apps Script (เพิ่มไฟล์ Photos, รัน setupPhotos แล้ว Deploy เป็นเวอร์ชันใหม่) · ตอนนี้หน้าเว็บใช้รูปเดิมอยู่' : 'โหลดรูปไม่สำเร็จ: ' + s.phErr)
+: !ph ? 'กำลังโหลดรูป…' : '';
+const out = { msg, folderUrl: ph ? ph.folderUrl : '', needImport: !!(ph && !ph.managed), ready: !!(ph && ph.managed), busy,
+sets: [], photos: [], empty: false, upLabel: 'เพิ่มรูป', hint: '', upStyle: '', import: () => this.phAct(kmApi('adminPhotoImport', t)), upload: () => {} };
+if (!out.ready) return out;
+const cur = ph.sets.find((g) => g.key === s.phSet) || ph.sets[0];
+out.sets = ph.sets.map((g) => ({ label: g.label, count: '(' + g.photos.length + ')', on: g.key === cur.key,
+pick: () => this.setState({ phSet: g.key }),
+style: 'min-height: 40px; padding: 0 14px; border-radius: 9999px; font-size: 14px; white-space: nowrap; cursor: pointer; ' + (g.key === cur.key ? 'background: #3A352F; color: #F6F3EE; border: 1px solid #3A352F; font-weight: 600;' : 'background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC;') }));
+const list = cur.photos, full = list.map((p) => p.full);
+out.empty = !list.length;
+out.photos = list.map((p, i) => ({ n: String(i + 1), thumb: p.thumb, cover: !!p.cover, busy,
+border: p.cover ? '2px solid #4F7A52' : '1px solid #E2D8C6',
+canCover: cur.room && !p.cover,
+noUp: busy || i === 0, noDown: busy || i === list.length - 1,
+iconStyle: 'width: 40px; height: 40px; border: 1px solid #CFC3AC; border-radius: 9999px; background: transparent; color: #47413A; display: flex; align-items: center; justify-content: center; cursor: pointer;',
+view: () => window.kmGallery && kmGallery.open(full, i, cur.label),
+up: () => this.phAct(kmApi('adminPhotoMove', t, p.id, -1)),
+down: () => this.phAct(kmApi('adminPhotoMove', t, p.id, 1)),
+setCover: () => this.phAct(kmApi('adminPhotoCover', t, p.id)),
+del: () => this.ask({ kind: 'danger', title: 'ลบรูปที่ ' + (i + 1) + ' ของ' + cur.label + ' ?', lines: [p.cover ? 'รูปนี้เป็นรูปปก รูปถัดไปจะเป็นรูปปกแทน' : 'รูปจะหายจากหน้าเว็บภายในประมาณ 1 นาที', p.drive ? 'ไฟล์จะย้ายไปถังขยะของ Google Drive (กู้คืนได้ 30 วัน)' : ''].filter(String),
+okLabel: 'ลบรูป', cancelLabel: 'ยกเลิก', onOk: () => this.phAct(kmApi('adminPhotoDelete', t, p.id)) }) }));
+const up = s.phUp;
+out.upLabel = up ? 'กำลังอัปโหลด ' + up.done + '/' + up.total + '…' : 'เพิ่มรูป';
+out.hint = cur.room ? 'รูปปกแสดงบนการ์ดห้องในหน้าแรกและหน้าจอง · เลือกได้หลายรูปพร้อมกัน' : cur.key === 'extra' ? 'รูปชุดนี้ต่อท้ายรูปของทุกห้อง' : 'รูป 3 รูปแรกแสดงในส่วนห้องนั่งเล่นของหน้าแรก';
+out.upStyle = 'position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 9999px; font-size: 15px; font-weight: 600; cursor: ' + (busy ? 'wait' : 'pointer') + '; background: ' + (busy ? '#B8AFA3' : '#4F7A52') + '; color: #FFFFFF;';
+out.upload = (e) => { const f = Array.prototype.slice.call(e.target.files || []); const set = cur.key; e.target.value = ''; this.phUpload(f, set); };
+return out;
+}
 ask(opts) {
 this.lastFocus = document.activeElement;
 this.setState({ dlg: opts }, () => { const b = document.getElementById('km-dlg-ok'); if (b) b.focus(); });
@@ -852,6 +983,7 @@ document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; if
 ['pointerdown', 'pointerover'].forEach((t) => document.addEventListener(t, (e) => this.onPointer(e), { passive: true }));
 this.load();
 this.loadStats('1m');
+this.loadPhotos();
 this.loadPricing();
 this.timer = setInterval(() => { if (!document.hidden) this.load(true); }, 120000);
 }
@@ -1450,6 +1582,7 @@ meName: me.fullname || me.username || '', greeting: (h < 12 ? 'สวัสด�
 todayLong: dash ? kmDate.long(today) : 'กำลังโหลดข้อมูล…',
 updatedLabel: s.updated ? 'อัปเดตล่าสุด ' + s.updated + ' น.' : '', loading: s.loading, refreshLabel: s.loading ? 'กำลังโหลด…' : 'รีเฟรชข้อมูล',
 lbTodo: lbTodo || '', lbRows, lbMsg,
+ph: this.phView(s),
 refresh: () => this.load(), loadErr: s.loadErr, toast: s.toast,
 logout: () => { kmApi('logout', t).catch(() => {}); kmToken.set(null); kmToken.setUser(null); this.toLogin(); },
 kpis, notes, nFilters, bFilters, rows, reminders, weeks, legend, agenda, noAgenda: !agenda.length, calCls: s.calGrid ? 'cal-showgrid' : '', calToggleLabel: s.calGrid ? 'ดูแบบรายการวัน' : 'ดูแบบตารางทั้งเดือน', toggleCalView: () => this.setState({ calGrid: !this.state.calGrid }),
