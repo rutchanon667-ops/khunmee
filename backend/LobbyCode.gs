@@ -40,6 +40,7 @@ const LC_REMIND_HOURS = 3;             // งานค้างนานกี�
 const LC_ROOM_NOTE = 'รหัสเข้าล็อบบี้ จะเป็นรหัสเดียวกันกับรหัสปลดล็อคตู้เซฟโดยจะเป็น รหัส 4 ตัว สุดท้าย เพื่อรับกุญแจเข้าห้องพักที่จองไว้ (ตู้เซฟจะอยู่ทางขวาของประตูล็อบบี้)';   // บอกแขกหลังเช็คอินว่าเข้าห้องอย่างไร
 const LC_SAFE_NOTE = 'ตั้งรหัส 4 ตัวสุดท้ายของรหัสนี้ที่ตู้เซฟกุญแจของห้องนี้ด้วย';   // เตือนแอดมินในการ์ดงานตั้งรหัส (ว่าง = ไม่แสดง)
 const LC_KEYPAD_NOTE = 'แตะหน้าจอกลอนให้ไฟติด กดรหัส แล้วกดปุ่มยืนยัน';      // วิธีกดรหัสที่กลอน (ว่าง = ไม่แสดง)
+const LC_AUTO_REMOVE = true;          // แขกเช็คเอาท์/ยกเลิก/เลื่อนวัน → ปิดรหัสในระบบเองทันที และส่ง LINE เตือนสั้น ๆ ให้ลบรหัสช่องนั้นที่กลอน (ไม่ต้องกดปุ่ม "ลบแล้ว")
 const LC_AFTER_CHECKIN_ONLY = true;    // แขกขอรหัสล็อบบี้ได้หลังเช็คอินแล้วเท่านั้น
 // เวลาที่คาดว่าจะมาถึง (ลูกค้าเลือกในหน้าจอง ขั้นข้อมูลผู้เข้าพัก) แสดงให้แอดมินดูอย่างเดียว ไม่มีผลกับการออกรหัส
 const LC_ARRIVAL_SLOTS = ['14:00–16:00', '16:00–18:00', '18:00–20:00', '20:00–22:00', 'หลัง 22:00'];
@@ -201,6 +202,7 @@ function lcSweep_() {
   const hour = Number(Utilities.formatDate(new Date(), tz_(), 'H'));
   const now = new Date();
   const toAdmin = [];
+  const autoGone = [];   // รหัสที่ระบบปิดเองหลังแขกออก (ต้องลบที่กลอนจริง)
 
   withLock_(() => {
     const rows = lcRows_();
@@ -212,6 +214,14 @@ function lcSweep_() {
       if (LC_OPEN_.indexOf(String(r.status)) < 0) return;
       const b = byId[String(r.bookingId)];
       if (!b || !lcWants_(b, today) || String(b.roomNo).trim() !== String(r.roomNo).replace(/^'/, '').trim()) {
+        if (LC_AUTO_REMOVE) {
+          const wasSet = !!r.setAt || String(r.status) === 'active';
+          const why = lcRemoveReason_(r);
+          Object.assign(r, { status: 'removed', removeAt: now, removedAt: now, removedBy: 'ระบบ (อัตโนมัติ · ' + why + ')' });
+          lcWrite_(r);
+          if (wasSet) autoGone.push({ slot: String(r.slot), pin: lcPin_(r), room: roomLabel_(String(r.roomNo).replace(/^'/, '')), guest: unsafe_(r.guestName), why: why });
+          return;
+        }
         r.status = 'remove';
         r.removeAt = now;
         lcWrite_(r);
@@ -247,6 +257,13 @@ function lcSweep_() {
         rows.push(Object.assign(r, { _row: lcSheet_().getLastRow(), _new: true }));
       });
 
+    // งานลบที่ค้างจากก่อนเปิด LC_AUTO_REMOVE: ปิดให้เลย (แจ้งลบไปแล้วตอนนั้น)
+    if (LC_AUTO_REMOVE) rows.forEach(r => {
+      if (String(r.status) !== 'remove') return;
+      Object.assign(r, { status: 'removed', removedAt: now, removedBy: 'ระบบ (อัตโนมัติ)' });
+      lcWrite_(r);
+    });
+
     // 3) งานที่ต้องแจ้งแอดมิน (ครั้งแรก และเตือนซ้ำ 1 ครั้งถ้าค้างนาน)
     rows.forEach(r => {
       const sent = String(r.notified || '').split(',').filter(String);
@@ -271,6 +288,11 @@ function lcSweep_() {
     });
   });
 
+  if (autoGone.length) {
+    const text = '🗑 ระบบปิดรหัสล็อบบี้ให้แล้ว · อย่าลืมลบรหัสที่กลอนด้วย\n' +
+      autoGone.map(x => '• ช่อง ' + x.slot + ' (รหัส ' + x.pin + ') · ' + x.room + ' · ' + x.guest + ' · ' + x.why).join('\n');
+    try { linePushAdmins_([{ type: 'text', text: text.slice(0, 4900) }]); } catch (e) { console.error('LINE lobby auto remove: ' + e); }
+  }
   if (toAdmin.length) {
     const cards = toAdmin.map(x => lcAdminCard_(x.r, x.key, x.arrival));
     for (let i = 0; i < cards.length; i += 5) {
