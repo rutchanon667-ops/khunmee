@@ -28,6 +28,24 @@ th{font-weight:600;text-align:left}
  .side::-webkit-scrollbar{display:none}
  .side a{white-space:nowrap;flex:0 0 auto;border:1px solid #DED4C1}
 }
+.adm-hint{display:none}
+@media (max-width:600px){
+ /* ปัดซ้าย-ขวาบนมือถือ */
+ .adm-sw{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;align-items:flex-start;overflow-x:auto !important;overflow-y:hidden !important;max-height:none !important;scroll-snap-type:x mandatory;gap:10px !important;margin-left:-14px !important;margin-right:-14px !important;padding:0 14px 8px !important;scroll-padding:0 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+ .adm-sw::-webkit-scrollbar{display:none}
+ .adm-sw>*{flex:0 0 86% !important;min-width:0;scroll-snap-align:start;box-sizing:border-box;margin:0 !important}
+ .adm-sw-2>*{flex-basis:46% !important;align-self:stretch}
+ .adm-sw-3>*{flex-basis:74% !important}
+ .adm-cards>*{background:#FFFDF9;border:1px solid #E2D8C6 !important;border-radius:14px;padding:12px !important}
+ .adm-chips{flex-wrap:nowrap !important;overflow-x:auto;margin-left:-14px;margin-right:-14px;padding:0 14px 4px;scrollbar-width:none}
+ .adm-chips::-webkit-scrollbar{display:none}
+ .adm-chips>*{flex:0 0 auto;white-space:nowrap}
+ .adm-hint{display:block;margin:0 0 6px;text-align:right;font-size:12px;color:#7D6043}
+ /* การ์ดการจองและการ์ดห้อง: ปัดทีละใบ */
+ .km-btable tbody,.km-ptable tbody{flex-direction:row !important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px !important;margin:0 -14px;padding:0 14px 8px;scroll-padding:0 14px;scrollbar-width:none;align-items:flex-start;overscroll-behavior-x:contain}
+ .km-btable tbody::-webkit-scrollbar,.km-ptable tbody::-webkit-scrollbar{display:none}
+ .km-btable tr,.km-ptable tr{flex:0 0 86%;min-width:0;box-sizing:border-box;scroll-snap-align:start}
+}
 @media (max-width:600px){
  .ph-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important}
  .ph-grid li>div{padding:6px !important;gap:4px !important}
@@ -148,7 +166,7 @@ Khun Mee · หลังบ้าน</a>
 <template data-sc="if" value="{{toast}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; background: #3A352F; color: #F6F3EE; border-radius: 11px; padding: 12px 14px; font-size: 14px">{{toast}}</p></template>
 
 <!-- KPIs -->
-<div class="kpis" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<div class="kpis adm-sw adm-sw-2" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
 <template data-sc="for" list="{{kpis}}" as="k" hint-placeholder-count="4">
 <button type="button" class="kpi-btn" onClick="{{k.go}}" aria-label="{{k.aria}}" style="display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; height: 100%; width: 100%; text-align: left; font: inherit; color: inherit; border: 0; background: #F6F3EE; border-radius: 18px; padding: 20px 24px; cursor: pointer">
 <span style="display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; color: #5E554C">{{k.label}}<span aria-hidden="true" style="color: #A1805D; font-size: 16px">›</span></span>
@@ -169,13 +187,13 @@ Khun Mee · หลังบ้าน</a>
 <button type="button" onClick="{{clearAll}}" disabled="{{noNotes}}" style="background: transparent; border: 1px solid #B5443F; color: #B5443F; font-size: 14px; padding: 8px 14px; min-height: 40px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>{{clearLabel}}</button>
 </div>
 </div>
-<div role="group" aria-label="กรองการแจ้งเตือน" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
+<div role="group" aria-label="กรองการแจ้งเตือน" class="adm-chips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
 <template data-sc="for" list="{{nFilters}}" as="nf" hint-placeholder-count="4">
 <button type="button" onClick="{{nf.pick}}" aria-pressed="{{nf.on}}" style="{{nf.style}}">{{nf.label}}</button>
 </template>
 </div>
 <template data-sc="if" value="{{noNotes}}" hint-placeholder-val="{{ false }}"><p style="margin: 20px 0 4px; text-align: center; font-size: 14px; color: #7A6E63">ไม่มีการแจ้งเตือน</p></template>
-<ul id="notify-list" style="{{notifyBox}}">
+<ul id="notify-list" class="adm-sw adm-cards" style="{{notifyBox}}">
 <template data-sc="for" list="{{notes}}" as="n" hint-placeholder-count="5">
 <li style="{{n.liStyle}}">
 <button type="button" onClick="{{n.open}}" aria-label="{{n.openLabel}}" class="km-note" style="flex: 1 1 auto; min-width: 0; display: flex; gap: 14px; align-items: flex-start; text-align: left; background: transparent; border: 0; padding: 12px 6px 12px 10px; color: inherit; font: inherit; cursor: pointer; border-radius: 12px">
@@ -209,7 +227,7 @@ Khun Mee · หลังบ้าน</a>
 <button type="button" onClick="{{testLine}}" disabled="{{lineBtnDisabled}}" style="{{lineBtnStyle}}">ทดสอบส่ง LINE</button>
 </div>
 <template data-sc="if" value="{{autoOff}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; margin-top: 8px; font-size: 14px; color: #9A4E60"><span style="flex: 1 1 200px">ยังไม่ได้เปิดการแจ้งเตือนเช็คอินอัตโนมัติรายวัน</span><button type="button" onClick="{{enableAuto}}" style="flex: 0 0 auto; border-radius: 9999px; padding: 8px 14px; font-size: 13px; border: 0; background: #47413A; color: #F6F3EE">เปิดใช้งาน</button></div></template>
-<ul style="list-style: none; margin: 12px 0 0; padding: 0">
+<ul class="adm-sw adm-cards" style="list-style: none; margin: 12px 0 0; padding: 0">
 <template data-sc="for" list="{{reminders}}" as="r" hint-placeholder-count="3">
 <li style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid #E6DDCB">
 <div style="width: 56px; flex: 0 0 56px; text-align: center; background: #3E6A9E; color: #F6F3EE; border-radius: 11px; padding: 6px 0">
@@ -236,7 +254,7 @@ Khun Mee · หลังบ้าน</a>
 <p style="margin: 0; font-size: 13px; color: #7A6E63">ตั้งรหัสในกลอนล็อบบี้และตู้เซฟก่อน แล้วค่อยกดยืนยันที่นี่</p>
 </div>
 <template data-sc="if" value="{{lbMsg}}" hint-placeholder-val="{{ false }}"><p style="margin: 14px 0 0; font-size: 14px; color: #7A6E63; background: #EDE6D7; border-radius: 11px; padding: 12px 14px">{{lbMsg}}</p></template>
-<ul style="list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px">
+<ul class="adm-sw" style="list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px">
 <template data-sc="for" list="{{lbRows}}" as="r" hint-placeholder-count="3">
 <li style="{{r.cardStyle}}">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
@@ -277,8 +295,9 @@ Khun Mee · หลังบ้าน</a>
 <p style="margin: 10px 0 0; font-size: 12px; color: #7A6E63">{{checkoutNote}}</p>
 <button type="button" class="cal-toggle" onClick="{{toggleCalView}}" style="margin-top: 12px; min-height: 36px; padding: 0 14px; border-radius: 9999px; border: 1px solid #DED4C1; background: #FFFDF9; color: #47413A; font-size: 13px; font-family: inherit">{{calToggleLabel}}</button>
 <div class="cal-agenda" style="margin-top: 14px">
+<p class="adm-hint" aria-hidden="true">ปัดดูวันอื่น ›</p>
 <template data-sc="if" value="{{noAgenda}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0; font-size: 14px; color: #7A6E63">เดือนนี้ยังไม่มีการเช็คอินหรือเช็คเอาท์</p></template>
-<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<ol class="adm-sw adm-sw-3" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
 <template data-sc="for" list="{{agenda}}" as="ad" hint-placeholder-count="4">
 <li id="{{ad.id}}" class="{{ad.cls}}" style="background: #FFFDF9; border: 1px solid #E6DDCB; border-radius: 14px; padding: 12px">
 <p style="margin: 0 0 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px"><span style="{{ad.dStyle}}">{{ad.label}}</span><span style="font-size: 12px; color: #7A6E63">{{ad.stay}}</span></p>
@@ -348,7 +367,7 @@ Khun Mee · หลังบ้าน</a>
 <input type="search" value="{{q}}" onInput="{{setQ}}" placeholder="ค้นหาชื่อ หรือเบอร์โทร" style="border: 0; outline-offset: 4px; font-size: 14px; flex: 1 1 auto; min-width: 0; background: transparent; color: #47413A">
 </label>
 </div>
-<div role="group" aria-label="กรองสถานะ" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
+<div role="group" aria-label="กรองสถานะ" class="adm-chips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
 <template data-sc="for" list="{{bFilters}}" as="bf" hint-placeholder-count="4">
 <button type="button" onClick="{{bf.pick}}" aria-pressed="{{bf.on}}" style="{{bf.style}}">{{bf.label}}</button>
 </template>
@@ -402,7 +421,7 @@ Khun Mee · หลังบ้าน</a>
 </div>
 <template data-sc="if" value="{{sheetUrl}}" hint-placeholder-val="{{ true }}"><a href="{{sheetUrl}}" target="_blank" rel="noopener" style="color: #2F6B45; font-size: 14px; text-decoration: underline">ดูข้อมูลดิบใน Google Sheets ↗</a></template>
 </div>
-<div role="group" aria-label="เลือกช่วงเวลา" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
+<div role="group" aria-label="เลือกช่วงเวลา" class="adm-chips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px">
 <template data-sc="for" list="{{stChips}}" as="c" hint-placeholder-count="5"><button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="{{c.style}}">{{c.label}}</button></template>
 </div>
 <form onSubmit="{{stApply}}" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-top: 14px">
@@ -415,7 +434,7 @@ Khun Mee · หลังบ้าน</a>
 <template data-sc="if" value="{{stErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60">{{stErr}}</p></template>
 <template data-sc="if" value="{{stLoading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 16px 0 0; font-size: 14px; color: #7A6E63">กำลังคำนวณสถิติ…</p></template>
 <template data-sc="if" value="{{stHas}}" hint-placeholder-val="{{ true }}">
-<div class="kpis" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
+<div class="kpis adm-sw adm-sw-2" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
 <template data-sc="for" list="{{stKpis}}" as="k" hint-placeholder-count="8">
 <div style="background: #EDE6D7; border-radius: 14px; padding: 16px 18px">
 <p style="margin: 0; font-size: 13px; color: #5E554C">{{k.label}}</p>
@@ -747,6 +766,7 @@ calFlash: '', calHL: this.loadHL(), linkHover: '', pop: null, notifyMax: '', boo
 /* รูปภาพห้องพัก (Photos.gs) */
 loadPhotos() {
 return kmApi('adminPhotoList', kmToken.get()).then((ph) => {
+if (!ph || !Array.isArray(ph.sets)) throw new Error('ไม่รู้จักคำสั่ง adminPhotoList');
 const set = this.state.phSet && ph.sets.some((g) => g.key === this.state.phSet) ? this.state.phSet : (ph.sets[0] || {}).key;
 this.setState({ ph, phSet: set, phErr: '' });
 }).catch((e) => { if (!this.fail(e)) this.setState({ phErr: e.message }); });
