@@ -1631,18 +1631,24 @@ okStyle: 'min-height: 44px; padding: 0 20px; border: 0; border-radius: 9999px; f
 const h = new Date().getHours();
 const me = s.me || {};
 const lb = s.lobby;
-const lbList = lb ? lb.rows : [];
+const lbToday = this.today(), lbTmr = kmDate.add(lbToday, 1);
+// แสดงเฉพาะเช็คอินวันนี้/พรุ่งนี้ และรหัสที่เลยวันเช็คอินแล้วแต่ยังไม่ได้ตั้ง (แขกจะรับรหัสไม่ได้)
+const lbList = (lb ? lb.rows : []).filter((r) => {
+const ci = String(r.checkIn || '').slice(0, 10);
+if (r.status === 'remove') return false;
+return ci === lbToday || ci === lbTmr || (r.status === 'pending' && ci < lbToday);
+});
 const lbTodo = lbList.filter((r) => r.status !== 'active').length;
 const lbMsg = s.lbErr ? (/ไม่รู้จักคำสั่ง/.test(s.lbErr) ? 'ยังไม่ได้อัปเดต LobbyCode.gs ใน Apps Script (คัดลอกเวอร์ชันล่าสุดแล้ว Deploy เป็นเวอร์ชันใหม่)' : 'โหลดรหัสล็อบบี้ไม่สำเร็จ: ' + s.lbErr)
-: !lb ? '' : !lb.enabled ? 'ระบบรหัสล็อบบี้ปิดอยู่ (LC_ENABLED = false)' : !lbList.length ? 'ยังไม่มีรหัสที่ต้องตั้งหรือลบ ระบบจะสร้างงานให้ 1 วันก่อนแขกเข้าพัก' : '';
+: !lb ? '' : !lb.enabled ? 'ระบบรหัสล็อบบี้ปิดอยู่ (LC_ENABLED = false)' : !lbList.length ? 'ไม่มีแขกเช็คอินวันนี้หรือพรุ่งนี้ · ระบบจะสร้างงานให้ 1 วันก่อนแขกเข้าพัก' : '';
 const lbChip = { pending: 'background: #E9C46A; color: #3A352F;', active: 'background: #DCE8DD; color: #2F5A33;', remove: 'background: #B5443F; color: #FFFFFF;' };
-const lbToday = this.today(), lbTmr = kmDate.add(lbToday, 1);
 const lbRows = lbList.map((r) => {
 const busy = s.acting === 'lb-' + r.id;
 // ป้ายวันเช็คอิน: แสดงเฉพาะเช็คอินวันนี้และพรุ่งนี้
 const ci = String(r.checkIn || '').slice(0, 10);
 const day = ci === lbToday ? ['เช็คอินวันนี้', 'background: #8B5E3C; color: #FFFFFF;']
 : ci === lbTmr ? ['เช็คอินพรุ่งนี้', 'background: #3E6A9E; color: #FFFFFF;']
+: ci < lbToday && r.status === 'pending' ? ['เลยวันเช็คอิน · ยังไม่ตั้งรหัส', 'background: #B5443F; color: #FFFFFF;']
 : ['', ''];
 const own = (s.lbOwn && s.lbOwn[r.id]) || '';
 const setOwnVal = (v) => this.setState({ lbOwn: Object.assign({}, this.state.lbOwn, { [r.id]: v }) });
