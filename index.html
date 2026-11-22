@@ -113,6 +113,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  #map figure{margin-top:20px !important;padding:10px !important}
  #tour{padding-top:48px !important}
  #tour>div:last-child{border-radius:18px !important}
+ .km-tour-sound{top:10px !important;right:10px !important;padding:8px 13px !important;font-size:14px !important}
  #contact{margin-top:56px !important}
  .km-foot{padding:36px 24px 24px !important;gap:24px !important}
 }
@@ -334,7 +335,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <h2 id="h-tour" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ชมบรรยากาศ</h2>
 </div>
 <div style="margin-top: 24px; position: relative; aspect-ratio: 16 / 9; border-radius: 28px; overflow: hidden; background: #3A352F">
-<template data-sc="if" value="{{tour.playing}}" hint-placeholder-val="{{ false }}"><iframe src="{{tour.embed}}" title="วิดีโอชมบรรยากาศ Khun Mee" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe></template>
+<template data-sc="if" value="{{tour.playing}}" hint-placeholder-val="{{ false }}"><iframe id="km-tour-frame" src="{{tour.embed}}" title="วิดีโอชมบรรยากาศ Khun Mee" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe></template>
+<template data-sc="if" value="{{tour.muted}}" hint-placeholder-val="{{ false }}"><button type="button" class="km-tour-sound" onClick="{{tour.unmute}}" aria-label="เปิดเสียงวิดีโอ" style="position: absolute; top: 16px; right: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 0; border-radius: 9999px; background: rgba(255,253,249,.94); color: #3A352F; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.22)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#3A352F"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#3A352F" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>เปิดเสียง</button></template>
 <template data-sc="if" value="{{tour.poster}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{tour.play}}" aria-label="เล่นวิดีโอชมบรรยากาศ" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #3A352F; cursor: pointer">
 <img src="{{tour.thumb}}" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; opacity: .85; display: block">
 <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 84px; height: 84px; border-radius: 9999px; background: rgba(255,253,249,.94); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(0,0,0,.25)"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#3A352F"></path></svg></span>
@@ -427,7 +429,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <script>
 class Component extends DCLogic {
 componentDidMount() {
-window.addEventListener('km-gallery', () => this.setState({ gv: Date.now() }));
+window.addEventListener('km-gallery', () => { this.setState({ gv: Date.now() }); setTimeout(() => this.tourWatch(), 0); });
+setTimeout(() => this.tourWatch(), 0);
 kmApi('publicListRooms').then((rooms) => {
 const prices = {};
 const names = {};
@@ -443,6 +446,30 @@ if (!/^[A-Z0-9]{6,30}$/.test(code)) return this.setState({ lkErr: 'กรุณ�
 if (phone.replace(/[^0-9]/g, '').length < 9) return this.setState({ lkErr: 'กรุณากรอกเบอร์โทรที่ใช้จอง 9–10 หลัก' });
 try { sessionStorage.setItem('km_lookup', JSON.stringify({ code, phone, t: Date.now() })); } catch (e) {}
 location.href = 'booking.html?code=' + encodeURIComponent(code) + '#lookup';
+}
+/* วิดีโอชมบรรยากาศ: เล่นเอง (ปิดเสียง) เมื่อเลื่อนมาถึง และหยุดเมื่อเลื่อนผ่าน · ปิดเล่นอัตโนมัติถ้าผู้ใช้ตั้งลดภาพเคลื่อนไหวหรือประหยัดเน็ต */
+tourWatch() {
+const el = document.getElementById('tour');
+if (!el || el === this._tourEl || !('IntersectionObserver' in window)) return;
+if (this._tourObs) this._tourObs.disconnect();
+this._tourEl = el;
+let noAuto = false;
+try { noAuto = matchMedia('(prefers-reduced-motion: reduce)').matches || !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
+if (noAuto) return;
+this._tourObs = new IntersectionObserver((ents) => {
+const e = ents[ents.length - 1];
+const id = window.kmGallery ? kmGallery.tourId() : '';
+if (!id) return;
+if (e.isIntersecting) {
+if (this.state.tourPlay !== id) this.setState({ tourPlay: id, tourAuto: true, tourMuted: true });
+else this.tourCmd('playVideo');
+} else if (this.state.tourPlay === id) this.tourCmd('pauseVideo');
+}, { threshold: 0.5 });
+this._tourObs.observe(el);
+}
+tourCmd(func, args) {
+const f = document.getElementById('km-tour-frame');
+if (f && f.contentWindow) f.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: args || [] }), '*');
 }
 priceOf(no) {
 const p = (this.state.prices || {})[no];
@@ -484,8 +511,11 @@ map: window.kmGallery ? kmGallery.single('map', 'images/map-khunmee.jpg') : 'ima
 tour: (() => {
 const id = window.kmGallery ? kmGallery.tourId() : '';
 const playing = !!id && this.state.tourPlay === id;
-return { on: !!id, playing, poster: !!id && !playing, thumb: id ? kmGallery.ytThumb(id) : '', embed: id ? kmGallery.ytEmbed(id, true) : '',
-play: () => this.setState({ tourPlay: id }) };
+const auto = playing && !!this.state.tourAuto;
+const embed = !id ? '' : kmGallery.ytEmbed(id, true) + '&enablejsapi=1' + (auto ? '&mute=1&loop=1&playlist=' + id : '');
+return { on: !!id, playing, poster: !!id && !playing, thumb: id ? kmGallery.ytThumb(id) : '', embed, muted: auto && !!this.state.tourMuted,
+play: () => this.setState({ tourPlay: id, tourAuto: false, tourMuted: false }),
+unmute: () => { this.tourCmd('unMute'); this.tourCmd('setVolume', [100]); this.tourCmd('playVideo'); this.setState({ tourMuted: false }); } };
 })(),
 livingCount: (window.kmGallery ? kmGallery.living() : ((window.KM_CONFIG || {}).LIVING_GALLERY || [])).length || 1,
 liv: (() => {
