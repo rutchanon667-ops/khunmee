@@ -19,16 +19,16 @@
   for (var i = 0; i < BASE; i++) all.push(d(i));
   var paths = '', grads = '';
   for (var k = 0; k < BEAMS; k++) {
-    var durN = rnd() * 8 + 8, dur = durN.toFixed(1) + 's', begin = (-rnd() * durN).toFixed(1) + 's', y2 = (78 + rnd() * 10).toFixed(1) + '%';
+    var dur = (rnd() * 10 + 10).toFixed(1) + 's', begin = (rnd() * 10).toFixed(1) + 's', y2 = (93 + rnd() * 8).toFixed(1) + '%';
     var an = function (att, vals) {
       return '<animate attributeName="' + att + '" values="' + vals + '" dur="' + dur + '" begin="' + begin +
         '" repeatCount="indefinite" calcMode="spline" keyTimes="0;1" keySplines="0.42 0 0.58 1"/>';
     };
     grads += '<linearGradient id="kmb' + k + '" x1="0%" x2="0%" y1="0%" y2="0%">' +
-      an('x1', '0%;100%') + an('x2', '0%;86%') + an('y1', '0%;100%') + an('y2', '0%;' + y2) +
-      '<stop stop-color="#B8733F" stop-opacity="0"/><stop stop-color="#B8733F"/>' +
+      an('x1', '0%;100%') + an('x2', '0%;95%') + an('y1', '0%;100%') + an('y2', '0%;' + y2) +
+      '<stop stop-color="#C98B5B" stop-opacity="0"/><stop stop-color="#C98B5B"/>' +
       '<stop offset="32.5%" stop-color="#A1805D"/><stop offset="100%" stop-color="#DCC881" stop-opacity="0"/></linearGradient>';
-    paths += '<path d="' + all[k] + '" stroke="url(#kmb' + k + ')" stroke-opacity="0.7" stroke-width="1.5" vector-effect="non-scaling-stroke"/>';
+    paths += '<path d="' + all[k] + '" stroke="url(#kmb' + k + ')" stroke-opacity="0.4" stroke-width="1.2" vector-effect="non-scaling-stroke"/>';
   }
   var svg = '<svg xmlns="' + NS + '" class="km-beams" aria-hidden="true" focusable="false" viewBox="0 0 696 316" preserveAspectRatio="xMidYMid slice" fill="none">' +
     '<path d="' + all.join('') + '" stroke="url(#kmbR)" stroke-opacity="0.09" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
