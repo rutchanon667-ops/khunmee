@@ -6,7 +6,11 @@
   if (window.__kmBeams) return;
   window.__kmBeams = true;
   var NS = 'http://www.w3.org/2000/svg';
-  var BEAMS = 50, BASE = 58;
+  var BASE = 58;
+  var small = false;
+  try { small = matchMedia('(max-width: 900px), (pointer: coarse)').matches; } catch (e) {}
+  // มือถือ/แท็บเล็ต: แสงวิ่ง 18 เส้น (จอคอม 50) ลดงานวาดให้เลื่อนหน้าลื่น
+  var BEAMS = small ? 18 : 50;
   var seed = 7;
   function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
   function d(i) {
@@ -40,7 +44,10 @@
   var css = document.createElement('style');
   css.textContent =
     '.km-beams{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;z-index:0;pointer-events:none}' +
+    '.km-beams{contain:strict;transform:translateZ(0)}' +
     '#app{position:relative;z-index:1}' +
+    // มือถือ: แถบเมนูไม่เบลอพื้นหลัง (การเบลอทับลำแสงที่ขยับทำให้กระตุก)
+    '@media (max-width:900px),(pointer:coarse){.km-bar2{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(237,230,215,.97)!important}}' +
     '@media (prefers-reduced-motion:reduce){.km-beams-run{display:none}}' +
     '@media print{.km-beams{display:none}}';
   function add() {
@@ -48,7 +55,19 @@
     document.head.appendChild(css);
     var box = document.createElement('div');
     box.innerHTML = svg;
-    document.body.insertBefore(box.firstChild, document.body.firstChild);
+    var el = box.firstChild;
+    document.body.insertBefore(el, document.body.firstChild);
+    // หยุดแสงชั่วคราวระหว่างเลื่อนหน้า/ปัด แล้ววิ่งต่อเมื่อหยุดเลื่อน (เลื่อนลื่นขึ้นบนมือถือ)
+    if (small && el.pauseAnimations) {
+      var t = 0, paused = false;
+      var idle = function () { paused = false; try { el.unpauseAnimations(); } catch (e) {} };
+      var busy = function () {
+        if (!paused) { paused = true; try { el.pauseAnimations(); } catch (e) {} }
+        clearTimeout(t); t = setTimeout(idle, 250);
+      };
+      window.addEventListener('scroll', busy, { passive: true });
+      window.addEventListener('touchmove', busy, { passive: true });
+    }
   }
   if (document.body) add(); else document.addEventListener('DOMContentLoaded', add);
 })();
