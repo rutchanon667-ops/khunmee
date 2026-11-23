@@ -458,7 +458,7 @@ location.href = 'booking.html?code=' + encodeURIComponent(code) + '#lookup';
 }
 /* วิดีโอชมบรรยากาศ: เปิดหน้าแรกแล้วเล่นเองพร้อมเสียง (ถ้าเบราว์เซอร์ไม่ยอมเล่นพร้อมเสียง จะเล่นแบบปิดเสียงก่อน
  * แล้วเปิดเสียงให้ทันทีที่ผู้ใช้แตะ/คลิกหน้าเว็บครั้งแรก หรือกดปุ่ม "เปิดเสียง") · เลื่อนผ่านแล้วหยุดเอง กลับมาแล้วเล่นต่อ
- * ปิดเล่นอัตโนมัติถ้าผู้ใช้ตั้งลดภาพเคลื่อนไหวหรือประหยัดเน็ต */
+ * ปิดเล่นอัตโนมัติเฉพาะโหมดประหยัดเน็ต (ไม่ใช้ค่า "ลดภาพเคลื่อนไหว" เพราะ Windows ที่ปิดเอฟเฟกต์ภาพจะส่งค่านี้มา ทำให้วิดีโอไม่เล่น) */
 tourListen() {
 if (this._ytL) return;
 this._ytL = true;
@@ -509,7 +509,7 @@ if (!el || el === this._tourEl || !('IntersectionObserver' in window)) return;
 if (this._tourObs) this._tourObs.disconnect();
 this._tourEl = el;
 let noAuto = false;
-try { noAuto = matchMedia('(prefers-reduced-motion: reduce)').matches || !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
+try { noAuto = !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
 if (noAuto) return;
 this.tourListen();
 this._tourObs = new IntersectionObserver((ents) => {
