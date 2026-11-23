@@ -106,9 +106,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  .km-quote-box{min-height:300px !important}
  section[aria-label="คำพูดจากเจ้าของบ้าน"]{margin-top:40px !important}
  #map figure{margin-top:20px !important;padding:10px !important}
- #tour{padding-top:20px !important}
+ #tour{padding-top:0 !important}
  #tour+#top{padding-top:24px !important}
- #tour>div:last-child{border-radius:18px !important}
  .km-tour-sound{top:10px !important;right:10px !important;padding:8px 13px !important;font-size:14px !important}
  #contact{margin-top:56px !important}
  .km-foot{padding:36px 24px 24px !important;gap:24px !important}
@@ -171,8 +170,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <main>
 <template data-sc="if" value="{{tour.on}}" hint-placeholder-val="{{ false }}">
-<section id="tour" aria-label="วิดีโอชมบรรยากาศ" style="max-width: 1240px; margin: 0 auto; padding: 40px 24px 0">
-<div style="position: relative; aspect-ratio: 16 / 9; border-radius: 28px; overflow: hidden; background: #3A352F">
+<section id="tour" aria-label="วิดีโอชมบรรยากาศ" style="margin: 0; padding: 0">
+<div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #3A352F">
 <template data-sc="if" value="{{tour.playing}}" hint-placeholder-val="{{ false }}"><iframe id="km-tour-frame" src="{{tour.embed}}" title="วิดีโอชมบรรยากาศ Khun Mee" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe></template>
 <template data-sc="if" value="{{tour.muted}}" hint-placeholder-val="{{ false }}"><button type="button" class="km-tour-sound" onClick="{{tour.unmute}}" aria-label="เปิดเสียงวิดีโอ" style="position: absolute; top: 16px; right: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 0; border-radius: 9999px; background: rgba(255,253,249,.94); color: #3A352F; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.22)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#3A352F"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#3A352F" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>เปิดเสียง</button></template>
 <template data-sc="if" value="{{tour.poster}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{tour.play}}" aria-label="เล่นวิดีโอชมบรรยากาศ" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #3A352F; cursor: pointer">
@@ -457,7 +456,41 @@ if (phone.replace(/[^0-9]/g, '').length < 9) return this.setState({ lkErr: 'ก�
 try { sessionStorage.setItem('km_lookup', JSON.stringify({ code, phone, t: Date.now() })); } catch (e) {}
 location.href = 'booking.html?code=' + encodeURIComponent(code) + '#lookup';
 }
-/* วิดีโอชมบรรยากาศ: เล่นเอง (ปิดเสียง) เมื่อเลื่อนมาถึง และหยุดเมื่อเลื่อนผ่าน · ปิดเล่นอัตโนมัติถ้าผู้ใช้ตั้งลดภาพเคลื่อนไหวหรือประหยัดเน็ต */
+/* วิดีโอชมบรรยากาศ: เปิดหน้าแรกแล้วเล่นเองพร้อมเสียง (ถ้าเบราว์เซอร์ไม่ยอมเล่นพร้อมเสียง จะเล่นแบบปิดเสียงก่อน
+ * แล้วเปิดเสียงให้ทันทีที่ผู้ใช้แตะ/คลิกหน้าเว็บครั้งแรก หรือกดปุ่ม "เปิดเสียง") · เลื่อนผ่านแล้วหยุดเอง กลับมาแล้วเล่นต่อ
+ * ปิดเล่นอัตโนมัติถ้าผู้ใช้ตั้งลดภาพเคลื่อนไหวหรือประหยัดเน็ต */
+tourListen() {
+if (this._ytL) return;
+this._ytL = true;
+window.addEventListener('message', (ev) => {
+if (!/youtube(-nocookie)?\.com$/.test(String(ev.origin).replace(/^https?:\/\//, ''))) return;
+let d = null; try { d = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data; } catch (e) { return; }
+const info = d && (d.info || {});
+if (d && d.event === 'onStateChange' && typeof d.info === 'number') this._ytState = d.info;
+if (info && typeof info.playerState === 'number') this._ytState = info.playerState;
+if (info && typeof info.muted === 'boolean') this._ytMuted = info.muted;
+});
+// แตะ/คลิกหน้าเว็บครั้งแรก: เปิดเสียงวิดีโอที่ถูกบังคับปิดเสียงไว้
+const wake = () => { if (this.state.tourMuted && this._tourVisible) this.tourUnmute(); };
+['pointerup', 'keydown', 'touchend'].forEach((t) => document.addEventListener(t, wake, { passive: true }));
+}
+tourFrameReady() {
+const f = document.getElementById('km-tour-frame');
+if (!f || f._kmReady) return;
+f._kmReady = true;
+const hello = () => { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'km-tour', channel: 'widget' }), '*'); } catch (e) {} };
+f.addEventListener('load', () => {
+hello(); setTimeout(hello, 400);
+this.tourCmd('setPlaybackQuality', ['highres']);
+// ตรวจว่าเล่นพร้อมเสียงได้ไหม: ไม่เล่น หรือถูกปิดเสียง → เล่นแบบปิดเสียงและแสดงปุ่ม "เปิดเสียง"
+setTimeout(() => {
+if (!this._tourVisible) return;
+if (this._ytState !== 1) { this.tourCmd('mute'); this.tourCmd('playVideo'); this.setState({ tourMuted: true }); }
+else if (this._ytMuted) this.setState({ tourMuted: true });
+}, 1800);
+});
+}
+tourUnmute() { this.tourCmd('unMute'); this.tourCmd('setVolume', [100]); this.tourCmd('playVideo'); this.setState({ tourMuted: false }); }
 tourWatch() {
 const el = document.getElementById('tour');
 if (!el || el === this._tourEl || !('IntersectionObserver' in window)) return;
@@ -466,12 +499,14 @@ this._tourEl = el;
 let noAuto = false;
 try { noAuto = matchMedia('(prefers-reduced-motion: reduce)').matches || !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
 if (noAuto) return;
+this.tourListen();
 this._tourObs = new IntersectionObserver((ents) => {
 const e = ents[ents.length - 1];
 const id = window.kmGallery ? kmGallery.tourId() : '';
 if (!id) return;
+this._tourVisible = e.isIntersecting;
 if (e.isIntersecting) {
-if (this.state.tourPlay !== id) this.setState({ tourPlay: id, tourAuto: true, tourMuted: true });
+if (this.state.tourPlay !== id) this.setState({ tourPlay: id, tourAuto: true, tourMuted: false }, () => this.tourFrameReady());
 else this.tourCmd('playVideo');
 } else if (this.state.tourPlay === id) this.tourCmd('pauseVideo');
 }, { threshold: 0.5 });
@@ -522,10 +557,10 @@ tour: (() => {
 const id = window.kmGallery ? kmGallery.tourId() : '';
 const playing = !!id && this.state.tourPlay === id;
 const auto = playing && !!this.state.tourAuto;
-const embed = !id ? '' : kmGallery.ytEmbed(id, true) + '&enablejsapi=1' + (auto ? '&mute=1&loop=1&playlist=' + id : '');
+const embed = !id ? '' : kmGallery.ytEmbed(id, true) + '&enablejsapi=1&vq=hd1080&origin=' + encodeURIComponent(location.origin) + (auto ? '&loop=1&playlist=' + id : '');
 return { on: !!id, playing, poster: !!id && !playing, thumb: id ? kmGallery.ytThumb(id) : '', embed, muted: auto && !!this.state.tourMuted,
 play: () => this.setState({ tourPlay: id, tourAuto: false, tourMuted: false }),
-unmute: () => { this.tourCmd('unMute'); this.tourCmd('setVolume', [100]); this.tourCmd('playVideo'); this.setState({ tourMuted: false }); } };
+unmute: () => this.tourUnmute() };
 })(),
 livingCount: (window.kmGallery ? kmGallery.living() : ((window.KM_CONFIG || {}).LIVING_GALLERY || [])).length || 1,
 livStrip: (() => {
