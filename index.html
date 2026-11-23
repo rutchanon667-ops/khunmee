@@ -64,7 +64,6 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  .km-hero-img{min-height:320px !important}
  .km-rooms{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .km-pets{grid-template-columns:minmax(0,1fr) !important}
- .km-living{grid-template-columns:minmax(0,1fr) !important}
  .km-foot{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
  .km-h1{font-size:40px !important}
  .km-h2{font-size:30px !important}
@@ -104,10 +103,6 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  #map{padding-top:56px !important}
  #pets{margin-top:40px !important}
  #pets .km-pets{gap:24px !important}
- .km-liv-main{min-height:220px !important;max-height:260px}
- .km-liv-card{padding:22px !important}
- .km-liv-pair{gap:12px !important}
- .km-liv-pair img{min-height:130px !important;max-height:150px}
  .km-quote-box{min-height:300px !important}
  section[aria-label="คำพูดจากเจ้าของบ้าน"]{margin-top:40px !important}
  #map figure{margin-top:20px !important;padding:10px !important}
@@ -125,6 +120,15 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  .km-lookup input{font-size:15px !important;padding:0 10px !important;letter-spacing:0 !important}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* แกลเลอรีพื้นที่ส่วนกลาง: จอคอมชี้เมาส์ให้รูปขยาย · มือถือแตะเพื่อขยาย แตะซ้ำเพื่อดูเต็มจอ */
+.km-strip{margin-top:32px;display:flex;gap:8px;height:400px}
+.km-strip-i{position:relative;flex:1 1 0;min-width:0;padding:0;border:0;border-radius:18px;overflow:hidden;background:#E2D8C6;cursor:pointer;transition:flex-grow .5s ease}
+.km-strip-i img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.km-strip-i:focus-visible{flex-grow:5}
+@media (hover:hover){.km-strip-i:hover{flex-grow:5}}
+@media (hover:none){.km-strip-i.on{flex-grow:7}}
+@media (max-width:600px){.km-strip{height:280px;gap:6px;margin-top:24px}.km-strip-i{border-radius:14px}}
+@media (prefers-reduced-motion:reduce){.km-strip-i{transition:none}}
 </style>
 </head>
 <body>
@@ -324,19 +328,18 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </section>
 
 <section id="living" aria-labelledby="h-living" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 24px">
-<div class="km-living" style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; align-items: stretch">
-<button type="button" class="km-zoom" data-gallery="living" data-src="{{liv.a.src}}" data-title="พื้นที่ส่วนกลาง" aria-label="ดูรูปพื้นที่ส่วนกลางขนาดใหญ่ ({{livingCount}} รูป)" style="height: 100%; border-radius: 28px; overflow: hidden"><img class="km-liv-main" src="{{liv.a.src}}" alt="{{liv.a.alt}}" style="width: 100%; height: 100%; min-height: 420px; object-fit: cover; border-radius: 28px; display: block"><span class="km-zoom-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>ดูรูปทั้งหมด {{livingCount}} รูป</span></button>
-<div style="display: flex; flex-direction: column; gap: 20px">
-<div class="km-liv-card" style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 28px; padding: 32px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
 <p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1.5px">RECEPTION &amp; LIVING</p>
-<h2 id="h-living" class="km-serif km-h2" style="margin: 0; font-size: 34px; font-weight: 700; line-height: 1.35">ห้องนั่งเล่นที่ทุกคนใช้ร่วมกัน</h2>
-<p style="margin: 0; font-size: 16px; font-weight: 300; line-height: 1.7; color: #5E554C">ครัวเคาน์เตอร์ไม้ มุมนั่งเล่นโซฟาผ้าลินิน และบล็อกแก้วที่ให้แสงธรรมชาติตลอดวัน</p>
+<h2 id="h-living" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ห้องนั่งเล่นที่ทุกคน<span style="white-space: nowrap">ใช้ร่วมกัน</span></h2>
+<p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.7; color: #5E554C">ครัวเคาน์เตอร์ไม้ มุมนั่งเล่นโซฟาผ้าลินิน และบล็อกแก้วที่ให้แสงธรรมชาติตลอดวัน</p>
 </div>
-<div class="km-liv-pair" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; flex-grow: 1">
-<button type="button" class="km-zoom" data-gallery="living" data-src="{{liv.b.src}}" data-title="พื้นที่ส่วนกลาง" aria-label="ดูรูป{{liv.b.alt}}ขนาดใหญ่" style="height: 100%; border-radius: 22px; overflow: hidden"><img src="{{liv.b.src}}" alt="{{liv.b.alt}}" style="width: 100%; height: 100%; min-height: 180px; object-fit: cover; border-radius: 22px; display: block"></button>
-<button type="button" class="km-zoom" data-gallery="living" data-src="{{liv.c.src}}" data-title="พื้นที่ส่วนกลาง" aria-label="ดูรูป{{liv.c.alt}}ขนาดใหญ่" style="height: 100%; border-radius: 22px; overflow: hidden"><img src="{{liv.c.src}}" alt="{{liv.c.alt}}" style="width: 100%; height: 100%; min-height: 180px; object-fit: cover; border-radius: 22px; display: block"></button>
+<a href="#living" data-gallery="living" data-title="พื้นที่ส่วนกลาง" style="font-size: 15px; font-weight: 600; color: #7D6043">ดูรูปทั้งหมด {{livingCount}} รูป ›</a>
 </div>
-</div>
+<div class="km-strip" role="list" aria-label="รูปพื้นที่ส่วนกลาง">
+<template data-sc="for" list="{{livStrip}}" as="ph" hint-placeholder-count="6">
+<button type="button" role="listitem" class="{{ph.cls}}" data-strip="{{ph.i}}" data-gallery="living" data-src="{{ph.src}}" data-title="พื้นที่ส่วนกลาง" aria-label="ดูรูป{{ph.alt}}ขนาดใหญ่"><img src="{{ph.src}}" alt="{{ph.alt}}" loading="lazy"></button>
+</template>
 </div>
 </section>
 
@@ -426,6 +429,16 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 class Component extends DCLogic {
 componentDidMount() {
 window.addEventListener('km-gallery', () => { this.setState({ gv: Date.now() }); setTimeout(() => this.tourWatch(), 0); });
+/* มือถือ: แตะรูปที่ยังไม่ขยายในแกลเลอรีพื้นที่ส่วนกลาง = ขยายรูปนั้นก่อน (ไม่เปิดเต็มจอ) */
+document.addEventListener('click', (e) => {
+const b = e.target.closest && e.target.closest('.km-strip-i');
+if (!b || b.classList.contains('on')) return;
+let touch = false;
+try { touch = matchMedia('(hover: none)').matches; } catch (_) {}
+if (!touch) return;
+e.preventDefault(); e.stopPropagation();
+this.setState({ livOn: Number(b.getAttribute('data-strip')) || 0 });
+}, true);
 setTimeout(() => this.tourWatch(), 0);
 kmApi('publicListRooms').then((rooms) => {
 const prices = {};
@@ -514,12 +527,11 @@ play: () => this.setState({ tourPlay: id, tourAuto: false, tourMuted: false }),
 unmute: () => { this.tourCmd('unMute'); this.tourCmd('setVolume', [100]); this.tourCmd('playVideo'); this.setState({ tourMuted: false }); } };
 })(),
 livingCount: (window.kmGallery ? kmGallery.living() : ((window.KM_CONFIG || {}).LIVING_GALLERY || [])).length || 1,
-liv: (() => {
-const ALT = { 'images/reception-1.jpg': 'โถงต้อนรับผนังหินขัดกรอบไม้ และเคาน์เตอร์ไม้', 'images/reception-3.jpg': 'เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์', 'images/bathroom-1.jpg': 'ห้องน้ำพร้อมเรนชาวเวอร์และกระจกส่องหน้า' };
-const D = ['images/reception-1.jpg', 'images/reception-3.jpg', 'images/bathroom-1.jpg'];
-const L = window.kmGallery ? kmGallery.living() : [];
-const pick = (i) => { const src = L.length ? L[i % L.length] : D[i]; return { src, alt: ALT[src] || 'พื้นที่ส่วนกลาง' }; };
-return { a: pick(0), b: pick(1), c: pick(2) };
+livStrip: (() => {
+const ALT = { 'images/reception-1.jpg': 'โถงต้อนรับผนังหินขัดกรอบไม้ และเคาน์เตอร์ไม้', 'images/reception-2.jpg': 'มุมนั่งเล่นโซฟาผ้าลินิน', 'images/reception-3.jpg': 'เคาน์เตอร์ครัวไม้โค้งพร้อมเก้าอี้บาร์', 'images/reception-4.jpg': 'พื้นที่ส่วนกลาง', 'images/bathroom-1.jpg': 'ห้องน้ำพร้อมเรนชาวเวอร์และกระจกส่องหน้า', 'images/bathroom-2.jpg': 'ห้องน้ำ' };
+const L = (window.kmGallery ? kmGallery.living() : ((window.KM_CONFIG || {}).LIVING_GALLERY || [])).filter((x) => !/^yt:/.test(String(x))).slice(0, 8);
+const on = Math.min(this.state.livOn || 0, Math.max(0, L.length - 1));
+return L.map((src, i) => ({ i: String(i), src, alt: ALT[src] || 'พื้นที่ส่วนกลาง', cls: 'km-strip-i' + (i === on ? ' on' : '') }));
 })(),
 rooms: [
 { code: 'ROOM 01', name: 'ห้องโชจิ', img: 'images/room-shoji.jpg', alt: 'ห้องโชจิ หัวเตียงลายตารางแบบประตูโชจิ', desc: 'หัวเตียงลายตารางแบบบานโชจิ ม้านั่งปลายเตียง และมุมเก้าอี้อ่านหนังสือ' },
