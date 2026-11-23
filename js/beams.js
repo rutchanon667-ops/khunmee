@@ -35,7 +35,8 @@
     paths += '<path d="' + all[k] + '" stroke="url(#kmb' + k + ')" stroke-opacity="0.4" stroke-width="1.2" vector-effect="non-scaling-stroke"/>';
   }
   var svg = '<svg xmlns="' + NS + '" class="km-beams" aria-hidden="true" focusable="false" viewBox="0 0 696 316" preserveAspectRatio="xMidYMid slice" fill="none">' +
-    '<path d="' + all.join('') + '" stroke="url(#kmbR)" stroke-opacity="0.09" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+    // เส้นนิ่ง: จอคอมจางลงด้านล่างแบบต้นฉบับ · มือถือ (จอแนวตั้ง) สีเท่ากันทั้งจอ ให้เห็นเส้นถึงด้านล่าง
+    '<path d="' + all.join('') + '" stroke="' + (small ? '#A1805D' : 'url(#kmbR)') + '" stroke-opacity="' + (small ? '0.08' : '0.09') + '" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
     '<g class="km-beams-run">' + paths + '</g><defs>' + grads +
     '<radialGradient id="kmbR" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(352 34) rotate(90) scale(555 1560.62)">' +
     '<stop offset="0.0667" stop-color="#A1805D"/><stop offset="0.2432" stop-color="#A1805D"/><stop offset="0.4359" stop-color="#A1805D" stop-opacity="0"/></radialGradient>' +
