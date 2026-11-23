@@ -469,6 +469,7 @@ const info = d && (d.info || {});
 if (d && d.event === 'onStateChange' && typeof d.info === 'number') this._ytState = d.info;
 if (info && typeof info.playerState === 'number') this._ytState = info.playerState;
 if (info && typeof info.muted === 'boolean') this._ytMuted = info.muted;
+if (d && !this._ytReady && /^(onReady|initialDelivery|infoDelivery)$/.test(d.event || '')) { this._ytReady = true; if (this._ytOnReady) this._ytOnReady(); }
 });
 // แตะ/คลิกหน้าเว็บครั้งแรก: เปิดเสียงวิดีโอที่ถูกบังคับปิดเสียงไว้
 const wake = () => { if (this.state.tourMuted && this._tourVisible) this.tourUnmute(); };
@@ -478,16 +479,27 @@ tourFrameReady() {
 const f = document.getElementById('km-tour-frame');
 if (!f || f._kmReady) return;
 f._kmReady = true;
+this._ytReady = false; this._ytState = undefined; this._ytMuted = undefined;
 const hello = () => { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'km-tour', channel: 'widget' }), '*'); } catch (e) {} };
-f.addEventListener('load', () => {
-hello(); setTimeout(hello, 400);
+// เบราว์เซอร์ไม่ยอมเล่นพร้อมเสียง → เล่นแบบปิดเสียงและแสดงปุ่ม "เปิดเสียง"
+const fallback = () => {
+if (!this._tourVisible || this._ytState === 1) { if (this._ytState === 1 && this._ytMuted) this.setState({ tourMuted: true }); return; }
+this.tourCmd('mute'); this.tourCmd('playVideo'); this.setState({ tourMuted: true });
+setTimeout(() => { if (this._tourVisible && this._ytState !== 1) this.tourCmd('playVideo'); }, 1500);
+};
+this._ytOnReady = () => {
 this.tourCmd('setPlaybackQuality', ['highres']);
-// ตรวจว่าเล่นพร้อมเสียงได้ไหม: ไม่เล่น หรือถูกปิดเสียง → เล่นแบบปิดเสียงและแสดงปุ่ม "เปิดเสียง"
-setTimeout(() => {
-if (!this._tourVisible) return;
-if (this._ytState !== 1) { this.tourCmd('mute'); this.tourCmd('playVideo'); this.setState({ tourMuted: true }); }
-else if (this._ytMuted) this.setState({ tourMuted: true });
-}, 1800);
+if (this._tourVisible) this.tourCmd('playVideo');
+setTimeout(fallback, 1200);
+};
+f.addEventListener('load', () => {
+// ส่ง listening ซ้ำจนตัวเล่น YouTube พร้อม (ตัวเล่นรับคำสั่งหลังพร้อมเท่านั้น)
+let n = 0;
+clearInterval(this._ytHello);
+this._ytHello = setInterval(() => { if (this._ytReady || ++n > 40) return clearInterval(this._ytHello); hello(); }, 250);
+hello();
+// กันไว้: ไม่มีสัญญาณจาก YouTube เลยภายใน 5 วินาที
+setTimeout(() => { if (!this._ytReady) fallback(); }, 5000);
 });
 }
 tourUnmute() { this.tourCmd('unMute'); this.tourCmd('setVolume', [100]); this.tourCmd('playVideo'); this.setState({ tourMuted: false }); }
