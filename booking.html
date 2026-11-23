@@ -50,6 +50,41 @@ input,select,textarea{font-family:inherit}
 }
 @media (min-width:481px) and (max-width:600px){ #receipt{zoom:.62} }
 .bk-hint{display:none}
+.bk-rshort,.bk-leg-btn,.bk-pick,.bk-rstat,.bk-n2{display:none}
+@media (max-width:600px){.bk-n1{display:none}.bk-n2{display:inline}}
+@media (max-width:600px){
+ /* ขั้นที่ 1 บนมือถือ: แถบห้องย่อติดบนจอ + ปฏิทินกระชับ + สรุปที่แถบล่าง */
+ .bk-roomcard{order:2}
+ .bk-datecard{order:1}
+ .bk-roomcard~[role=alert],.next-row{order:3}
+ .bk-roomcard #h-room{font-size:17px !important}
+ .bk-room-sub{display:none}
+ .rooms4{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important;margin-top:12px !important}
+ .rooms4 .bk-room{padding:6px 6px 10px !important;border-radius:14px !important}
+ .rooms4 .bk-room img{aspect-ratio:1 / 1 !important;border-radius:8px !important}
+ .rooms4 .bk-rname{margin-top:6px !important;font-size:15px !important;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .rooms4 .bk-rprice{display:none !important}
+ .rooms4 .bk-rshort{display:block;font-size:13px;color:#7A6E63;white-space:nowrap}
+ .bk-rstat{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;border-radius:9999px;padding:2px 9px}
+ .st-wait{background:#EDE6D7;color:#7A6E63}.st-ok{background:#DCE8DD;color:#2F5A33}.st-full{background:#F3D6DD;color:#7E3E50}
+ .bk-sel{top:8px !important;left:8px !important;padding:3px !important}
+ .bk-sel-t{display:none}
+ .months button{height:44px !important}
+ .rooms4 .bk-room img{aspect-ratio:4 / 3 !important}
+ .bk-datecard{padding:14px 12px 16px !important}
+ .bk-datecard #h-date{font-size:17px !important}
+ .bk-datecard>div:first-child{align-items:center !important;flex-wrap:nowrap !important;gap:8px !important}
+ .bk-datehint{display:none}
+ .bk-mhint{display:none !important}
+ .months.bk-swipe{margin-top:10px !important}
+ .months h3{margin-bottom:6px !important;font-size:16px !important}
+ .bk-leg-btn{display:inline-flex;margin-top:12px;background:transparent;border:0;padding:6px 0;font-size:13px;color:#7D6043;text-decoration:underline;text-underline-offset:3px}
+ .bk-legend.bk-leg-off{display:none !important}
+ .bk-pick{display:block;flex:1 1 100%;font-size:15px;font-weight:600;color:#3A352F;text-align:center}
+ .bk-holdnote{display:none}
+ .next-row{gap:8px !important}
+ .wrap:has(#h-room) .bk-sum{display:none !important}
+}
 .bk-room:hover{box-shadow:0 4px 14px rgba(58,53,47,.10)}
 .bk-sel{position:absolute;top:18px;left:18px;z-index:1;display:inline-flex;align-items:center;gap:5px;background:#4F7A52;color:#FFFDF9;border-radius:9999px;padding:5px 11px 5px 9px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .bk-pair{display:contents}
@@ -156,35 +191,34 @@ input,select,textarea{font-family:inherit}
 </section>
 </template>
 <template data-sc="if" value="{{doneNote}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 0; display: flex; align-items: center; gap: 10px; background: #E7EFE5; border: 1px solid #A9C2A6; border-radius: 12px; padding: 12px 16px; font-size: 15px; line-height: 1.5; color: #35553A"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 18px"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{doneNote}}</p></template>
-<section aria-labelledby="h-room" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
-<h2 id="h-room" style="margin: 0; font-size: 24px; font-weight: 600">1. เลือกห้องพัก</h2>
-<p style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ทุกห้องพาสัตว์เลี้ยงเข้าพักได้ มีห้องน้ำในตัว</p>
+<section aria-labelledby="h-room" class="card bk-roomcard" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<h2 id="h-room" style="margin: 0; font-size: 24px; font-weight: 600"><span class="bk-n1">1.</span><span class="bk-n2">2.</span> เลือกห้องพัก</h2>
+<p class="bk-room-sub" style="margin: 6px 0 0; font-size: 14px; color: #7A6E63">ทุกห้องพาสัตว์เลี้ยงเข้าพักได้ มีห้องน้ำในตัว</p>
 <template data-sc="if" value="{{loading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 20px 0 0; font-size: 15px; color: #5E554C">กำลังโหลดห้องพักและวันว่าง…</p></template>
 <template data-sc="if" value="{{loadErr}}" hint-placeholder-val="{{ false }}"><div role="alert" style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60"><span style="flex: 1 1 240px">{{loadErr}}</span><button type="button" onClick="{{reload}}" style="background: #47413A; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 8px 16px; font-size: 14px">ลองอีกครั้ง</button></div></template>
-<p class="bk-hint" aria-hidden="true">ปัดดูห้องอื่น ›</p>
-<div class="rooms4 bk-swipe" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
+<div class="rooms4" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
 <template data-sc="for" list="{{rooms}}" as="r" hint-placeholder-count="4">
-<button type="button" class="bk-room" onClick="{{r.pick}}" aria-pressed="{{r.selected}}" style="{{r.style}}">
-<template data-sc="if" value="{{r.selected}}" hint-placeholder-val="{{ false }}"><span class="bk-sel" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>เลือกแล้ว</span></template>
+<button type="button" class="bk-room" onClick="{{r.pick}}" aria-pressed="{{r.selected}}" aria-disabled="{{r.full}}" style="{{r.style}}">
+<template data-sc="if" value="{{r.selected}}" hint-placeholder-val="{{ false }}"><span class="bk-sel" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg><span class="bk-sel-t">เลือกแล้ว</span></span></template>
 <img src="{{r.img}}" alt="" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block">
-<span style="display: block; margin-top: 10px; font-size: 17px; font-weight: 600; color: #47413A">{{r.name}}</span>
-<span style="display: block; margin-top: 2px; font-size: 14px; color: #7A6E63">{{r.priceLabel}}</span>
+<span class="bk-rname" style="display: block; margin-top: 10px; font-size: 17px; font-weight: 600; color: #47413A">{{r.name}}</span>
+<span class="bk-rprice" style="display: block; margin-top: 2px; font-size: 14px; color: #7A6E63">{{r.priceLabel}}</span><span class="bk-rshort">{{r.short}}</span><template data-sc="if" value="{{r.status}}" hint-placeholder-val="{{ false }}"><span class="{{r.stCls}}">{{r.status}}</span></template>
 </button>
 </template>
 </div>
 </section>
 
-<section aria-labelledby="h-date" class="card" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
+<section aria-labelledby="h-date" class="card bk-datecard" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap">
-<h2 id="h-date" style="margin: 0; font-size: 24px; font-weight: 600">2. เลือกวันเข้าพัก</h2>
+<h2 id="h-date" style="margin: 0; font-size: 24px; font-weight: 600"><span class="bk-n1">2.</span><span class="bk-n2">1.</span> เลือกวันเข้าพัก</h2>
 <div style="display: flex; align-items: center; gap: 8px">
 <button type="button" onClick="{{prevMonths}}" disabled="{{noPrev}}" aria-label="เดือนก่อนหน้า" style="{{prevStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></button>
 <button type="button" onClick="{{nextMonths}}" disabled="{{noNext}}" aria-label="เดือนถัดไป" style="{{nextStyle}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></button>
 <button type="button" onClick="{{clearDates}}" style="background: transparent; border: 0; color: {{accent}}; font-size: 14px; padding: 8px 4px">ล้างวันที่</button>
 </div>
 </div>
-<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">{{dateHint}}</p>
-<p class="bk-hint" aria-hidden="true">ปัดดูเดือนถัดไป ›</p>
+<p class="bk-datehint" style="margin: 6px 0 0; font-size: 14px; color: #5E554C">{{dateHint}}</p>
+<p class="bk-hint bk-mhint" aria-hidden="true">ปัดดูเดือนถัดไป ›</p>
 <div class="months bk-swipe bk-full" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-top: 24px">
 <template data-sc="for" list="{{months}}" as="m" hint-placeholder-count="2">
 <div>
@@ -203,7 +237,8 @@ input,select,textarea{font-family:inherit}
 </div>
 </template>
 </div>
-<div class="bk-legend" style="display: flex; gap: 12px 20px; flex-wrap: wrap; margin-top: 20px; font-size: 13px; color: #47413A">
+<button type="button" class="bk-leg-btn" onClick="{{toggleLegend}}" aria-expanded="{{legOpen}}">{{legLabel}}</button>
+<div class="{{legCls}}" style="display: flex; gap: 12px 20px; flex-wrap: wrap; margin-top: 20px; font-size: 13px; color: #47413A">
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: {{accent}}"></span>วันที่เลือก</span>
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: #EFE2B4"></span>ช่วงเข้าพัก</span>
 <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 4px; background: #F3D6DD; border: 1px solid #C88193; box-sizing: border-box"></span>เต็ม (จองแล้ว)</span>
@@ -214,7 +249,8 @@ input,select,textarea{font-family:inherit}
 
 <template data-sc="if" value="{{holdErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{holdErr}}</p></template>
 <div class="next-row" style="display: flex; justify-content: flex-end; align-items: center; gap: 16px; flex-wrap: wrap">
-<span style="font-size: 13px; color: #7A6E63">กดถัดไปแล้ว ระบบจะกันห้องไว้ให้คุณ {{holdMin}} นาที</span>
+<span class="bk-pick" aria-live="polite">{{pickSum}}</span>
+<span class="bk-holdnote" style="font-size: 13px; color: #7A6E63">กดถัดไปแล้ว ระบบจะกันห้องไว้ให้คุณ {{holdMin}} นาที</span>
 <button type="button" onClick="{{goStep2}}" disabled="{{next1Disabled}}" style="{{next1Style}}">{{next1Label}}</button>
 </div>
 </template>
@@ -593,6 +629,18 @@ lkOpen: false, lkCode: '', lkPhone: '', lkBusy: false, lkErr: ''
 /* มือถือ: ปฏิทินเรียงทุกเดือนที่จองได้ ปัดทีละเดือน */
 isMob() { try { return matchMedia('(max-width: 600px)').matches; } catch (e) { return false; } }
 monthsEl() { return document.querySelector('.months.bk-swipe'); }
+toRooms() {
+const sec = document.querySelector('.bk-roomcard'), head = document.querySelector('.km-head');
+if (!sec) return;
+window.scrollTo({ top: sec.getBoundingClientRect().top + window.scrollY - (head ? head.offsetHeight : 0) - 12, behavior: 'smooth' });
+}
+/* มือถือ: เลื่อนให้ปฏิทินอยู่ใต้แถบห้องที่ติดบนจอ */
+toCalendar() {
+const sec = document.getElementById('h-date'), bar = document.querySelector('.bk-roomcard'), head = document.querySelector('.km-head');
+if (!sec || !bar) return;
+const top = sec.closest('section').getBoundingClientRect().top + window.scrollY - (head ? head.offsetHeight : 0) - bar.offsetHeight - 8;
+if (Math.abs(window.scrollY - top) > 24) window.scrollTo({ top, behavior: 'smooth' });
+}
 scrollMonths(k) { const el = this.monthsEl(); if (el) el.scrollBy({ left: k * el.clientWidth, behavior: 'smooth' }); }
 scrollToMonth(iso) {
 const el = this.monthsEl(); if (!el || !iso || !this.isMob()) return;
@@ -601,6 +649,8 @@ const k = (d[0] * 12 + d[1]) - (t[0] * 12 + t[1]);
 if (k > 0 && k < el.children.length) el.scrollLeft = el.children[k].offsetLeft - el.children[0].offsetLeft;
 }
 componentDidMount() {
+const setHead = () => { const h = document.querySelector('.km-head'); document.documentElement.style.setProperty('--bk-head', (h ? h.offsetHeight : 104) + 'px'); };
+setTimeout(setHead, 0); window.addEventListener('resize', setHead);
 try { const mq = matchMedia('(max-width: 600px)'); const re = () => this.setState({ mob: mq.matches }); mq.addEventListener ? mq.addEventListener('change', re) : mq.addListener(re); } catch (e) {}
 window.addEventListener('km-gallery', () => this.setState({ gv: Date.now() }));
 let saved = null;
@@ -676,8 +726,10 @@ if (!(ci && co && ci >= cfg.today && co > ci)) { ci = null; co = null; }
 const keep = this.state.room && rooms.some((r) => r.roomNo === this.state.room);
 const freeFor = (no) => !ci || !((booked[no] || []).some((x) => ci < x[1] && co > x[0]));
 let room = keep ? this.state.room : null;
-if (!room) { const fr = rooms.find((r) => freeFor(r.roomNo)); room = fr ? fr.roomNo : (rooms[0] ? rooms[0].roomNo : null); }
-if (ci && !freeFor(room)) { ci = null; co = null; }
+const dfMode = this.isMob();
+if (!room && !dfMode) { const fr = rooms.find((r) => freeFor(r.roomNo)); room = fr ? fr.roomNo : (rooms[0] ? rooms[0].roomNo : null); }
+if (ci && !dfMode && !freeFor(room)) { ci = null; co = null; }
+if (dfMode && room && ci && !freeFor(room)) room = null;
 if (ci) { const cp = ci.split('-').map(Number); p[0] = cp[0]; p[1] = cp[1]; }
 this.setState({ loading: false, cfg, rooms, booked, room,
 viewY: this.state.viewY || p[0], viewM: this.state.viewM || p[1],
@@ -692,6 +744,13 @@ return kmCall('publicGetBookedDates', [t, kmDate.add(t, 400), this.state.holdId 
 }
 setF(k, v) { this.setState({ f: Object.assign({}, this.state.f, { [k]: v }) }); }
 rangesFor(roomNo) { return (this.state.booked || {})[roomNo] || []; }
+/* แบบเลือกวันก่อน (มือถือ): วันเต็มเมื่อทุกห้องไม่ว่าง */
+rangeFree(roomNo, a, b) { for (let d = a; d < b; d = kmDate.add(d, 1)) if (this.dayState(roomNo, d)) return false; return true; }
+dayAny(d) {
+const sts = (this.state.rooms || []).map((r) => this.dayState(r.roomNo, d));
+if (!sts.length || sts.some((x) => !x)) return null;
+return sts.some((x) => x === 'hold') ? 'hold' : 'booked';
+}
 dayState(roomNo, d) {
 let st = null;
 this.rangesFor(roomNo).forEach((r) => { if (d >= r[0] && d < r[1]) st = (r[2] === 'hold' && st !== 'booked') ? 'hold' : 'booked'; });
@@ -846,7 +905,9 @@ const cfg = s.cfg || { today: '2000-01-01', payment: {}, maxNights: 60, holdMinu
 const today = cfg.today;
 const f = s.f;
 const room = s.rooms.find((r) => r.roomNo === s.room) || null;
-const free = (a, b) => { for (let d = a; d < b; d = kmDate.add(d, 1)) if (this.dayState(s.room, d)) return false; return true; };
+const df = this.isMob();
+const dsOf = (d) => df ? this.dayAny(d) : this.dayState(s.room, d);
+const free = (a, b) => df ? s.rooms.some((r) => this.rangeFree(r.roomNo, a, b)) : this.rangeFree(s.room, a, b);
 const price = room ? Number(room.pricePerNight) || 0 : 0;
 const nights = s.ci && s.co ? kmDate.diff(s.ci, s.co) : 0;
 const money = kmMoney;
@@ -865,23 +926,32 @@ const variesByNight = nightly.some((n) => n.price !== price);
 const sv = s.saved;
 const view = s.step >= 4 && sv;
 
-const rooms = s.rooms.map((r) => ({
+const rooms = s.rooms.map((r) => { const avail = !(df && s.ci && s.co) || this.rangeFree(r.roomNo, s.ci, s.co); const on = r.roomNo === s.room; return {
+avail, full: !avail, status: !df ? '' : !(s.ci && s.co) ? 'เลือกวันก่อน' : avail ? 'ว่าง' : 'เต็มช่วงนี้',
+stCls: 'bk-rstat' + (!df ? '' : !(s.ci && s.co) ? ' st-wait' : avail ? ' st-ok' : ' st-full'),
 name: r.name || ('ห้อง ' + r.roomNo), img: kmRoomImage(r.roomNo), selected: r.roomNo === s.room,
+short: Number(r.pricePerNight) > 0 ? '฿' + money(r.pricePerNight) : 'สอบถาม',
 priceLabel: (Number(r.pricePerNight) > 0 ? '฿' + money(r.pricePerNight) + ' / คืน' : 'สอบถามราคา') + ' · ' + r.capacity + ' ท่าน',
-style: 'position: relative; text-align: left; border-radius: 18px; padding: 10px 10px 14px; cursor: pointer; transition: background .15s, box-shadow .15s; ' + (r.roomNo === s.room ? 'background: #E7EFE5; border: 3px solid #4F7A52; margin: 0; box-shadow: 0 8px 22px rgba(79,122,82,.22);' : 'background: #F6F3EE; border: 1px solid #DED4C1; margin: 2px;'),
+style: 'position: relative; text-align: left; border-radius: 18px; padding: 10px 10px 14px; cursor: pointer; transition: background .15s, box-shadow .15s; ' + (!avail ? 'opacity: .5; cursor: not-allowed; ' : '') + (on ? 'background: #E7EFE5; border: 3px solid #4F7A52; margin: 0; box-shadow: 0 8px 22px rgba(79,122,82,.22);' : 'background: #F6F3EE; border: 1px solid #DED4C1; margin: 2px;'),
 pick: () => {
+if (df) { if (!avail) return; this.setState({ room: r.roomNo, holdErr: '' }); return; }
 let ok = !!(s.ci && s.co);
 if (ok) for (let d = s.ci; d < s.co; d = kmDate.add(d, 1)) if (this.dayState(r.roomNo, d)) { ok = false; break; }
 this.setState(ok ? { room: r.roomNo, holdErr: '' } : { room: r.roomNo, ci: null, co: null, holdErr: '' });
 }
-}));
+}; });
 
 const pickingOut = !!(s.ci && !s.co);
 const pick = (d) => {
 this.setState({ holdErr: '' });
-if (!s.ci || s.co || d <= s.ci) { if (!this.dayState(s.room, d)) this.setState({ ci: d, co: null }); return; }
-if (kmDate.diff(s.ci, d) <= cfg.maxNights && free(s.ci, d)) return this.setState({ co: d });
-if (!this.dayState(s.room, d)) this.setState({ ci: d, co: null });
+if (!s.ci || s.co || d <= s.ci) { if (!dsOf(d)) this.setState({ ci: d, co: null }); return; }
+if (kmDate.diff(s.ci, d) <= cfg.maxNights && free(s.ci, d)) {
+const keep = !df || (s.room && this.rangeFree(s.room, s.ci, d));
+this.setState({ co: d, room: keep ? s.room : null });
+if (df) setTimeout(() => this.toRooms(), 0);
+return;
+}
+if (!dsOf(d)) this.setState({ ci: d, co: null });
 };
 const mkMonth = (y, m) => {
 const first = kmDate.monthStart(y, m);
@@ -892,7 +962,7 @@ for (let i = 1; i <= n; i++) {
 const d = kmDate.add(first, i - 1);
 const isEnd = d === s.ci || d === s.co;
 const inRange = s.ci && s.co && d > s.ci && d < s.co;
-const ds = this.dayState(s.room, d);
+const ds = dsOf(d);
 const past = d < today;
 const canBeOut = pickingOut && d > s.ci && kmDate.diff(s.ci, d) <= cfg.maxNights && free(s.ci, d);
 const dis = !isEnd && (past || (ds && !canBeOut));
@@ -983,7 +1053,10 @@ chevStyle: 'flex: 0 0 18px; transition: transform .2s; transform: rotate(' + (s.
 toggle: () => this.setState({ lkOpen: !this.state.lkOpen, lkErr: '' }),
 setCode: (e) => this.setState({ lkCode: e.target.value, lkErr: '' }), setPhone: (e) => this.setState({ lkPhone: e.target.value, lkErr: '' }),
 submit: (e) => { e.preventDefault(); this.lookup(); } },
-doneNote: s.doneNote || '', isStep1: s.step === 1, showLookup: s.step === 1 && !!s.lkShow, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
+doneNote: s.doneNote || '', legOpen: !!s.legOpen, legLabel: s.legOpen ? 'ซ่อนความหมายสี' : 'ความหมายสี', legCls: 'bk-legend' + (s.legOpen ? '' : ' bk-leg-off'),
+toggleLegend: () => this.setState({ legOpen: !this.state.legOpen }),
+pickSum: this.isMob() ? (!s.ci ? 'แตะวันเช็คอินในปฏิทิน' : !s.co ? kmDate.dm(s.ci) + ' → แตะวันเช็คเอาท์' : !room ? kmDate.dm(s.ci) + '–' + kmDate.dm(s.co) + ' · ' + nights + ' คืน · เลือกห้องที่ว่าง' : room.name + ' · ' + kmDate.dm(s.ci) + '–' + kmDate.dm(s.co) + ' · ' + nights + ' คืน · ' + totalLabel) : !room ? 'เลือกห้องพัก' : !s.ci ? room.name + ' · แตะวันเช็คอิน' : !s.co ? room.name + ' · ' + kmDate.dm(s.ci) + ' → แตะวันเช็คเอาท์' : room.name + ' · ' + kmDate.dm(s.ci) + '–' + kmDate.dm(s.co) + ' · ' + nights + ' คืน · ' + totalLabel,
+isStep1: s.step === 1, showLookup: s.step === 1 && !!s.lkShow, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4, isStep5: s.step === 5,
 dateHint: s.loading ? 'กำลังโหลดวันว่าง…' : !s.ci ? 'แตะวันที่เพื่อเลือกวันเช็คอิน (ช่องสีชมพู "เต็ม" คือมีคนจองแล้ว)' : !s.co ? 'เช็คอิน ' + kmDate.short(s.ci) + ' แตะวันเช็คเอาท์' : 'เข้าพัก ' + nights + ' คืน · ' + kmDate.short(s.ci) + ' ถึง ' + kmDate.short(s.co),
 clearDates: () => this.setState({ ci: null, co: null, holdErr: '' }),
 prevMonths: () => shift(-1), nextMonths: () => shift(1), noPrev: mob ? false : noPrev, noNext: mob ? false : noNext, prevStyle: navBtn(mob ? false : noPrev), nextStyle: navBtn(mob ? false : noNext),
