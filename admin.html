@@ -443,6 +443,7 @@ Khun Mee · หลังบ้าน</a>
 </ol>
 <template data-sc="if" value="{{noRows}}" hint-placeholder-val="{{ false }}"><p style="margin: 24px 0; text-align: center; color: #7A6E63; font-size: 14px">ไม่พบการจองที่ตรงกับการค้นหา</p></template>
 </div>
+<template data-sc="if" value="{{bookCount}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; font-size: 12px; color: #7A6E63; text-align: center">{{bookCount}} ↓</p></template>
 </section>
 
 <!-- Statistics -->
@@ -948,16 +949,17 @@ this.fitQ = true;
 requestAnimationFrame(() => { this.fitQ = false; this.fit(); });
 }
 fit() {
-const measure = (id, rowSel) => {
+const measure = (id, rowSel, max) => {
 const box = document.getElementById(id);
 if (!box) return '';
 const rows = box.querySelectorAll(rowSel);
-if (rows.length <= 10) return '';
+if (rows.length <= max) return '';
 const top = box.getBoundingClientRect().top - box.scrollTop;
-return Math.ceil(rows[9].getBoundingClientRect().bottom - top) + 'px';
+return Math.ceil(rows[max - 1].getBoundingClientRect().bottom - top) + 'px';
 };
-const n = measure('notify-list', ':scope > li');
-const b = measure('book-scroll', '.bk-list > li');
+const n = measure('notify-list', ':scope > li', 10);
+// ข้อมูลการจอง: เห็นทีละ 6 การ์ด ที่เหลือเลื่อนในกรอบ (จอคอมและมือถือ)
+const b = measure('book-scroll', '.bk-list > li', 6);
 if (n !== this.state.notifyMax || b !== this.state.bookMax) this.setState({ notifyMax: n, bookMax: b });
 }
 /* ไปที่ปฏิทินรายเดือน เดือนของวันที่นั้น แล้วให้วันนั้นกะพริบสีแดง 3 ครั้ง */
@@ -1712,7 +1714,7 @@ noNotes: !notes.length, hasNotes: !!notes.length, clearAll, clearLabel: s.nf ===
 notifyCount: notes.length > 10 ? 'แสดง 10 รายการล่าสุด เลื่อนลงเพื่อดูอีก ' + (notes.length - 10) + ' รายการ' : '',
 notifyBox: 'list-style: none; margin: 16px 0 0; padding: 0 4px 0 0; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;' + (s.notifyMax ? ' max-height: ' + s.notifyMax + ';' : ''),
 bookBox: 'overflow: auto; margin-top: 16px; overscroll-behavior: contain;' + (s.bookMax ? ' max-height: ' + s.bookMax + ';' : ''),
-bookCount: rows.length > 10 ? 'แสดง 10 รายการล่าสุด เลื่อนลงในตารางเพื่อดูอีก ' + (rows.length - 10) + ' รายการ' : '',
+bookCount: rows.length > 6 ? 'แสดง 6 รายการล่าสุด เลื่อนลงในกรอบเพื่อดูอีก ' + (rows.length - 6) + ' รายการ' : '',
 newBookings: String(rows.filter((r) => r.isNew).length), hasNewBookings: rows.some((r) => r.isNew),
 goNotify: () => { const el = document.getElementById('notify'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
 unreadBadge: unread > 99 ? '99+' : String(unread),
