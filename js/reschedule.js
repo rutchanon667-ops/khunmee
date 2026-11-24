@@ -195,6 +195,16 @@
         run: function () { openDlg(inst, b, r.room); } });
     });
 
+    // กล่องรายละเอียดในปฏิทิน: ปุ่มเลื่อนวัน (เงื่อนไขเดียวกับปุ่มในรายการการจอง)
+    if (v.pop && s.pop && byId[s.pop.id]) {
+      var pb = byId[s.pop.id];
+      v.pop.canResch = !!(s.rsLoaded && !map[pb.id] && RS_STATUSES.indexOf(pb.status) >= 0 && pb.checkIn >= today && !s.rsDlg);
+      v.pop.resch = function () {
+        var room = (v.rows || []).filter(function (r) { return r.code === pb.code; })[0];
+        inst.setState({ pop: null });
+        openDlg(inst, pb, room ? room.room : ('ห้อง ' + pb.roomNo));
+      };
+    }
     // กล่องรายละเอียดในปฏิทิน
     if (v.pop && s.pop && byId[s.pop.id] && map[s.pop.id] && Array.isArray(v.pop.rows)) {
       var rp = map[s.pop.id];
