@@ -86,6 +86,14 @@ input,select,textarea{font-family:inherit}
  .wrap:has(#h-room) .bk-sum{display:none !important}
 }
 .bk-room:hover{box-shadow:0 4px 14px rgba(58,53,47,.10)}
+/* การ์ดห้อง + ปุ่มดูรูป (ปุ่มดูรูปแสดงเฉพาะมือถือ) */
+.bk-rwrap{position:relative;display:flex;min-width:0}
+.bk-rwrap>.bk-room{flex:1 1 auto;min-width:0}
+.bk-rphotos{display:none}
+@media (max-width:600px){
+ .bk-rphotos{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:0 10px;border:0;border-radius:9999px;background:rgba(58,53,47,.82);color:#FFFDF9;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+ .bk-rphotos:active{transform:scale(.95)}
+}
 .bk-sel{position:absolute;top:18px;left:18px;z-index:1;display:inline-flex;align-items:center;gap:5px;background:#4F7A52;color:#FFFDF9;border-radius:9999px;padding:5px 11px 5px 9px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .bk-pair{display:contents}
 @media (max-width:600px){
@@ -198,12 +206,15 @@ input,select,textarea{font-family:inherit}
 <template data-sc="if" value="{{loadErr}}" hint-placeholder-val="{{ false }}"><div role="alert" style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; color: #9A4E60"><span style="flex: 1 1 240px">{{loadErr}}</span><button type="button" onClick="{{reload}}" style="background: #47413A; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 8px 16px; font-size: 14px">ลองอีกครั้ง</button></div></template>
 <div class="rooms4" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px">
 <template data-sc="for" list="{{rooms}}" as="r" hint-placeholder-count="4">
+<div class="bk-rwrap">
 <button type="button" class="bk-room" onClick="{{r.pick}}" aria-pressed="{{r.selected}}" aria-disabled="{{r.full}}" style="{{r.style}}">
 <template data-sc="if" value="{{r.selected}}" hint-placeholder-val="{{ false }}"><span class="bk-sel" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg><span class="bk-sel-t">เลือกแล้ว</span></span></template>
 <img src="{{r.img}}" alt="" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block">
 <span class="bk-rname" style="display: block; margin-top: 10px; font-size: 17px; font-weight: 600; color: #47413A">{{r.name}}</span>
 <span class="bk-rprice" style="display: block; margin-top: 2px; font-size: 14px; color: #7A6E63">{{r.priceLabel}}</span><span class="bk-rshort">{{r.short}}</span><template data-sc="if" value="{{r.status}}" hint-placeholder-val="{{ false }}"><span class="{{r.stCls}}">{{r.status}}</span></template>
 </button>
+<button type="button" class="bk-rphotos" data-gallery="room" data-room="{{r.no}}" data-title="{{r.name}}" aria-label="ดูรูป{{r.name}} {{r.photoAria}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>{{r.photoLabel}}</button>
+</div>
 </template>
 </div>
 </section>
@@ -930,7 +941,8 @@ const view = s.step >= 4 && sv;
 const rooms = s.rooms.map((r) => { const avail = !(df && s.ci && s.co) || this.rangeFree(r.roomNo, s.ci, s.co); const on = r.roomNo === s.room; return {
 avail, full: !avail, status: !df ? '' : !(s.ci && s.co) ? 'เลือกวันก่อน' : avail ? 'ว่าง' : 'เต็มช่วงนี้',
 stCls: 'bk-rstat' + (!df ? '' : !(s.ci && s.co) ? ' st-wait' : avail ? ' st-ok' : ' st-full'),
-name: r.name || ('ห้อง ' + r.roomNo), img: kmRoomImage(r.roomNo), selected: r.roomNo === s.room,
+name: r.name || ('ห้อง ' + r.roomNo), img: kmRoomImage(r.roomNo), selected: r.roomNo === s.room, no: String(r.roomNo),
+...(() => { const L = window.kmGallery ? kmGallery.roomList(r.roomNo) : [kmRoomImage(r.roomNo)]; const v = L.filter((x) => /^yt:/.test(String(x))).length; return { photoLabel: (L.length - v) + ' รูป' + (v ? ' ▶' : ''), photoAria: (window.kmGallery ? kmGallery.countLabel(L) : L.length + ' รูป') }; })(),
 short: Number(r.pricePerNight) > 0 ? '฿' + money(r.pricePerNight) : 'สอบถาม',
 priceLabel: (Number(r.pricePerNight) > 0 ? '฿' + money(r.pricePerNight) + ' / คืน' : 'สอบถามราคา') + ' · ' + r.capacity + ' ท่าน',
 style: 'position: relative; text-align: left; border-radius: 18px; padding: 10px 10px 14px; cursor: pointer; transition: background .15s, box-shadow .15s; ' + (!avail ? 'opacity: .5; cursor: not-allowed; ' : '') + (on ? 'background: #E7EFE5; border: 3px solid #4F7A52; margin: 0; box-shadow: 0 8px 22px rgba(79,122,82,.22);' : 'background: #F6F3EE; border: 1px solid #DED4C1; margin: 2px;'),
