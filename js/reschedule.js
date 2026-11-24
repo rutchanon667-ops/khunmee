@@ -189,9 +189,9 @@
       r.rsTag = '';
       if (!s.rsLoaded || RS_STATUSES.indexOf(b.status) < 0 || b.checkIn < today || !Array.isArray(r.actions)) return;
       var i = -1;
-      r.actions.forEach(function (a, k) { if (a.label === 'ยกเลิก') i = k; });
+      r.actions.forEach(function (a, k) { if (String(a.label).indexOf('ยกเลิก') === 0) i = k; });
       if (i < 0) i = r.actions.length;
-      r.actions.splice(i, 0, { label: 'เลื่อนวัน', style: actStyle, busy: s.acting === b.id || !!s.rsDlg,
+      r.actions.splice(i, 0, { label: 'เลื่อนวัน', cls: 'a-sec', style: actStyle, busy: s.acting === b.id || !!s.rsDlg,
         run: function () { openDlg(inst, b, r.room); } });
     });
 

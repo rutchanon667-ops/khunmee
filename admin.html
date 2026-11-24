@@ -132,11 +132,22 @@ th{font-weight:600;text-align:left}
 .bk-c-extra{font-size:12px;color:#5B4B8A}
 .bk-c-tel{white-space:nowrap;color:#47413A;font-variant-numeric:tabular-nums;text-decoration:underline;text-decoration-color:#CFC3AC;text-underline-offset:3px}
 .bk-c-link{color:#3E6A9E;text-decoration:underline;white-space:nowrap}
+/* ปุ่มในการ์ด (เฉพาะจอคอม): ปุ่มหลักเต็มแถว · ปุ่มรองแบ่งแถวเท่ากัน · ยกเลิกเป็นลิงก์เล็กด้านล่าง · คอลัมน์ปุ่มกว้างเท่ากันทุกการ์ด */
 .bk-c-act{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:260px}
 .bk-c-act button{min-height:36px}
+@media (min-width:761px){
+ .bk-c-act{width:224px;display:flex;flex-wrap:wrap;gap:8px;align-content:center}
+ .bk-c-act button{box-sizing:border-box;min-height:40px;padding:0 10px !important;border-radius:12px !important;font-size:14px !important;font-weight:600;white-space:nowrap;cursor:pointer}
+ .bk-c-act .a-pri{flex:1 1 100%;min-height:44px;font-size:15px !important}
+ .bk-c-act .a-sec{flex:1 1 0;min-width:0}
+ .bk-c-act .a-del{flex:1 1 100%;min-height:30px !important;background:transparent !important;border:0 !important;color:#B5443F !important;font-size:13px !important;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+ .bk-c-act .a-del:hover{color:#8A2F2A !important}
+ .bk-c-act button:disabled{opacity:.5;cursor:default}
+}
 @media (max-width:760px){
  .bk-card{grid-template-columns:minmax(0,1fr);padding:12px}
  .bk-c-act{justify-content:flex-start;max-width:none;border-top:1px solid #EFE9DD;padding-top:10px}
+ .bk-c-act:empty{display:none}
  .bk-c-name{font-size:16px}
 }
 #notify button:disabled{cursor:default;opacity:.45}
@@ -426,7 +437,7 @@ Khun Mee · หลังบ้าน</a>
 <p class="bk-c-line bk-c-sub"><a href="{{b.tel}}" class="bk-c-tel">{{b.phone}}</a><span> · {{b.pets}} · </span><strong>{{b.total}}</strong><template data-sc="if" value="{{b.slipUrl}}" hint-placeholder-val="{{ false }}"><span> · </span><a href="{{b.slipUrl}}" target="_blank" rel="noopener" class="bk-c-link">ดูสลิป</a></template><template data-sc="if" value="{{b.noSlip}}" hint-placeholder-val="{{ true }}"><span> · ไม่มีสลิป</span></template><template data-sc="if" value="{{b.receiptUrl}}" hint-placeholder-val="{{ false }}"><span> · </span><a href="{{b.receiptUrl}}" target="_blank" rel="noopener" class="bk-c-link" style="color: #2F6B45">ใบเสร็จ PDF</a></template></p>
 <template data-sc="if" value="{{b.extra}}" hint-placeholder-val="{{ false }}"><p class="bk-c-line bk-c-extra">{{b.extra}}</p></template>
 </div>
-<div class="bk-c-act"><template data-sc="for" list="{{b.actions}}" as="a" hint-placeholder-count="2"><button type="button" onClick="{{a.run}}" disabled="{{a.busy}}" style="{{a.style}}">{{a.label}}</button></template></div>
+<div class="bk-c-act"><template data-sc="for" list="{{b.actions}}" as="a" hint-placeholder-count="2"><button type="button" class="{{a.cls}}" onClick="{{a.run}}" disabled="{{a.busy}}" style="{{a.style}}">{{a.label}}</button></template></div>
 </li>
 </template>
 </ol>
@@ -770,7 +781,7 @@ Khun Mee · หลังบ้าน</a>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/gallery.js?v=3"></script>
-<script src="js/reschedule.js?v=2"></script>
+<script src="js/reschedule.js?v=3"></script>
 <script>
 class Component extends DCLogic {
 constructor(props) {
@@ -1044,6 +1055,7 @@ if (p) { const r = p.getBoundingClientRect(); if (r.bottom > window.innerHeight)
 });
 }
 componentDidMount() {
+try { const mqA = matchMedia('(max-width: 760px)'); const reA = () => this.setState({ actWide: !mqA.matches }); mqA.addEventListener ? mqA.addEventListener('change', reA) : mqA.addListener(reA); } catch (e) {}
 document.addEventListener('click', (e) => {
 if (!this.state.navOpen || !e.target.closest) return;
 if (e.target.closest('#adm-nav a') || !e.target.closest('.nav-wrap')) this.setState({ navOpen: false });
@@ -1268,6 +1280,8 @@ warn: 'ยกเลิกแล้วย้อนกลับไม่ได้ 
 this.ask(Object.assign({ lines: who, onOk: go }, D));
 };
 const setStatus = (b, st, label) => () => { ackBooking(b.id); confirmStatus(b, st); };
+// จอคอม: ปุ่มในการ์ดจัดแบบใหม่ · มือถือ: ปุ่มแบบเดิม
+const wideAct = !(window.matchMedia && matchMedia('(max-width: 760px)').matches);
 const btn = (kind) => 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; ' + (kind === 'ext' ? 'border: 0; background: #3E6A9E; color: #FFFFFF;' : kind === 'ghost' ? 'border: 1px solid #DED4C1; background: #F6F3EE; color: #47413A;' : kind === 'ok' ? 'border: 0; background: #4F7A52; color: #F6F3EE;' : kind === 'in' ? 'border: 0; background: #8B5E3C; color: #FFFFFF;' : kind === 'out' ? 'border: 0; background: #848484; color: #FFFFFF;' : 'border: 1px solid #B5443F; background: transparent; color: #B5443F;');
 const refundAct = (b, res) => () => { ackBooking(b.id); this.ask({ kind: res === 'refunded' ? 'ok' : 'danger',
 title: res === 'refunded' ? 'ยืนยันว่าโอนเงินคืน ' + b.guestName + ' แล้ว ?' : 'ปิดคำขอคืนเงินของ ' + b.guestName + ' ?',
@@ -1284,12 +1298,12 @@ const k = stOf(b);
 const busy = s.acting === b.id;
 const isNewRow = s.bkInit && !s.bkAck[b.id];
 const actions = [];
-if (b.status === 'pending') actions.push({ label: 'อนุมัติ', style: btn('ok'), run: setStatus(b, 'confirmed'), busy });
-if (b.status === 'confirmed') actions.push({ label: 'เช็คอิน', style: btn('in'), run: setStatus(b, 'checked_in'), busy });
-if (b.status === 'checked_in') actions.push({ label: 'เช็คเอาท์', style: btn('out'), run: setStatus(b, 'checked_out'), busy });
-if (b.status === 'confirmed' || b.status === 'checked_in') actions.push({ label: 'เพิ่มวัน', style: btn('ext'), run: () => { ackBooking(b.id); this.openExt(b); }, busy });
-if (b.status === 'pending' || b.status === 'confirmed') actions.push({ label: 'ยกเลิก', style: btn('cancel'), run: setStatus(b, 'cancelled'), busy });
-if (b.refundStatus === 'requested') { actions.push({ label: 'คืนเงินแล้ว', style: btn('ok'), run: refundAct(b, 'refunded'), busy }); actions.push({ label: 'ไม่ต้องคืน', style: btn('ghost'), run: refundAct(b, 'none'), busy }); }
+if (b.status === 'pending') actions.push({ label: 'อนุมัติ', cls: 'a-pri', style: btn('ok'), run: setStatus(b, 'confirmed'), busy });
+if (b.status === 'confirmed') actions.push({ label: 'เช็คอิน', cls: 'a-pri', style: btn('in'), run: setStatus(b, 'checked_in'), busy });
+if (b.status === 'checked_in') actions.push({ label: 'เช็คเอาท์', cls: 'a-pri', style: btn('out'), run: setStatus(b, 'checked_out'), busy });
+if (b.status === 'confirmed' || b.status === 'checked_in') actions.push({ label: wideAct ? '+ เพิ่มวัน' : 'เพิ่มวัน', cls: 'a-sec', style: wideAct ? 'border: 1px solid #3E6A9E; background: #FFFDF9; color: #3E6A9E;' : btn('ext'), run: () => { ackBooking(b.id); this.openExt(b); }, busy });
+if (b.status === 'pending' || b.status === 'confirmed') actions.push({ label: wideAct ? 'ยกเลิกการจอง' : 'ยกเลิก', cls: 'a-del', style: wideAct ? '' : btn('cancel'), run: setStatus(b, 'cancelled'), busy });
+if (b.refundStatus === 'requested') { actions.push({ label: 'คืนเงินแล้ว', cls: 'a-pri', style: btn('ok'), run: refundAct(b, 'refunded'), busy }); actions.push({ label: 'ไม่ต้องคืน', cls: 'a-sec', style: btn('ghost'), run: refundAct(b, 'none'), busy }); }
 const rAmt = '฿' + kmMoney(b.refundAmount || b.totalPrice);
 return { code: b.code, name: b.guestName, phone: b.phone, tel: b.phone ? 'tel:' + String(b.phone).replace(/[^0-9+]/g, '') : '#', nights: String(b.nights || kmDate.diff(b.checkIn, b.checkOut)), room: rn(b.roomNo), pets: b.pets || 'ไม่มีสัตว์เลี้ยง',
 ci: kmDate.dm(b.checkIn), arr: b.arrivalTime || '', co: kmDate.dm(b.checkOut), total: b.totalPrice ? '฿' + kmMoney(b.totalPrice) : '—',
