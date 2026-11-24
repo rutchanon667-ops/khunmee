@@ -82,6 +82,34 @@ input,select,textarea{font-family:inherit}
 </section>
 </template>
 
+<!-- ยังไม่ถึงเวลาเช็คอิน: กรอบสีเหลือง + วันที่ต้องมาเช็คอิน -->
+<template data-sc="if" value="{{early}}" hint-placeholder-val="{{ false }}">
+<section class="card ci-early" role="status" aria-labelledby="h-early" style="background: #FBF3DC; border: 2px solid #E9C46A; border-radius: 18px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; gap: 16px; align-items: center">
+<span style="width: 56px; height: 56px; flex: 0 0 56px; border-radius: 9999px; background: #E9C46A; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3A352F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+<div style="min-width: 0">
+<h2 id="h-early" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 700; line-height: 1.35; color: #3A352F">สามารถเช็คอินได้ในวันที่ท่านเข้าพัก</h2>
+<template data-sc="if" value="{{early.left}}" hint-placeholder-val="{{ true }}"><p style="margin: 2px 0 0; font-size: 15px; font-weight: 600; color: #6B5420">{{early.left}}</p></template>
+</div>
+</div>
+<div style="background: #FFFDF9; border-radius: 14px; padding: 18px 20px">
+<p style="margin: 0; font-size: 17px; color: #5E554C">กรุณาเช็คอินในวันที่</p>
+<p style="margin: 4px 0 0; font-size: 24px; font-weight: 700; line-height: 1.4; color: #3A352F">{{early.date}}</p>
+<p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; color: #6B5420">ตั้งแต่เวลา {{early.hour}}:00 น. เป็นต้นไป</p>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; font-size: 15px; line-height: 1.5">
+<dt style="color: #6B5420">ห้องพัก</dt><dd style="margin: 0; font-weight: 600">{{bk.room}}</dd>
+<dt style="color: #6B5420">วันเข้าพัก</dt><dd style="margin: 0">{{bk.dates}}</dd>
+<dt style="color: #6B5420">รหัสการจอง</dt><dd style="margin: 0; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums">{{bk.code}}</dd>
+</dl>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<button type="button" onClick="{{recheck}}" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 12px 22px; font-size: 16px; font-weight: 600">{{recheckLabel}}</button>
+<button type="button" onClick="{{again}}" style="background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 11px 20px; font-size: 15px">ค้นหาการจองอื่น</button>
+<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 11px 20px; font-size: 15px">ติดต่อที่พัก</a>
+</div>
+</section>
+</template>
+
 <!-- 2. การจองที่พบ -->
 <template data-sc="if" value="{{hasInfo}}" hint-placeholder-val="{{ false }}">
 <section aria-labelledby="h-bk" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
@@ -299,6 +327,7 @@ this.setState(st);
 this.remember(['in', 'open', 'early', 'busy'].indexOf(info.step) >= 0);
 if (info.step === 'open') this.focus('h-form');
 else if (info.step === 'in') this.focus('h-door');
+else if (info.step === 'early') this.focus('h-early');
 }
 find(auto) {
 const s = this.state;
@@ -409,7 +438,7 @@ const step = info ? info.step : '';
 const out = {
 doorLabel: kmDoorLabel(),
 checkinNote: info && info.lobby ? 'กดปุ่มเพื่อเช็คอิน แล้วเข้าห้องพักได้เลย' : 'กดปุ่มเพื่อเช็คอิน แล้วรับ' + kmDoorLabel() + 'ทาง LINE',
-pageTitle: step === 'in' ? 'ห้องของคุณ' : 'เช็คอินด้วยตัวเอง',
+pageTitle: step === 'in' ? 'ห้องของคุณ' : step === 'early' ? 'ยังไม่ถึงเวลาเช็คอิน' : 'เช็คอินด้วยตัวเอง',
 checkinHour: String(info ? info.checkinHour : 14), checkoutHour: String(info ? info.checkoutHour : 12),
 showLead: !info || step === 'open' || step === 'early',
 code: s.code, phone: s.phone, busy: s.busy, findErr: s.findErr,
@@ -419,7 +448,7 @@ setPhone: (e) => this.setState({ phone: e.target.value, findErr: '' }),
 find: (e) => { if (e && e.preventDefault) e.preventDefault(); this.find(false); },
 showFind: !info, hasInfo: !!info && !s.done,
 again: () => { this.remember(false); this.setState({ info: null, done: null, justIn: false, formErr: '' }); setTimeout(() => { const i = document.getElementById('ci-code'); if (i) i.focus(); }, 0); },
-blockedMsg: '', canRecheck: false, canCheckin: false, idForm: false, inStay: false, done: s.done,
+blockedMsg: '', canRecheck: false, canCheckin: false, idForm: false, inStay: false, done: s.done, early: null,
 lineTop: false
 };
 if (!info || s.done) return out;
@@ -433,6 +462,16 @@ Object.assign(out, this.lineVals(info, step), { copyBk: () => this.copyText(info
 if (step === 'done') {
 out.done = { title: 'เช็คเอาท์เรียบร้อยแล้ว', note: 'การจองนี้เช็คเอาท์แล้ว ขอบคุณที่มาพักกับ Khun Mee นะคะ' };
 out.hasInfo = false;
+return out;
+}
+if (step === 'early') {
+const now = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);
+const n = kmDate.diff(now, info.checkIn);
+out.early = { date: n <= 0 ? 'วันนี้ · ' + kmDate.long(info.checkIn) : kmDate.long(info.checkIn), hour: String(info.checkinHour || 14),
+left: n <= 0 ? 'เช็คอินได้ตั้งแต่ ' + (info.checkinHour || 14) + ':00 น. วันนี้' : n === 1 ? 'อีก 1 วัน (พรุ่งนี้)' : 'อีก ' + n + ' วัน' };
+out.showLead = false; out.hasInfo = false;
+out.recheckLabel = s.busy ? 'กำลังตรวจสอบ…' : 'ตรวจสอบอีกครั้ง';
+out.recheck = () => this.find(false);
 return out;
 }
 if (['early', 'busy', 'wait', 'missed', 'cancelled'].indexOf(step) >= 0) {
