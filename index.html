@@ -201,11 +201,11 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a class="f-go" href="{{findHref}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>ค้นหาห้องว่าง · {{nightsLabel}}</a>
 <p class="f-note">จองไว้แล้วแต่อยากเปลี่ยนวัน? <a href="reschedule.html">เลื่อนวันพักได้ 1 ครั้ง ›</a></p>
 </form>
-<section id="lookup" class="km-lookup" aria-labelledby="h-lookup" style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 20px; padding: 16px 18px">
-<button type="button" onClick="{{lk.toggle}}" aria-expanded="{{lk.open}}" aria-controls="lk-form" style="width: 100%; display: flex; align-items: center; gap: 14px; background: transparent; border: 0; padding: 0; text-align: left; color: #3A352F; font-family: inherit; cursor: pointer">
-<span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 9999px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path><path d="M9 8h6M9 12h6"></path></svg></span>
-<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column"><span id="h-lookup" style="font-size: 16px; font-weight: 600">จองไว้แล้ว? ดูสถานะและใบเสร็จ</span><span style="font-size: 13px; color: #7A6E63">กรอกรหัสการจองและเบอร์โทรที่ใช้จอง</span></span>
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A6E63" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{lk.chevStyle}}"><path d="M6 9l6 6 6-6"></path></svg>
+<section id="lookup" class="km-lookup" aria-labelledby="h-lookup" style="background: #7A6E63; color: #FFFFFF; border: 1px solid #E2D8C6; border-radius: 20px; padding: 16px 18px">
+<button type="button" onClick="{{lk.toggle}}" aria-expanded="{{lk.open}}" aria-controls="lk-form" style="width: 100%; display: flex; align-items: center; gap: 14px; background: transparent; border: 0; padding: 0; text-align: left; color: #FFFFFF; font-family: inherit; cursor: pointer">
+<span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 9999px; background: #F6F3EE; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path><path d="M9 8h6M9 12h6"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column"><span id="h-lookup" style="font-size: 16px; font-weight: 600; color: #FFFFFF">จองไว้แล้ว? ดูสถานะและใบเสร็จ</span><span style="font-size: 13px; color: #FFFFFF">กรอกรหัสการจองและเบอร์โทรที่ใช้จอง</span></span>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{lk.chevStyle}}"><path d="M6 9l6 6 6-6"></path></svg>
 </button>
 <template data-sc="if" value="{{lk.open}}" hint-placeholder-val="{{ false }}">
 <form id="lk-form" onSubmit="{{lk.submit}}" style="margin-top: 14px; display: flex; flex-direction: column; gap: 12px">
@@ -218,8 +218,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 </label>
 </div>
 <template data-sc="if" value="{{lk.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 12px; padding: 10px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{lk.err}}</p></template>
-<button type="submit" style="min-height: 48px; background: #3A352F; color: #F6F3EE; border: 0; border-radius: 9999px; padding: 0 24px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer">ดูการจอง</button>
-<p style="margin: 0; font-size: 13px; color: #7A6E63">รหัสการจองขึ้นต้นด้วย KM อยู่ในอีเมลยืนยันและในแชท LINE</p>
+<button type="submit" style="min-height: 48px; background: #DCC881; color: #3A352F; border: 0; border-radius: 9999px; padding: 0 24px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer">ดูการจอง</button>
+<p style="margin: 0; font-size: 13px; color: #F6F3EE">รหัสการจองขึ้นต้นด้วย KM อยู่ในอีเมลยืนยันและในแชท LINE</p>
 </form>
 </template>
 </section>
