@@ -64,7 +64,7 @@
         var ok = startOk(d);
         var css = 'height: ' + (c.cellH || 50) + 'px; width: 100%; border-radius: 10px; font-size: 15px; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 0; box-sizing: border-box; ';
         var sub = '', subColor = '#7A6E63', why = '';
-        if (isEnd) { css += 'border: 0; background: #47413A; color: #F6F3EE; font-weight: 700;'; sub = d === pick ? 'เช็คอิน' : 'เช็คเอาท์'; subColor = '#F6F3EE'; }
+        if (isEnd) { css += 'border: 0; background: #47413A; color: #F6F3EE; font-weight: 600;'; sub = d === pick ? 'เช็คอิน' : 'เช็คเอาท์'; subColor = '#F6F3EE'; }
         else if (inPick) css += 'border: 0; background: #EFE2B4; color: #47413A;';
         else if (out) { css += 'border: 0; background: transparent; color: #CFC3AC;'; why = ' เลือกไม่ได้'; }
         else if (st === 'booked') {
@@ -94,45 +94,45 @@
    * แดชบอร์ดแอดมิน
    * ========================================================= */
   var ADMIN_TAG_HTML =
-'<template data-sc="if" value="{{b.rsTag}}" hint-placeholder-val="{{ false }}"><span style="display: block; margin-top: 5px; font-size: 11px; font-weight: 600; color: ' + PURPLE_INK + '; white-space: nowrap">↻ {{b.rsTag}}</span></template>';
+'<template data-sc="if" value="{{b.rsTag}}" hint-placeholder-val="{{ false }}"><span style="display: block; margin-top: 4px; font-size: 11px; font-weight: 600; color: ' + PURPLE_INK + '; white-space: nowrap">↻ {{b.rsTag}}</span></template>';
 
   var ADMIN_DLG_HTML =
 '<template data-sc="if" value="{{rsDlgOpen}}" hint-placeholder-val="{{ false }}">' +
 '<div id="km-rs-back" onClick="{{rsDlgBack}}" style="position: fixed; inset: 0; z-index: 81; background: rgba(58,53,47,.55); display: flex; align-items: center; justify-content: center; padding: 16px; box-sizing: border-box">' +
-'<div role="dialog" aria-modal="true" aria-labelledby="km-rs-h" class="km-dlg" style="width: 100%; max-width: 460px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFDF9; color: #47413A; border-radius: 18px; box-shadow: 0 20px 48px rgba(58,53,47,.35); padding: 22px; box-sizing: border-box">' +
+'<div role="dialog" aria-modal="true" aria-labelledby="km-rs-h" class="km-dlg" style="width: 100%; max-width: 460px; max-height: calc(100vh - 32px); overflow-y: auto; background: #FFFDF9; color: #47413A; border-radius: 18px; box-shadow: 0 20px 48px rgba(58,53,47,.35); padding: 24px; box-sizing: border-box">' +
 '<p style="margin: 0; font-size: 12px; color: #7A6E63">{{rsD.sub}}</p>' +
 '<h2 id="km-rs-h" style="margin: 2px 0 0; font-size: 19px; font-weight: 600; line-height: 1.4">{{rsD.title}}</h2>' +
 '<p style="margin: 8px 0 0; font-size: 14px; color: #5E554C">{{rsD.old}}</p>' +
 '<template data-sc="if" value="{{rsD.loading}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 12px 0 0; font-size: 14px; color: #7A6E63">กำลังตรวจสอบสิทธิ์และห้องว่าง…</p></template>' +
-'<template data-sc="if" value="{{rsD.reason}}" hint-placeholder-val="{{ false }}"><p style="margin: 12px 0 0; font-size: 14px; line-height: 1.5; background: #FBE3DF; color: #8A2F2A; border-radius: 10px; padding: 9px 12px">{{rsD.reason}}</p></template>' +
+'<template data-sc="if" value="{{rsD.reason}}" hint-placeholder-val="{{ false }}"><p style="margin: 12px 0 0; font-size: 14px; line-height: 1.5; background: #FBE3DF; color: #8A2F2A; border-radius: 10px; padding: 8px 12px">{{rsD.reason}}</p></template>' +
 '<template data-sc="if" value="{{rsD.canPick}}" hint-placeholder-val="{{ true }}">' +
-'<p style="margin: 14px 0 0; font-size: 14px; font-weight: 600">แตะวันเช็คอินใหม่ (พัก {{rsD.nights}} คืนเท่าเดิม)</p>' +
+'<p style="margin: 16px 0 0; font-size: 14px; font-weight: 600">แตะวันเช็คอินใหม่ (พัก {{rsD.nights}} คืนเท่าเดิม)</p>' +
 '<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 8px">' +
 '<button type="button" onClick="{{rsDPrev}}" disabled="{{rsD.noPrev}}" aria-label="เดือนก่อนหน้า" style="{{rsD.prevStyle}}">' + CHEV_L + '</button>' +
 '<h3 style="margin: 0; font-size: 16px; font-weight: 600">{{rsD.monthTitle}}</h3>' +
 '<button type="button" onClick="{{rsDNext}}" disabled="{{rsD.noNext}}" aria-label="เดือนถัดไป" style="{{rsD.nextStyle}}">' + CHEV_R + '</button>' +
 '</div>' +
-'<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; text-align: center; font-size: 12px; color: #7A6E63; margin: 10px 0 6px"><span>อา</span><span>จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span></div>' +
-'<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px">' +
+'<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; text-align: center; font-size: 12px; color: #7A6E63; margin: 12px 0 8px"><span>อา</span><span>จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span></div>' +
+'<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">' +
 '<template data-sc="for" list="{{rsD.cells}}" as="c" hint-placeholder-count="35">' +
 '<template data-sc="if" value="{{c.blank}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true"></span></template>' +
 '<template data-sc="if" value="{{c.real}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{c.pick}}" disabled="{{c.disabled}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" title="{{c.title}}" style="{{c.style}}"><span>{{c.label}}</span><span style="{{c.subStyle}}">{{c.sub}}</span></button></template>' +
 '</template>' +
 '</div>' +
-'<div style="display: flex; gap: 8px 14px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: #47413A">' +
-'<span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #FFFDF9; border: 1px solid #DED4C1; box-sizing: border-box"></span>ว่าง</span>' +
-'<span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #F6CDC9; border: 1px solid #C0392B; box-sizing: border-box"></span>ไม่ว่าง</span>' +
-'<span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 4px; background: repeating-linear-gradient(135deg, #F6CDC9 0 3px, #FBE6E3 3px 6px); border: 1px solid #C0392B; box-sizing: border-box"></span>มีลูกค้ากำลังจอง</span>' +
-'<span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 4px; background: ' + PURPLE_SOFT + '; border: 2px dashed ' + PURPLE + '; box-sizing: border-box"></span>วันเดิม</span>' +
-'<span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: #47413A"></span>วันใหม่</span>' +
+'<div style="display: flex; gap: 8px 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: #47413A">' +
+'<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #FFFDF9; border: 1px solid #DED4C1; box-sizing: border-box"></span>ว่าง</span>' +
+'<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 14px; border-radius: 4px; background: #F6CDC9; border: 1px solid #C0392B; box-sizing: border-box"></span>ไม่ว่าง</span>' +
+'<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 14px; border-radius: 4px; background: repeating-linear-gradient(135deg, #F6CDC9 0 3px, #FBE6E3 3px 6px); border: 1px solid #C0392B; box-sizing: border-box"></span>มีลูกค้ากำลังจอง</span>' +
+'<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 14px; border-radius: 4px; background: ' + PURPLE_SOFT + '; border: 2px dashed ' + PURPLE + '; box-sizing: border-box"></span>วันเดิม</span>' +
+'<span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 14px; border-radius: 9999px; background: #47413A"></span>วันใหม่</span>' +
 '</div>' +
 '<template data-sc="if" value="{{rsD.avail}}" hint-placeholder-val="{{ false }}"><p role="status" style="{{rsD.availStyle}}">{{rsD.avail}}</p></template>' +
-'<p style="margin: 10px 0 0; font-size: 13px; color: #5E554C">{{rsD.price}}</p>' +
-'<p style="margin: 12px 0 0; font-size: 13px; line-height: 1.5; background: ' + PURPLE_SOFT + '; color: ' + PURPLE_INK + '; border-radius: 10px; padding: 9px 12px">เลื่อนได้ครั้งเดียวต่อการจอง (นับรวมที่ลูกค้าเลื่อนเองทางหน้าเว็บ) บันทึกแล้วจะเลื่อนอีกไม่ได้ ระบบแจ้ง LINE และส่งอีเมลถึงลูกค้าให้</p>' +
+'<p style="margin: 12px 0 0; font-size: 13px; color: #5E554C">{{rsD.price}}</p>' +
+'<p style="margin: 12px 0 0; font-size: 13px; line-height: 1.5; background: ' + PURPLE_SOFT + '; color: ' + PURPLE_INK + '; border-radius: 10px; padding: 8px 12px">เลื่อนได้ครั้งเดียวต่อการจอง (นับรวมที่ลูกค้าเลื่อนเองทางหน้าเว็บ) บันทึกแล้วจะเลื่อนอีกไม่ได้ ระบบแจ้ง LINE และส่งอีเมลถึงลูกค้าให้</p>' +
 '</template>' +
 '<template data-sc="if" value="{{rsD.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: #9A4E60">{{rsD.err}}</p></template>' +
-'<div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 18px">' +
-'<button type="button" onClick="{{rsDlgCancel}}" style="min-height: 44px; padding: 0 18px; border: 1px solid #DED4C1; border-radius: 9999px; background: #F6F3EE; color: #47413A; font-size: 15px">{{rsD.cancelLabel}}</button>' +
+'<div style="display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; margin-top: 20px">' +
+'<button type="button" onClick="{{rsDlgCancel}}" style="min-height: 44px; padding: 0 20px; border: 1px solid #DED4C1; border-radius: 9999px; background: #F6F3EE; color: #47413A; font-size: 15px">{{rsD.cancelLabel}}</button>' +
 '<template data-sc="if" value="{{rsD.canPick}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{rsDlgOk}}" disabled="{{rsD.okDisabled}}" style="{{rsD.okStyle}}">{{rsD.okLabel}}</button></template>' +
 '</div>' +
 '</div>' +
@@ -178,7 +178,7 @@
     var today = (s.dash && s.dash.today) || (typeof inst.today === 'function' ? inst.today() : new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10));
     var byCode = {}, byId = {};
     bookings.forEach(function (b) { byCode[b.code] = b; byId[b.id] = b; });
-    var actStyle = 'border-radius: 9999px; padding: 6px 12px; font-size: 13px; white-space: nowrap; border: 1px solid ' + PURPLE + '; background: transparent; color: ' + PURPLE + ';';
+    var actStyle = 'border-radius: 9999px; padding: 8px 12px; font-size: 13px; white-space: nowrap; border: 1px solid ' + PURPLE + '; background: transparent; color: ' + PURPLE + ';';
 
     // ตาราง: ป้ายเลื่อนแล้ว / ปุ่มเลื่อนวัน (ก่อนปุ่มยกเลิก)
     (v.rows || []).forEach(function (r) {
@@ -255,7 +255,7 @@
         cells: rd.cells, monthTitle: rd.monthTitle || '', noPrev: !!rd.noPrev, noNext: !!rd.noNext,
         prevStyle: rd.prevStyle || '', nextStyle: rd.nextStyle || '',
         avail: avail,
-        availStyle: 'margin: 12px 0 0; font-size: 14px; font-weight: 600; border-radius: 10px; padding: 9px 12px; ' + (date ? 'background: #DCE8DD; color: #2F5A33;' : 'background: #EDE6D7; color: #5E554C;'),
+        availStyle: 'margin: 12px 0 0; font-size: 14px; font-weight: 600; border-radius: 10px; padding: 8px 12px; ' + (date ? 'background: #DCE8DD; color: #2F5A33;' : 'background: #EDE6D7; color: #5E554C;'),
         price: info ? (info.keepPrice ? 'ยอดเดิม ฿' + kmMoney(info.totalPrice) + ' (ไม่คิดราคาใหม่)' : 'ระบบจะคิดราคาใหม่ตามวันใหม่ และบันทึกส่วนต่างในหมายเหตุ') : '',
         err: d.err || '',
         cancelLabel: canPick ? 'ยกเลิก' : 'ปิด',
@@ -318,7 +318,7 @@
   /* =========================================================
    * หน้าแรก: ลิงก์ "เลื่อนวันพัก" ไปหน้า reschedule.html (แถบเมนู ใต้กล่องค้นหาห้องว่าง และส่วนท้าย)
    * ========================================================= */
-  var HOME_NAV_HTML = '<a class="pill" href="reschedule.html" style="background: transparent; color: ' + PURPLE + '; border: 1px solid ' + PURPLE + '; border-radius: 9999px; padding: 5px 14px; font-size: 14px; white-space: nowrap; display: inline-block">เลื่อนวันพัก</a>';
+  var HOME_NAV_HTML = '<a class="pill" href="reschedule.html" style="background: transparent; color: ' + PURPLE + '; border: 1px solid ' + PURPLE + '; border-radius: 9999px; padding: 4px 16px; font-size: 14px; white-space: nowrap; display: inline-block">เลื่อนวันพัก</a>';
   var HOME_HERO_HTML =
 '<p style="margin: 20px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C; text-align: center">จองไว้แล้วแต่อยากเปลี่ยนวัน? ' +
 '<a href="reschedule.html" style="font-weight: 600; color: ' + PURPLE + '; text-decoration: underline; text-underline-offset: 3px">เลื่อนวันพักได้ 1 ครั้ง ›</a></p>';

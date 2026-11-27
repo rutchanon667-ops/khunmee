@@ -60,7 +60,7 @@
     st.textContent =
       '.kmg{position:fixed;inset:0;z-index:1000;background:#181512;display:flex;flex-direction:column;color:#F6F3EE;font-family:inherit;opacity:0;transition:opacity .18s}' +
       '.kmg.on{opacity:1}.kmg[hidden]{display:none}' +
-      '.kmg-top{display:flex;align-items:center;gap:12px;padding:max(10px,env(safe-area-inset-top)) 12px 10px 18px}' +
+      '.kmg-top{display:flex;align-items:center;gap:12px;padding:max(12px,env(safe-area-inset-top)) 12px 12px 20px}' +
       '.kmg-title{flex:1 1 auto;min-width:0;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
       '.kmg-count{font-size:14px;color:#D9D1C5;font-variant-numeric:tabular-nums}' +
       '.kmg-x{flex:0 0 auto;width:48px;height:48px;border-radius:9999px;border:0;background:rgba(246,243,238,.14);color:#FFF;display:flex;align-items:center;justify-content:center;cursor:pointer}' +
@@ -79,13 +79,13 @@
       '.kmg-nav:hover{background:rgba(246,243,238,.3)}.kmg-nav:disabled{opacity:.25;cursor:default}' +
       '.kmg-prev{left:16px}.kmg-next{right:16px}' +
       '@media (hover:hover) and (pointer:fine){.kmg-nav{display:flex}.kmg-slide{padding:0 84px 24px}}' +
-      '.kmg-dots{display:flex;justify-content:center;gap:6px;padding:4px 0 max(14px,env(safe-area-inset-bottom))}' +
+      '.kmg-dots{display:flex;justify-content:center;gap:8px;padding:4px 0 max(16px,env(safe-area-inset-bottom))}' +
       '.kmg-dots i{width:7px;height:7px;border-radius:9999px;background:rgba(246,243,238,.35)}.kmg-dots i.on{background:#F6F3EE}' +
       '.kmg button:focus-visible{outline:2px solid #DCC881;outline-offset:2px}' +
       'html.kmg-lock,html.kmg-lock body{overflow:hidden}' +
       '.km-zoom{position:relative;display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:inherit;font:inherit;color:inherit;text-align:left}' +
       '.km-zoom img{display:block}' +
-      '.km-zoom .km-zoom-tag{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:rgba(58,53,47,.78);color:#FFF;border-radius:9999px;padding:6px 10px;font-size:12px;font-weight:600;pointer-events:none}';
+      '.km-zoom .km-zoom-tag{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:8px;background:rgba(58,53,47,.78);color:#FFF;border-radius:9999px;padding:8px 12px;font-size:12px;font-weight:600;pointer-events:none}';
     document.head.appendChild(st);
   }
   var ICON = {

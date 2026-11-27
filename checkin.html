@@ -6,7 +6,7 @@
 <title>Khun Mee – เช็คอินด้วยตัวเอง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=2">
+<link rel="stylesheet" href="css/site.css?v=3">
 <style>
 body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
@@ -54,7 +54,7 @@ input,select,textarea{font-family:inherit}
 </div>
 
 <template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
-<div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
+<div role="note" style="display: flex; gap: 20px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 18px; padding: 24px 28px; box-sizing: border-box">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #4F7A52; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
 <p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #2F5A33">กรอกรหัสการจองและเบอร์โทร เช็คอินในวันเข้าพัก แล้วรับ{{doorLabel}}ทาง LINE ได้ทันที ไม่ต้องรอเจ้าหน้าที่</p>
 </div>
@@ -64,19 +64,19 @@ input,select,textarea{font-family:inherit}
 <template data-sc="if" value="{{showFind}}" hint-placeholder-val="{{ true }}">
 <section class="card" aria-labelledby="h-find" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-find" style="margin: 0; font-size: 24px; font-weight: 600">เช็คอินด้วยรหัสการจอง</h2>
-<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">รหัสการจองอยู่ในหน้ายืนยันการจองและอีเมลยืนยัน เช่น KM261103ABCD กดปุ่มแล้วเช็คอินได้เลย รหัสประตูรับทาง LINE</p>
+<p style="margin: 8px 0 0; font-size: 14px; color: #5E554C">รหัสการจองอยู่ในหน้ายืนยันการจองและอีเมลยืนยัน เช่น KM261103ABCD กดปุ่มแล้วเช็คอินได้เลย รหัสประตูรับทาง LINE</p>
 <form onSubmit="{{find}}" style="margin-top: 24px">
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">รหัสการจอง *
-<input id="ci-code" type="text" value="{{code}}" onInput="{{setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="เช่น KM261103ABCD" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">รหัสการจอง *
+<input id="ci-code" type="text" value="{{code}}" onInput="{{setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="เช่น KM261103ABCD" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 16px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box">
 </label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ที่ใช้ตอนจอง *
-<input type="tel" value="{{phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ที่ใช้ตอนจอง *
+<input type="tel" value="{{phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 16px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
 </label>
 </div>
-<template data-sc="if" value="{{findErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{findErr}}</p></template>
+<template data-sc="if" value="{{findErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 16px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{findErr}}</p></template>
 <div style="display: flex; justify-content: flex-end; margin-top: 24px">
-<button type="submit" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 32px; font-size: 18px; font-weight: 600">{{findLabel}}</button>
+<button type="submit" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 32px; font-size: 18px; font-weight: 600">{{findLabel}}</button>
 </div>
 </form>
 </section>
@@ -84,28 +84,28 @@ input,select,textarea{font-family:inherit}
 
 <!-- ยังไม่ถึงเวลาเช็คอิน: กรอบสีเหลือง + วันที่ต้องมาเช็คอิน -->
 <template data-sc="if" value="{{early}}" hint-placeholder-val="{{ false }}">
-<section class="card ci-early" role="status" aria-labelledby="h-early" style="background: #FBF3DC; border: 2px solid #E9C46A; border-radius: 18px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+<section class="card ci-early" role="status" aria-labelledby="h-early" style="background: #FBF3DC; border: 2px solid #E9C46A; border-radius: 18px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
 <div style="display: flex; gap: 16px; align-items: center">
 <span style="width: 56px; height: 56px; flex: 0 0 56px; border-radius: 9999px; background: #E9C46A; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3A352F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
 <div style="min-width: 0">
-<h2 id="h-early" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 700; line-height: 1.35; color: #3A352F">สามารถเช็คอินได้ในวันที่ท่านเข้าพัก</h2>
+<h2 id="h-early" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 600; line-height: 1.35; color: #3A352F">สามารถเช็คอินได้ในวันที่ท่านเข้าพัก</h2>
 <template data-sc="if" value="{{early.left}}" hint-placeholder-val="{{ true }}"><p style="margin: 2px 0 0; font-size: 15px; font-weight: 600; color: #6B5420">{{early.left}}</p></template>
 </div>
 </div>
-<div style="background: #FFFDF9; border-radius: 14px; padding: 18px 20px">
+<div style="background: #FFFDF9; border-radius: 14px; padding: 20px 20px">
 <p style="margin: 0; font-size: 17px; color: #5E554C">กรุณาเช็คอินในวันที่</p>
-<p style="margin: 4px 0 0; font-size: 24px; font-weight: 700; line-height: 1.4; color: #3A352F">{{early.date}}</p>
+<p style="margin: 4px 0 0; font-size: 24px; font-weight: 600; line-height: 1.4; color: #3A352F">{{early.date}}</p>
 <p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; color: #6B5420">ตั้งแต่เวลา {{early.hour}}:00 น. เป็นต้นไป</p>
 </div>
-<dl style="margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; font-size: 15px; line-height: 1.5">
+<dl style="margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 16px; font-size: 15px; line-height: 1.5">
 <dt style="color: #6B5420">ห้องพัก</dt><dd style="margin: 0; font-weight: 600">{{bk.room}}</dd>
 <dt style="color: #6B5420">วันเข้าพัก</dt><dd style="margin: 0">{{bk.dates}}</dd>
 <dt style="color: #6B5420">รหัสการจอง</dt><dd style="margin: 0; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums">{{bk.code}}</dd>
 </dl>
-<div style="display: flex; gap: 10px; flex-wrap: wrap">
-<button type="button" onClick="{{recheck}}" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 12px 22px; font-size: 16px; font-weight: 600">{{recheckLabel}}</button>
-<button type="button" onClick="{{again}}" style="background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 11px 20px; font-size: 15px">ค้นหาการจองอื่น</button>
-<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 11px 20px; font-size: 15px">ติดต่อที่พัก</a>
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<button type="button" onClick="{{recheck}}" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 12px 24px; font-size: 16px; font-weight: 600">{{recheckLabel}}</button>
+<button type="button" onClick="{{again}}" style="background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 12px 20px; font-size: 15px">ค้นหาการจองอื่น</button>
+<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 20px; font-size: 15px">ติดต่อที่พัก</a>
 </div>
 </section>
 </template>
@@ -114,12 +114,12 @@ input,select,textarea{font-family:inherit}
 <template data-sc="if" value="{{hasInfo}}" hint-placeholder-val="{{ false }}">
 <section aria-labelledby="h-bk" style="background: #F6F3EE; border-radius: 18px; padding: 24px 28px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
 <div style="flex: 1 1 280px; min-width: 0">
-<div style="display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{bk.code}}</span><template data-sc="if" value="{{showCopyBk}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{copyBk}}" aria-label="คัดลอกรหัสการจอง {{bk.code}}" style="display: flex; align-items: center; gap: 6px; background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 6px 14px; font-size: 14px; min-height: 36px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>{{copyBkLabel}}</button></template></div>
+<div style="display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap"><span style="font-size: 13px; color: #5E554C">รหัสการจอง</span><span style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{bk.code}}</span><template data-sc="if" value="{{showCopyBk}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{copyBk}}" aria-label="คัดลอกรหัสการจอง {{bk.code}}" style="display: flex; align-items: center; gap: 8px; background: #FFFDF9; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 8px 16px; font-size: 14px; min-height: 36px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h9"></path></svg>{{copyBkLabel}}</button></template></div>
 <h2 id="h-bk" style="margin: 2px 0 0; font-size: 22px; font-weight: 600">{{bk.room}}</h2>
 <p style="margin: 4px 0 0; font-size: 16px">{{bk.dates}}</p>
 </div>
 <span style="{{bk.chipStyle}}">{{bk.chip}}</span>
-<button type="button" onClick="{{again}}" style="background: transparent; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 9px 18px; font-size: 14px">ค้นหาการจองอื่น</button>
+<button type="button" onClick="{{again}}" style="background: transparent; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 8px 20px; font-size: 14px">ค้นหาการจองอื่น</button>
 </section>
 </template>
 
@@ -128,8 +128,8 @@ input,select,textarea{font-family:inherit}
 <section class="card" style="background: #F6F3EE; border-radius: 18px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
 <p role="status" style="margin: 0; font-size: 17px; line-height: 1.6; color: #47413A">{{blockedMsg}}</p>
 <div style="display: flex; gap: 12px; flex-wrap: wrap">
-<template data-sc="if" value="{{canRecheck}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{recheck}}" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 11px 22px; font-size: 16px; font-weight: 600">{{recheckLabel}}</button></template>
-<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">ติดต่อที่พัก</a>
+<template data-sc="if" value="{{canRecheck}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{recheck}}" disabled="{{busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 12px 24px; font-size: 16px; font-weight: 600">{{recheckLabel}}</button></template>
+<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">ติดต่อที่พัก</a>
 </div>
 </section>
 </template>
@@ -139,10 +139,10 @@ input,select,textarea{font-family:inherit}
 <section class="card" aria-labelledby="h-form" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
 <div style="flex: 1 1 260px; min-width: 0">
 <h2 id="h-form" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">พร้อมเช็คอินแล้ว{{firstName}}</h2>
-<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">{{checkinNote}}</p>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">{{checkinNote}}</p>
 </div>
-<button type="button" onClick="{{submit}}" disabled="{{busy}}" style="flex: 0 0 auto; background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 15px 30px; font-size: 18px; font-weight: 600">{{submitLabel}}</button>
-<template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
+<button type="button" onClick="{{submit}}" disabled="{{busy}}" style="flex: 0 0 auto; background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 32px; font-size: 18px; font-weight: 600">{{submitLabel}}</button>
+<template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; flex: 1 1 100%; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 16px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
 </section>
 </template>
 
@@ -151,7 +151,7 @@ input,select,textarea{font-family:inherit}
 <section class="card" aria-labelledby="h-form" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
 <div>
 <h2 id="h-form" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">พร้อมเช็คอินแล้ว{{firstName}}</h2>
-<p style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ที่พักต้องลงทะเบียนผู้เข้าพักตามกฎหมาย กรอกเลขบัตรและถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันที</p>
+<p style="margin: 8px 0 0; font-size: 15px; line-height: 1.6; color: #5E554C">ที่พักต้องลงทะเบียนผู้เข้าพักตามกฎหมาย กรอกเลขบัตรและถ่ายรูปบัตร แล้วรับรหัสประตูทาง LINE ได้ทันที</p>
 </div>
 <div role="radiogroup" aria-label="ประเภทบัตร" class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
 <button type="button" role="radio" aria-checked="{{idf.thai}}" onClick="{{pickThai}}" style="{{idf.thaiStyle}}"><span style="font-size: 17px; font-weight: 600; color: #47413A">คนไทย</span><span style="font-size: 13px; color: #5E554C">บัตรประชาชน 13 หลัก</span></button>
@@ -159,12 +159,12 @@ input,select,textarea{font-family:inherit}
 </div>
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
 <template data-sc="if" value="{{idf.foreign}}" hint-placeholder-val="{{ false }}">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">สัญชาติ · Nationality *
-<input type="text" value="{{idf.nationality}}" onInput="{{setNationality}}" autocomplete="country-name" placeholder="เช่น Japanese" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 17px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">สัญชาติ · Nationality *
+<input type="text" value="{{idf.nationality}}" onInput="{{setNationality}}" autocomplete="country-name" placeholder="เช่น Japanese" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 16px; font-size: 17px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
 </label>
 </template>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">{{idf.noLabel}} *
-<input id="ci-idno" type="text" value="{{idf.idNumber}}" onInput="{{setIdNo}}" inputmode="{{idf.inputMode}}" autocomplete="off" spellcheck="false" placeholder="{{idf.noHint}}" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; box-sizing: border-box">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">{{idf.noLabel}} *
+<input id="ci-idno" type="text" value="{{idf.idNumber}}" onInput="{{setIdNo}}" inputmode="{{idf.inputMode}}" autocomplete="off" spellcheck="false" placeholder="{{idf.noHint}}" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 16px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; box-sizing: border-box">
 </label>
 </div>
 <label style="{{idf.photoBox}}">
@@ -174,9 +174,9 @@ input,select,textarea{font-family:inherit}
 <span style="font-size: 13px; color: #5E554C">{{idf.photoSub}}</span>
 </label>
 <button type="button" role="checkbox" aria-checked="{{idf.accept}}" onClick="{{toggleAccept}}" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; background: transparent; border: 0; padding: 0; color: #47413A; font-size: 14px; line-height: 1.6"><span style="{{idf.boxStyle}}" aria-hidden="true">{{idf.tick}}</span><span>ยินยอมให้ Khun Mee เก็บเลขบัตรและรูปบัตรเพื่อลงทะเบียนผู้เข้าพักตามกฎหมาย รูปบัตรจะถูกลบอัตโนมัติ {{idf.keepDays}} วันหลังเช็คเอาท์</span></button>
-<template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
+<template data-sc="if" value="{{formErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 16px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{formErr}}</p></template>
 <div style="display: flex; justify-content: flex-end">
-<button type="button" onClick="{{submitId}}" disabled="{{idf.busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 15px 30px; font-size: 18px; font-weight: 600">{{idf.submitLabel}}</button>
+<button type="button" onClick="{{submitId}}" disabled="{{idf.busy}}" style="background: #4F7A52; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 32px; font-size: 18px; font-weight: 600">{{idf.submitLabel}}</button>
 </div>
 </section>
 </template>
@@ -196,7 +196,7 @@ input,select,textarea{font-family:inherit}
 <p style="margin: 2px 0 0; font-size: 19px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #47413A">{{line.sample}}</p>
 </div>
 <div style="display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap">
-<a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 13px 26px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
+<a class="pill" href="{{line.url}}" style="flex: 0 0 auto; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 12px 28px; font-size: 17px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">เปิดแชท LINE</a>
 <span style="flex: 1 1 220px; font-size: 13px; line-height: 1.6; color: #5E554C">กดปุ่มแล้ว LINE จะพิมพ์ข้อความนี้ให้ กดส่งได้เลย ถ้ายังไม่ได้เป็นเพื่อนกับ Khun Mee กด "เพิ่มเพื่อน" ด้วย · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือแล้วส่งข้อความนี้</span>
 </div>
 </section>
@@ -204,13 +204,13 @@ input,select,textarea{font-family:inherit}
 
 <!-- 4. เข้าพักอยู่: รหัสประตูรับทาง LINE เท่านั้น (ไม่แสดงบนหน้าเว็บ) -->
 <template data-sc="if" value="{{inStay}}" hint-placeholder-val="{{ false }}">
-<section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
-<template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p class="ci-welcome" style="margin: 0 0 6px; font-size: 28px; line-height: 1.35; color: #DCC881; font-weight: 700">เช็คอินเรียบร้อย<br>ยินดีต้อนรับค่ะ</p></template>
+<section class="card" aria-labelledby="h-door" style="background: #3A352F; color: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+<template data-sc="if" value="{{justIn}}" hint-placeholder-val="{{ false }}"><p class="ci-welcome" style="margin: 0 0 8px; font-size: 28px; line-height: 1.35; color: #DCC881; font-weight: 600">เช็คอินเรียบร้อย<br>ยินดีต้อนรับค่ะ</p></template>
 <span style="width: 64px; height: 64px; border-radius: 9999px; background: #06C755; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"></circle><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"></path></svg></span>
 <h2 id="h-door" tabindex="-1" style="margin: 0; font-size: 26px; font-weight: 600; line-height: 1.3; color: #FFFFFF">รับ{{doorLabel}}ทาง LINE</h2>
 <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #D9D1C5; max-width: 460px">{{door.note}}</p>
-<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><div style="margin-top: 4px; background: rgba(246,243,238,0.08); border: 1px solid #5E554C; border-radius: 12px; padding: 12px 14px 12px 18px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px; text-align: left"><div style="flex: 1 1 190px; min-width: 0"><p style="margin: 0; font-size: 13px; color: #D9D1C5">พิมพ์ในแชทแบบนี้</p><p style="margin: 2px 0 0; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #FFFFFF">{{line.sample}}</p></div><button type="button" onClick="{{copyLine}}" aria-label="คัดลอกรหัสการจองและเบอร์โทร" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; background: {{copyLineBg}}; color: {{copyLineFg}}; border: 1px solid #F6F3EE; border-radius: 9999px; padding: 0 14px; font-size: 14px; font-weight: 600; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>{{copyLineLabel}}</button><span role="status" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{copyLineMsg}}</span></div></template>
-<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><a class="pill" href="{{line.url}}" style="margin-top: 6px; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 18px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">รับ{{doorLabel}}ทาง LINE</a><p style="margin: 0; font-size: 13px; line-height: 1.6; color: #D9D1C5; max-width: 420px">กดปุ่มแล้ว LINE จะพิมพ์ข้อความให้ กดส่งได้เลย ครั้งต่อไปกดเมนู "รับรหัสประตู" ในแชทได้ทันที · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือ</p></template>
+<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><div style="margin-top: 4px; background: rgba(246,243,238,0.08); border: 1px solid #5E554C; border-radius: 12px; padding: 12px 16px 12px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 16px; text-align: left"><div style="flex: 1 1 190px; min-width: 0"><p style="margin: 0; font-size: 13px; color: #D9D1C5">พิมพ์ในแชทแบบนี้</p><p style="margin: 2px 0 0; font-size: 20px; font-weight: 600; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: #FFFFFF">{{line.sample}}</p></div><button type="button" onClick="{{copyLine}}" aria-label="คัดลอกรหัสการจองและเบอร์โทร" style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; background: {{copyLineBg}}; color: {{copyLineFg}}; border: 1px solid #F6F3EE; border-radius: 9999px; padding: 0 16px; font-size: 14px; font-weight: 600; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>{{copyLineLabel}}</button><span role="status" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{copyLineMsg}}</span></div></template>
+<template data-sc="if" value="{{door.canLine}}" hint-placeholder-val="{{ true }}"><a class="pill" href="{{line.url}}" style="margin-top: 8px; background: #06C755; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 28px; font-size: 18px; font-weight: 600; display: inline-block; text-decoration: none; text-align: center">รับ{{doorLabel}}ทาง LINE</a><p style="margin: 0; font-size: 13px; line-height: 1.6; color: #D9D1C5; max-width: 420px">กดปุ่มแล้ว LINE จะพิมพ์ข้อความให้ กดส่งได้เลย ครั้งต่อไปกดเมนู "รับรหัสประตู" ในแชทได้ทันที · เปิดจากคอมพิวเตอร์ ให้ค้นหา {{line.oa}} ในแอป LINE บนมือถือ</p></template>
 </section>
 
 <section class="card" aria-labelledby="h-howto" style="background: #F6F3EE; border-radius: 18px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
@@ -222,23 +222,23 @@ input,select,textarea{font-family:inherit}
 <p style="margin: 0; font-size: 13px; color: #7A6E63">แตะที่ภาพเพื่อดูขนาดใหญ่</p>
 </section>
 
-<section class="card" aria-labelledby="h-stay" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+<section class="card" aria-labelledby="h-stay" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
 <h2 id="h-stay" style="margin: 0; font-size: 22px; font-weight: 600">ข้อมูลระหว่างเข้าพัก</h2>
 <template data-sc="if" value="{{stay.roomNote}}" hint-placeholder-val="{{ false }}">
-<div style="display: flex; gap: 14px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 12px; padding: 14px 16px">
+<div style="display: flex; gap: 16px; align-items: flex-start; background: #E7EFE4; border: 2px solid #4F7A52; border-radius: 12px; padding: 16px 16px">
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F5A33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 22px; margin-top: 2px"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"></path><path d="M2 21h20"></path><path d="M15 12h.01"></path></svg>
 <div><p style="margin: 0; font-size: 13px; color: #2F5A33">เข้าห้องพัก{{stay.roomLabel}}</p><p style="margin: 2px 0 0; font-size: 16px; font-weight: 600; line-height: 1.5; color: #2F5A33">{{stay.roomNote}}</p></div>
 </div>
 </template>
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
 <template data-sc="if" value="{{stay.wifiName}}" hint-placeholder-val="{{ true }}">
-<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 14px 16px">
+<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 16px 16px">
 <p style="margin: 0; font-size: 13px; color: #5E554C">Wi-Fi</p>
 <p style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{stay.wifiName}}</p>
 <p style="margin: 2px 0 0; font-size: 15px">รหัส {{stay.wifiPassword}}</p>
 </div>
 </template>
-<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 14px 16px">
+<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 16px 16px">
 <p style="margin: 0; font-size: 13px; color: #5E554C">เช็คเอาท์</p>
 <p style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{stay.checkout}}</p>
 <p style="margin: 2px 0 0; font-size: 14px; color: #5E554C">{{contact}}</p>
@@ -262,8 +262,8 @@ input,select,textarea{font-family:inherit}
 <h2 id="h-done" tabindex="-1" style="margin: 0; font-size: 30px; font-weight: 600">{{done.title}}</h2>
 <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5E554C; max-width: 520px">{{done.note}}</p>
 <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px">
-<a class="pill" href="booking.html" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 16px">จองห้องพักอีกครั้ง</a>
-<a class="pill" href="index.html" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">กลับหน้าแรก</a>
+<a class="pill" href="booking.html" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 12px 24px; font-size: 16px">จองห้องพักอีกครั้ง</a>
+<a class="pill" href="index.html" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">กลับหน้าแรก</a>
 </div>
 </section>
 </template>
@@ -456,7 +456,7 @@ if (!info || s.done) return out;
 const chip = { open: ['พร้อมเช็คอิน', '#E7EFE4', '#2F5A33'], early: ['ยังไม่ถึงเวลาเช็คอิน', '#FBF3DC', '#6B5420'], wait: ['รอยืนยันการชำระเงิน', '#FBF3DC', '#6B5420'], busy: ['ห้องพักยังไม่พร้อม', '#FBF3DC', '#6B5420'],
 in: ['เข้าพักอยู่', '#E7EFE4', '#2F5A33'], done: ['เช็คเอาท์แล้ว', '#E6DDCB', '#47413A'], missed: ['เลยวันเข้าพัก', '#F3D6DD', '#7E3E50'], cancelled: ['ยกเลิกแล้ว', '#F3D6DD', '#7E3E50'] }[step] || ['-', '#EDE6D7', '#47413A'];
 out.bk = { code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + info.nights + ' คืน)',
-chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
+chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 8px 16px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
 Object.assign(out, this.lineVals(info, step), { copyBk: () => this.copyText(info.code, 'bkCopied'), copyBkLabel: s.bkCopied ? 'คัดลอกแล้ว' : 'คัดลอก', showCopyBk: step !== 'in' });
 
 if (step === 'done') {
@@ -483,7 +483,7 @@ return out;
 }
 if (step === 'open' && KM_ID_FORM && info.requireId) {
 const d = s.idf;
-const opt = (on) => 'display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 14px 16px; border-radius: 12px; background: #FFFDF9; cursor: pointer; border: ' + (on ? '2px solid #4F7A52' : '1px solid #CFC3AC') + '; margin: ' + (on ? '0' : '1px') + ';';
+const opt = (on) => 'display: flex; flex-direction: column; gap: 2px; text-align: left; padding: 16px 16px; border-radius: 12px; background: #FFFDF9; cursor: pointer; border: ' + (on ? '2px solid #4F7A52' : '1px solid #CFC3AC') + '; margin: ' + (on ? '0' : '1px') + ';';
 const missingPhoto = s.idTried && !d.photo;
 Object.assign(out, {
 idForm: true, firstName: info.firstName ? ' คุณ' + info.firstName : '', formErr: s.formErr,
@@ -494,9 +494,9 @@ noLabel: d.foreign ? 'เลขพาสปอร์ต · Passport No.' : 'เ�
 inputMode: d.foreign ? 'text' : 'numeric',
 photoLabel: s.photoBusy ? 'กำลังเตรียมรูป…' : d.photo ? 'แนบรูปบัตรแล้ว' : 'แตะเพื่อถ่ายรูปบัตร',
 photoSub: d.photo ? 'แตะเพื่อถ่ายใหม่' : 'ถ่ายด้านหน้าบัตรให้เห็นชื่อและเลขบัตรชัดเจน',
-photoBox: 'position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px; border-radius: 18px; cursor: pointer; text-align: center; border: 2px dashed ' + (d.photo ? '#4F7A52' : missingPhoto ? '#9A4E60' : '#CFC3AC') + '; background: ' + (d.photo ? '#E7EFE4' : '#EDE6D7') + ';',
+photoBox: 'position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px; border-radius: 18px; cursor: pointer; text-align: center; border: 2px dashed ' + (d.photo ? '#4F7A52' : missingPhoto ? '#9A4E60' : '#CFC3AC') + '; background: ' + (d.photo ? '#E7EFE4' : '#EDE6D7') + ';',
 accept: d.accept ? 'true' : 'false', tick: d.accept ? '✓' : '',
-boxStyle: 'flex: 0 0 24px; width: 24px; height: 24px; margin-top: 1px; border-radius: 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #FFFFFF; background: ' + (d.accept ? '#4F7A52' : '#FFFDF9') + '; border: ' + (d.accept ? '0' : '1px solid ' + (s.idTried ? '#9A4E60' : '#7A6E63')) + ';',
+boxStyle: 'flex: 0 0 24px; width: 24px; height: 24px; margin-top: 1px; border-radius: 6px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: #FFFFFF; background: ' + (d.accept ? '#4F7A52' : '#FFFDF9') + '; border: ' + (d.accept ? '0' : '1px solid ' + (s.idTried ? '#9A4E60' : '#7A6E63')) + ';',
 keepDays: String(info.keepIdDays || 90),
 busy: s.busy || s.photoBusy, submitLabel: s.busy ? 'กำลังเช็คอิน…' : 'เช็คอิน'
 },
