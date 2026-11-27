@@ -6,7 +6,7 @@
 <title>Khun Mee – เช็คเอาท์ด้วยตัวเอง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&amp;family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=2">
+<link rel="stylesheet" href="css/site.css?v=3">
 <style>
 body{margin:0;background:#EDE6D7;color:#47413A;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#47413A;text-decoration:none}a:hover{text-decoration:underline}
@@ -53,7 +53,7 @@ input,select,textarea{font-family:inherit}
 </div>
 
 <template data-sc="if" value="{{showLead}}" hint-placeholder-val="{{ true }}">
-<div role="note" style="display: flex; gap: 18px; align-items: flex-start; background: #F4ECE2; border: 2px solid #7D6043; border-radius: 18px; padding: 24px 26px; box-sizing: border-box">
+<div role="note" style="display: flex; gap: 20px; align-items: flex-start; background: #F4ECE2; border: 2px solid #7D6043; border-radius: 18px; padding: 24px 28px; box-sizing: border-box">
 <span style="width: 52px; height: 52px; flex: 0 0 52px; border-radius: 9999px; background: #7D6043; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
 <p class="lead" style="margin: 0; font-size: 23px; font-weight: 600; line-height: 1.55; color: #5A4330">เช็คเอาท์ได้ถึง {{checkoutHour}}:00 น. ของวันเช็คเอาท์</p>
 </div>
@@ -63,19 +63,19 @@ input,select,textarea{font-family:inherit}
 <template data-sc="if" value="{{showFind}}" hint-placeholder-val="{{ true }}">
 <section class="card" aria-labelledby="h-find" style="background: #F6F3EE; border-radius: 18px; padding: 32px; box-sizing: border-box">
 <h2 id="h-find" style="margin: 0; font-size: 24px; font-weight: 600">ค้นหาการจองของคุณ</h2>
-<p style="margin: 6px 0 0; font-size: 14px; color: #5E554C">ใช้รหัสการจองและเบอร์โทรเดียวกับตอนเช็คอิน</p>
+<p style="margin: 8px 0 0; font-size: 14px; color: #5E554C">ใช้รหัสการจองและเบอร์โทรเดียวกับตอนเช็คอิน</p>
 <form onSubmit="{{find}}" style="margin-top: 24px">
 <div class="fields2" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">รหัสการจอง *
-<input id="co-code" type="text" value="{{code}}" onInput="{{setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="เช่น KM261103ABCD" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">รหัสการจอง *
+<input id="co-code" type="text" value="{{code}}" onInput="{{setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="เช่น KM261103ABCD" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 16px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px; box-sizing: border-box">
 </label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ที่ใช้ตอนจอง *
-<input type="tel" value="{{phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 14px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">เบอร์โทรศัพท์ที่ใช้ตอนจอง *
+<input type="tel" value="{{phone}}" onInput="{{setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 52px; border: 1px solid #CFC3AC; border-radius: 11px; padding: 0 16px; font-size: 18px; font-weight: 400; color: #47413A; background: #FFFDF9; box-sizing: border-box">
 </label>
 </div>
-<template data-sc="if" value="{{findErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{findErr}}</p></template>
+<template data-sc="if" value="{{findErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 16px 0 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 11px; padding: 12px 16px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{findErr}}</p></template>
 <div style="display: flex; justify-content: flex-end; margin-top: 24px">
-<button type="submit" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 32px; font-size: 18px; font-weight: 600">{{findLabel}}</button>
+<button type="submit" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 32px; font-size: 18px; font-weight: 600">{{findLabel}}</button>
 </div>
 </form>
 </section>
@@ -90,7 +90,7 @@ input,select,textarea{font-family:inherit}
 <p style="margin: 4px 0 0; font-size: 16px">{{bk.dates}}</p>
 </div>
 <span style="{{bk.chipStyle}}">{{bk.chip}}</span>
-<button type="button" onClick="{{again}}" style="background: transparent; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 9px 18px; font-size: 14px">ค้นหาการจองอื่น</button>
+<button type="button" onClick="{{again}}" style="background: transparent; color: #47413A; border: 1px solid #CFC3AC; border-radius: 9999px; padding: 8px 20px; font-size: 14px">ค้นหาการจองอื่น</button>
 </section>
 </template>
 
@@ -99,8 +99,8 @@ input,select,textarea{font-family:inherit}
 <section class="card" style="background: #F6F3EE; border-radius: 18px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
 <p role="status" style="margin: 0; font-size: 17px; line-height: 1.6; color: #47413A">{{blockedMsg}}</p>
 <div style="display: flex; gap: 12px; flex-wrap: wrap">
-<template data-sc="if" value="{{checkinHref}}" hint-placeholder-val="{{ false }}"><a class="pill" href="{{checkinHref}}" style="background: #4F7A52; color: #FFFFFF; border-radius: 9999px; padding: 11px 22px; font-size: 16px; font-weight: 600">ไปหน้าเช็คอิน</a></template>
-<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">ติดต่อที่พัก</a>
+<template data-sc="if" value="{{checkinHref}}" hint-placeholder-val="{{ false }}"><a class="pill" href="{{checkinHref}}" style="background: #4F7A52; color: #FFFFFF; border-radius: 9999px; padding: 12px 24px; font-size: 16px; font-weight: 600">ไปหน้าเช็คอิน</a></template>
+<a class="pill" href="index.html#contact" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">ติดต่อที่พัก</a>
 </div>
 </section>
 </template>
@@ -109,7 +109,7 @@ input,select,textarea{font-family:inherit}
 <template data-sc="if" value="{{canOut}}" hint-placeholder-val="{{ false }}">
 <section class="card" aria-labelledby="h-out" style="background: #F6F3EE; border-radius: 18px; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
 <h2 id="h-out" tabindex="-1" style="margin: 0; font-size: 22px; font-weight: 600">เช็คเอาท์ห้อง{{roomShort}}</h2>
-<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 14px 16px">
+<div style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 12px; padding: 16px 16px">
 <p style="margin: 0; font-size: 13px; color: #5E554C">กำหนดเช็คเอาท์</p>
 <p style="margin: 2px 0 0; font-size: 16px; font-weight: 600">{{dueLabel}}</p>
 <p style="margin: 2px 0 0; font-size: 14px; color: #5E554C">{{contact}}</p>
@@ -121,26 +121,26 @@ input,select,textarea{font-family:inherit}
 </ul>
 <fieldset style="border: 0; margin: 0; padding: 0">
 <legend style="font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 8px">ให้คะแนนการเข้าพัก (ไม่บังคับ)</legend>
-<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
 <template data-sc="for" list="{{stars}}" as="st" hint-placeholder-count="5">
 <button type="button" onClick="{{st.pick}}" aria-pressed="{{st.pressed}}" aria-label="{{st.aria}}" style="{{st.style}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="{{st.fill}}" stroke="#7D6043" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"></path></svg></button>
 </template>
 </div>
 </fieldset>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600">ข้อเสนอแนะ (ไม่บังคับ)
-<textarea rows="3" onInput="{{setComment}}" maxlength="500" style="border: 1px solid #7A6E63; border-radius: 11px; padding: 12px 14px; font-size: 16px; font-weight: 400; color: #47413A; background: #FFFDF9; resize: vertical; box-sizing: border-box">{{out.comment}}</textarea>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600">ข้อเสนอแนะ (ไม่บังคับ)
+<textarea rows="3" onInput="{{setComment}}" maxlength="500" style="border: 1px solid #7A6E63; border-radius: 11px; padding: 12px 16px; font-size: 16px; font-weight: 400; color: #47413A; background: #FFFDF9; resize: vertical; box-sizing: border-box">{{out.comment}}</textarea>
 </label>
 <template data-sc="if" value="{{outErr}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; font-size: 14px; line-height: 1.5; color: #9A4E60">{{outErr}}</p></template>
 <template data-sc="if" value="{{outAsk}}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; justify-content: flex-end">
-<button type="button" onClick="{{askOut}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">เช็คเอาท์</button>
+<button type="button" onClick="{{askOut}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 28px; font-size: 17px; font-weight: 600">เช็คเอาท์</button>
 </div>
 </template>
 <template data-sc="if" value="{{outConfirm}}" hint-placeholder-val="{{ false }}">
-<div role="alert" style="background: #FBF3DC; border: 1px solid #DCC881; border-radius: 12px; padding: 14px 16px; font-size: 15px; line-height: 1.6">หลังเช็คเอาท์ รหัสประตูจะใช้ไม่ได้และไม่แสดงในหน้าเช็คอินอีก ตรวจสอบว่านำของออกจากห้องครบแล้ว</div>
+<div role="alert" style="background: #FBF3DC; border: 1px solid #DCC881; border-radius: 12px; padding: 16px 16px; font-size: 15px; line-height: 1.6">หลังเช็คเอาท์ รหัสประตูจะใช้ไม่ได้และไม่แสดงในหน้าเช็คอินอีก ตรวจสอบว่านำของออกจากห้องครบแล้ว</div>
 <div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap">
 <button type="button" onClick="{{cancelOut}}" disabled="{{busy}}" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">ยังไม่เช็คเอาท์</button>
-<button type="button" onClick="{{doOut}}" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 14px 28px; font-size: 17px; font-weight: 600">{{outLabel}}</button>
+<button type="button" onClick="{{doOut}}" disabled="{{busy}}" style="background: #7D6043; color: #FFFFFF; border: 0; border-radius: 9999px; padding: 16px 28px; font-size: 17px; font-weight: 600">{{outLabel}}</button>
 </div>
 </template>
 </section>
@@ -153,8 +153,8 @@ input,select,textarea{font-family:inherit}
 <h2 id="h-done" tabindex="-1" style="margin: 0; font-size: 30px; font-weight: 600">{{done.title}}</h2>
 <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5E554C; max-width: 520px">{{done.note}}</p>
 <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px">
-<a class="pill" href="booking.html" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 11px 22px; font-size: 16px">จองห้องพักอีกครั้ง</a>
-<a class="pill" href="index.html" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 10px 22px; font-size: 16px">กลับหน้าแรก</a>
+<a class="pill" href="booking.html" style="background: #47413A; color: #F6F3EE; border-radius: 9999px; padding: 12px 24px; font-size: 16px">จองห้องพักอีกครั้ง</a>
+<a class="pill" href="index.html" style="background: transparent; color: #47413A; border: 1px solid #47413A; border-radius: 9999px; padding: 12px 24px; font-size: 16px">กลับหน้าแรก</a>
 </div>
 </section>
 </template>
@@ -251,7 +251,7 @@ if (!info || s.done) return out;
 const chip = { open: ['ยังไม่ได้เช็คอิน', '#FBF3DC', '#6B5420'], early: ['ยังไม่ถึงวันเข้าพัก', '#FBF3DC', '#6B5420'], wait: ['รอยืนยันการชำระเงิน', '#FBF3DC', '#6B5420'],
 in: ['เข้าพักอยู่', '#E7EFE4', '#2F5A33'], done: ['เช็คเอาท์แล้ว', '#E6DDCB', '#47413A'], missed: ['เลยวันเข้าพัก', '#F3D6DD', '#7E3E50'], cancelled: ['ยกเลิกแล้ว', '#F3D6DD', '#7E3E50'] }[step] || ['-', '#EDE6D7', '#47413A'];
 out.bk = { code: info.code, room: info.roomName, dates: range(info.checkIn, info.checkOut) + ' (' + info.nights + ' คืน)',
-chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
+chip: chip[0], chipStyle: 'flex: 0 0 auto; border-radius: 9999px; padding: 8px 16px; font-size: 14px; font-weight: 600; white-space: nowrap; background: ' + chip[1] + '; color: ' + chip[2] + ';' };
 
 if (step === 'done') {
 const at = String(info.checkedOutAt || '');

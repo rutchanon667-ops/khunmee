@@ -12,18 +12,18 @@ a{color:#7D6043}a:hover{color:#5C4630}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #A1805D;outline-offset:2px}
 html{scroll-behavior:smooth;scroll-padding-top:120px}
 .km-serif{font-family:'Noto Serif Thai',serif}
-.km-skip{position:absolute;left:-9999px;top:8px;z-index:50;background:#3A352F;color:#F6F3EE;padding:8px 14px;border-radius:9999px}
+.km-skip{position:absolute;left:-9999px;top:8px;z-index:50;background:#3A352F;color:#F6F3EE;padding:8px 16px;border-radius:9999px}
 .km-skip:focus{left:12px}
 /* ส่วนหัว */
 .km-head{position:sticky;top:0;z-index:20}
 .km-bar1{background:rgba(246,243,238,.96);border-bottom:1px solid #E2D8C6;max-width:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px max(24px,calc((100% - 1240px)/2 + 24px))}
-.km-brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:#3A352F;white-space:nowrap}
+.km-brand{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:#3A352F;white-space:nowrap}
 .km-navlinks{display:flex;align-items:center;gap:28px;font-size:15px}
 .km-navlinks a{color:#47413A;text-decoration:none}
 .km-navlinks a:hover{color:#7D6043}
-.km-bar1-r{display:flex;align-items:center;gap:10px}
-.km-line{background:#06C755;color:#FFFFFF !important;border-radius:9999px;padding:6px 14px;font-size:13px;font-weight:600;text-decoration:none}
-.km-admin{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;background:#5E554C;color:#EDE6D7 !important;border-radius:9999px;padding:6px 12px;font-size:13px;text-decoration:none}
+.km-bar1-r{display:flex;align-items:center;gap:12px}
+.km-line{background:#06C755;color:#FFFFFF !important;border-radius:9999px;padding:8px 16px;font-size:13px;font-weight:600;text-decoration:none}
+.km-admin{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:#5E554C;color:#EDE6D7 !important;border-radius:9999px;padding:8px 12px;font-size:13px;text-decoration:none}
 .km-bar2{background:rgba(237,230,215,.86);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08)}
 .km-bar2-in{max-width:1240px;margin:0 auto;padding:8px 24px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .km-sublinks{display:flex;gap:24px;font-size:14px}
@@ -31,25 +31,25 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 .km-actions{display:flex;align-items:center;gap:8px}
 .km-pill{display:inline-flex;align-items:center;min-height:36px;padding:0 16px;border-radius:9999px;font-size:14px;white-space:nowrap;text-decoration:none;box-sizing:border-box}
 .km-pill-in{border:1px solid #4F7A52;color:#2F5A33 !important}
-.km-pill-map{display:none;gap:5px;border:1px solid #A1805D;background:#FFFDF9;color:#7D6043 !important}
+.km-pill-map{display:none;gap:4px;border:1px solid #A1805D;background:#FFFDF9;color:#7D6043 !important}
 .km-pill-out{border:1px solid #7D6043;color:#7D6043 !important}
 .km-pill-rs{border:1px solid #5B4B8A;color:#5B4B8A !important}
 .km-pill-book{background:#4F7A52;color:#FFFDF9 !important;font-weight:600}
 .km-pill-book:hover{background:#436A46}
 /* กล่องค้นหาห้องว่าง */
-.km-finder{margin-top:8px;background:#FFFDF9;border:1px solid #E2D8C6;border-radius:24px;padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 32px rgba(58,53,47,.08)}
-.km-finder-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.km-finder{margin-top:8px;background:#FFFDF9;border:1px solid #E2D8C6;border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 32px rgba(58,53,47,.08)}
+.km-finder-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .f-tile{position:relative;display:flex;flex-direction:column;gap:2px;background:#F6F3EE;border:1px solid #E2D8C6;border-radius:16px;padding:12px 16px;min-width:0;cursor:pointer}
 .f-tile:focus-within{outline:2px solid #A1805D;outline-offset:-2px}
-.f-k{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#7A6E63}
+.f-k{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#7A6E63}
 .f-v{font-size:20px;font-weight:600;color:#3A352F;white-space:nowrap}
 .f-s{font-size:13px;color:#7A6E63;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .f-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;padding:0;margin:0}
 .f-native::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
-.f-sel select{-webkit-appearance:none;appearance:none;width:100%;border:0;background:transparent;font:inherit;font-size:17px;font-weight:600;color:#3A352F;padding:0 22px 0 0;cursor:pointer}
+.f-sel select{-webkit-appearance:none;appearance:none;width:100%;border:0;background:transparent;font:inherit;font-size:17px;font-weight:600;color:#3A352F;padding:0 24px 0 0;cursor:pointer}
 .f-sel select:focus-visible{outline:none}
 .f-chev{position:absolute;right:14px;bottom:16px;pointer-events:none}
-.f-go{min-height:56px;border-radius:9999px;background:#4F7A52;color:#FFFDF9 !important;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}
+.f-go{min-height:56px;border-radius:9999px;background:#4F7A52;color:#FFFDF9 !important;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;text-decoration:none}
 .f-go:hover{background:#436A46}
 .f-note{margin:2px 0 0;font-size:14px;color:#5E554C;text-align:center}
 .f-note a{color:#5B4B8A;font-weight:600}
@@ -57,7 +57,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 .km-tile-link:hover{background:#E4DBC8 !important}
 /* ปุ่ม LINE ลอย (มือถือ) */
 .km-fab{display:none;position:fixed;right:12px;bottom:12px;z-index:20;align-items:center;gap:8px;background:#06C755;color:#FFFFFF !important;border-radius:9999px;padding:12px 16px;font-size:15px;font-weight:600;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.22)}
-@media (max-width:1100px){.km-navlinks{gap:18px;font-size:14px}}
+@media (max-width:1100px){.km-navlinks{gap:20px;font-size:14px}}
 @media (max-width:960px){.km-pill-map{display:inline-flex}.km-navlinks{display:none}.km-sublinks{display:none}.km-bar2-in{justify-content:flex-end}}
 @media (max-width:860px){
  .km-hero{grid-template-columns:minmax(0,1fr) !important}
@@ -70,7 +70,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 }
 @media (max-width:600px){
  .km-bar1-r .km-line{display:none}
- .km-bar1{padding:10px 16px}
+ .km-bar1{padding:12px 16px}
  .km-fab{display:flex}
  .km-bar2-in{padding:8px 12px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
  .km-bar2-in::-webkit-scrollbar{display:none}
@@ -78,8 +78,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  .km-pill-book{order:-2}
  .km-pill-map{order:-1}
  .km-h1{font-size:34px !important}
- #pets>div{padding:40px 22px !important}
- .km-quote{padding:32px 22px !important}
+ #pets>div{padding:40px 24px !important}
+ .km-quote{padding:32px 24px !important}
  .km-quote p.km-serif{font-size:23px !important}
 }
 @media (max-width:520px){
@@ -105,20 +105,21 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
  #pets .km-pets{gap:24px !important}
  .km-quote-box{min-height:300px !important}
  section[aria-label="คำพูดจากเจ้าของบ้าน"]{margin-top:40px !important}
- #map figure{margin-top:20px !important;padding:10px !important}
+ #map figure{margin-top:20px !important;padding:12px !important}
  #tour{padding-top:0 !important}
  #tour+#top{padding-top:24px !important}
- .km-tour-sound{top:10px !important;right:10px !important;padding:8px 13px !important;font-size:14px !important}
+ .km-tour-sound{top:10px !important;right:10px !important;padding:8px 12px !important;font-size:14px !important}
  #contact{margin-top:56px !important}
  .km-foot{padding:36px 24px 24px !important;gap:24px !important}
 }
 @media (max-width:600px){
- .km-lookup{padding:14px !important}
+ .km-lookup{padding:16px !important}
  .km-lookup #h-lookup{font-size:15px !important}
- .km-lookup button[aria-controls]{gap:10px !important}
- .km-lookup input{font-size:15px !important;padding:0 10px !important;letter-spacing:0 !important}
+ .km-lookup button[aria-controls]{gap:12px !important}
+ .km-lookup input{font-size:15px !important;padding:0 12px !important;letter-spacing:0 !important}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (max-width:600px){.km-credit{padding-bottom:88px !important}}
 /* แกลเลอรีพื้นที่ส่วนกลาง: จอคอมชี้เมาส์ให้รูปขยาย · มือถือแตะเพื่อขยาย แตะซ้ำเพื่อดูเต็มจอ */
 .km-strip{margin-top:32px;display:flex;gap:8px;height:400px}
 .km-strip-i{position:relative;flex:1 1 0;min-width:0;padding:0;border:0;border-radius:18px;overflow:hidden;background:#E2D8C6;cursor:pointer;transition:flex-grow .5s ease}
@@ -126,7 +127,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 .km-strip-i:focus-visible{flex-grow:5}
 @media (hover:hover){.km-strip-i:hover{flex-grow:5}}
 @media (hover:none){.km-strip-i.on{flex-grow:7}}
-@media (max-width:600px){.km-strip{height:280px;gap:6px;margin-top:24px}.km-strip-i{border-radius:14px}}
+@media (max-width:600px){.km-strip{height:280px;gap:8px;margin-top:24px}.km-strip-i{border-radius:14px}}
 @media (prefers-reduced-motion:reduce){.km-strip-i{transition:none}}
 </style>
 </head>
@@ -137,12 +138,12 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a class="km-skip" href="#top">ข้ามไปที่เนื้อหา</a>
 <header class="km-head">
 <div class="km-bar1">
-<a href="#top" class="km-brand"><span class="km-serif" style="font-size: 24px; font-weight: 700; letter-spacing: 0.5px">Khun Mee</span><span style="font-size: 12px; color: #7A6E63; letter-spacing: 1.5px">PET FRIENDLY HOUSE</span></a>
+<a href="#top" class="km-brand"><span class="km-serif" style="font-size: 24px; font-weight: 600; letter-spacing: 0.5px">Khun Mee</span><span style="font-size: 12px; color: #7A6E63; letter-spacing: 1.5px">PET FRIENDLY HOUSE</span></a>
 <nav aria-label="เมนูหลัก" class="km-navlinks">
 <a href="#rooms">ห้องพัก</a>
 <a href="#pets">สำหรับสัตว์เลี้ยง</a>
 <a href="#living">พื้นที่ส่วนกลาง</a>
-<a href="#map" style="display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>แผนที่</a>
+<a href="#map" style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>แผนที่</a>
 <a href="#contact">ติดต่อ</a>
 </nav>
 <div class="km-bar1-r">
@@ -173,7 +174,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <section id="tour" aria-label="วิดีโอชมบรรยากาศ" style="margin: 0; padding: 0">
 <div style="position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #3A352F">
 <template data-sc="if" value="{{tour.playing}}" hint-placeholder-val="{{ false }}"><iframe id="km-tour-frame" src="{{tour.embed}}" title="วิดีโอชมบรรยากาศ Khun Mee" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0"></iframe></template>
-<template data-sc="if" value="{{tour.muted}}" hint-placeholder-val="{{ false }}"><button type="button" class="km-tour-sound" onClick="{{tour.unmute}}" aria-label="เปิดเสียงวิดีโอ" style="position: absolute; top: 16px; right: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 0; border-radius: 9999px; background: rgba(255,253,249,.94); color: #3A352F; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.22)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#3A352F"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#3A352F" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>เปิดเสียง</button></template>
+<template data-sc="if" value="{{tour.muted}}" hint-placeholder-val="{{ false }}"><button type="button" class="km-tour-sound" onClick="{{tour.unmute}}" aria-label="เปิดเสียงวิดีโอ" style="position: absolute; top: 16px; right: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px; border: 0; border-radius: 9999px; background: rgba(255,253,249,.94); color: #3A352F; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.22)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="#3A352F"></path><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#3A352F" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>เปิดเสียง</button></template>
 <template data-sc="if" value="{{tour.poster}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{tour.play}}" aria-label="เล่นวิดีโอชมบรรยากาศ" style="position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #3A352F; cursor: pointer">
 <img src="{{tour.thumb}}" alt="" style="width: 100%; height: 100%; object-fit: cover; opacity: .85; display: block">
 <span style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 84px; height: 84px; border-radius: 9999px; background: rgba(255,253,249,.94); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(0,0,0,.25)"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#3A352F"></path></svg></span>
@@ -184,9 +185,9 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <section id="top" style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 40px">
 <div class="km-hero" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 48px; align-items: center">
 <div style="display: flex; flex-direction: column; gap: 20px">
-<p style="margin: 0; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1px">
+<p style="margin: 0; display: inline-flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1px">
 <span style="width: 28px; height: 1px; background: #A1805D" aria-hidden="true"></span>ที่พักสไตล์ญี่ปุ่น · เป็นมิตรกับสัตว์เลี้ยง</p>
-<h1 class="km-serif km-h1" style="margin: 0; font-size: 56px; font-weight: 700; line-height: 1.25; color: #3A352F">บ้านที่น้องหมาน้องแมว<br>ก็คือแขกคนสำคัญ</h1>
+<h1 class="km-serif km-h1" style="margin: 0; font-size: 56px; font-weight: 600; line-height: 1.25; color: #3A352F">บ้านที่น้องหมาน้องแมว<br>ก็คือแขกคนสำคัญ</h1>
 <p style="margin: 0; font-size: 19px; font-weight: 300; line-height: 1.7; color: #5E554C; max-width: 480px">พักผ่อนอย่างอบอุ่นในบ้านไม้โทนญี่ปุ่น พร้อมพาสมาชิกสี่ขาของคุณมาด้วยได้ทุกห้อง</p>
 
 <form id="book" class="km-finder" aria-label="ค้นหาห้องว่าง" onSubmit="{{noSubmit}}">
@@ -201,23 +202,23 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a class="f-go" href="{{findHref}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>ค้นหาห้องว่าง · {{nightsLabel}}</a>
 <p class="f-note">จองไว้แล้วแต่อยากเปลี่ยนวัน? <a href="reschedule.html">เลื่อนวันพักได้ 1 ครั้ง ›</a></p>
 </form>
-<section id="lookup" class="km-lookup" aria-labelledby="h-lookup" style="background: #7A6E63; color: #FFFFFF; border: 1px solid #E2D8C6; border-radius: 20px; padding: 16px 18px">
-<button type="button" onClick="{{lk.toggle}}" aria-expanded="{{lk.open}}" aria-controls="lk-form" style="width: 100%; display: flex; align-items: center; gap: 14px; background: transparent; border: 0; padding: 0; text-align: left; color: #FFFFFF; font-family: inherit; cursor: pointer">
+<section id="lookup" class="km-lookup" aria-labelledby="h-lookup" style="background: #7A6E63; color: #FFFFFF; border: 1px solid #E2D8C6; border-radius: 20px; padding: 16px 20px">
+<button type="button" onClick="{{lk.toggle}}" aria-expanded="{{lk.open}}" aria-controls="lk-form" style="width: 100%; display: flex; align-items: center; gap: 16px; background: transparent; border: 0; padding: 0; text-align: left; color: #FFFFFF; font-family: inherit; cursor: pointer">
 <span style="width: 40px; height: 40px; flex: 0 0 40px; border-radius: 9999px; background: #F6F3EE; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path><path d="M9 8h6M9 12h6"></path></svg></span>
 <span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column"><span id="h-lookup" style="font-size: 16px; font-weight: 600; color: #FFFFFF">จองไว้แล้ว? ดูสถานะและใบเสร็จ</span><span style="font-size: 13px; color: #FFFFFF">กรอกรหัสการจองและเบอร์โทรที่ใช้จอง</span></span>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="{{lk.chevStyle}}"><path d="M6 9l6 6 6-6"></path></svg>
 </button>
 <template data-sc="if" value="{{lk.open}}" hint-placeholder-val="{{ false }}">
-<form id="lk-form" onSubmit="{{lk.submit}}" style="margin-top: 14px; display: flex; flex-direction: column; gap: 12px">
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; min-width: 0">รหัสการจอง
-<input type="text" value="{{lk.code}}" onInput="{{lk.setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KM261118ABCD" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 12px; padding: 0 14px; font-size: 16px; color: #3A352F; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px">
+<form id="lk-form" onSubmit="{{lk.submit}}" style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600; min-width: 0">รหัสการจอง
+<input type="text" value="{{lk.code}}" onInput="{{lk.setCode}}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="KM261118ABCD" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 12px; padding: 0 16px; font-size: 16px; color: #3A352F; background: #FFFDF9; text-transform: uppercase; letter-spacing: 0.5px">
 </label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; min-width: 0">เบอร์โทรที่ใช้จอง
-<input type="tel" value="{{lk.phone}}" onInput="{{lk.setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 12px; padding: 0 14px; font-size: 16px; color: #3A352F; background: #FFFDF9">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600; min-width: 0">เบอร์โทรที่ใช้จอง
+<input type="tel" value="{{lk.phone}}" onInput="{{lk.setPhone}}" autocomplete="tel" placeholder="08X-XXX-XXXX" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #CFC3AC; border-radius: 12px; padding: 0 16px; font-size: 16px; color: #3A352F; background: #FFFDF9">
 </label>
 </div>
-<template data-sc="if" value="{{lk.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 12px; padding: 10px 14px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{lk.err}}</p></template>
+<template data-sc="if" value="{{lk.err}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 0; background: #FFFDF9; border: 1px solid #C88193; border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.5; color: #9A4E60">{{lk.err}}</p></template>
 <button type="submit" style="min-height: 48px; background: #DCC881; color: #3A352F; border: 0; border-radius: 9999px; padding: 0 24px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer">ดูการจอง</button>
 <p style="margin: 0; font-size: 13px; color: #F6F3EE">รหัสการจองขึ้นต้นด้วย KM อยู่ในอีเมลยืนยันและในแชท LINE</p>
 </form>
@@ -236,15 +237,15 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <section aria-label="ข้อมูลการเข้าพัก" style="max-width: 1240px; margin: 0 auto; padding: 0 24px">
 <div class="km-swipe km-swipe-sm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
-<div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
+<div style="display: flex; gap: 16px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 20px 20px">
 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">เช็คอิน 14:00 · เช็คเอาท์ 12:00</span><span style="font-size: 13px; color: #5E554C">เวลาเดียวกันทุกห้อง</span></span>
 </div>
-<a href="checkin.html" class="km-tile-link" style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px; color: #3A352F; text-decoration: none">
+<a href="checkin.html" class="km-tile-link" style="display: flex; gap: 16px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 20px 20px; color: #3A352F; text-decoration: none">
 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M9 7h6M9 11h6M9 15h3"></path></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">เช็คอินด้วยตัวเอง ›</span><span style="font-size: 13px; color: #5E554C">รหัสการจอง + เบอร์โทร ไม่ต้องรอเจ้าหน้าที่</span></span>
 </a>
-<div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
+<div style="display: flex; gap: 16px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 20px 20px">
 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">รับรหัสเข้าล็อบบี้ทาง LINE</span><span style="font-size: 13px; color: rgb(94, 85, 76)">และใช้เปิดตู้เซฟรับกุญแจห้องได้ด้วย</span></span>
 </div>
@@ -254,9 +255,9 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <section id="rooms" aria-labelledby="h-rooms" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 24px">
 <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
-<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1.5px">ROOMS</p>
-<h2 id="h-rooms" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ห้องพักทั้ง 4 ห้อง</h2>
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 0">ห้องพัก</p>
+<h2 id="h-rooms" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.3">ห้องพักทั้ง 4 ห้อง</h2>
 <p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.7; color: #5E554C">ไม้ธรรมชาติ แสงอุ่น และพื้นที่ให้น้อง ๆ ได้นอนข้างคุณ ทุกห้องมีห้องน้ำในตัวพร้อมเรนชาวเวอร์</p>
 </div>
 <a href="booking.html" style="font-size: 15px; font-weight: 600; color: #7D6043">เช็คห้องว่าง ›</a>
@@ -266,14 +267,14 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <template data-sc="for" list="{{rooms}}" as="r" hint-placeholder-count="4">
 <article style="background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column">
 <button type="button" class="km-zoom" data-gallery="room" data-room="{{r.no}}" data-title="{{r.name}}" aria-label="ดูรูป{{r.name}}ขนาดใหญ่ ({{r.tag}})"><img src="{{r.img}}" alt="{{r.alt}}" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block"><span class="km-zoom-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>{{r.tag}}</span></button>
-<div style="padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1">
+<div style="padding: 20px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1">
 <h3 class="km-serif" style="margin: 0; font-size: 22px; font-weight: 600; color: #3A352F">ROOM {{r.no}}</h3>
 <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #5E554C; flex-grow: 1">{{r.desc}}</p>
-<div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px">
-<span style="font-size: 12px; background: #EDE6D7; border-radius: 9999px; padding: 4px 10px">พาน้องได้</span>
-<span style="font-size: 12px; background: #EDE6D7; border-radius: 9999px; padding: 4px 10px">ห้องน้ำในตัว</span>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px">
+<span style="font-size: 12px; background: #EDE6D7; border-radius: 9999px; padding: 4px 12px">พาน้องได้</span>
+<span style="font-size: 12px; background: #EDE6D7; border-radius: 9999px; padding: 4px 12px">ห้องน้ำในตัว</span>
 </div>
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 14px; border-top: 1px solid #EDE6D7">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 16px; border-top: 1px solid #EDE6D7">
 <span style="font-size: 14px; color: #5E554C"><strong style="font-size: 18px; color: #3A352F">{{r.price}}</strong> {{r.per}}</span>
 <a href="booking.html" class="km-book-room" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 9999px; border: 0; background: #4F7A52; color: #FFFDF9; text-decoration: none; font-size: 14px; font-weight: 600">จองห้องนี้</a>
 </div>
@@ -286,38 +287,38 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <section id="pets" aria-labelledby="h-pets" style="max-width: 1240px; margin: 72px auto 0; padding: 0 24px">
 <div style="background: #3A352F; color: #F6F3EE; border-radius: 32px; padding: 56px 48px">
 <div class="km-pets" style="display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 48px; align-items: start">
-<div style="display: flex; flex-direction: column; gap: 14px">
-<p style="margin: 0; font-size: 14px; font-weight: 500; color: #DCC881; letter-spacing: 1.5px">FOR FOUR PAWS</p>
-<h2 id="h-pets" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ออกแบบมาเพื่อสี่ขา</h2>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<p style="margin: 0; font-size: 14px; font-weight: 500; color: #DCC881; letter-spacing: 0">สำหรับสี่ขา</p>
+<h2 id="h-pets" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.3">ออกแบบมาเพื่อสี่ขา</h2>
 <p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.7; color: #DCD3C2">ไม่มีห้องพิเศษ ไม่มีโซนแยก เพราะเราออกแบบทั้งบ้านมาเพื่อคุณและสัตว์เลี้ยงตั้งแต่แรก</p>
-<div id="pet-rules" class="km-swipe" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px">
-<div style="background: rgba(246, 243, 238, 0.08); border: 1px solid rgba(246, 243, 238, 0.16); border-radius: 16px; padding: 16px 18px">
+<div id="pet-rules" class="km-swipe" style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px">
+<div style="background: rgba(246, 243, 238, 0.08); border: 1px solid rgba(246, 243, 238, 0.16); border-radius: 16px; padding: 16px 20px">
 <p style="margin: 0; font-size: 15px; font-weight: 600">สมุดวัคซีนของน้อง</p>
 <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.6; color: #DCD3C2">กรุณาแสดงหลักฐานการฉีดวัคซีนที่เป็นปัจจุบันในวันเช็คอิน</p>
 </div>
-<div style="background: rgba(246, 243, 238, 0.08); border: 1px solid rgba(246, 243, 238, 0.16); border-radius: 16px; padding: 16px 18px">
+<div style="background: rgba(246, 243, 238, 0.08); border: 1px solid rgba(246, 243, 238, 0.16); border-radius: 16px; padding: 16px 20px">
 <p style="margin: 0; font-size: 15px; font-weight: 600">สูงสุด [จำนวน] ตัวต่อห้อง</p>
 <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.6; color: #DCD3C2">ทั้งน้องหมาและน้องแมว แจ้งจำนวนไว้ตอนจองเพื่อให้เราเตรียมของได้ครบ</p>
 </div>
 </div>
 </div>
-<div class="km-swipe km-swipe-sm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
-<div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+<div class="km-swipe km-swipe-sm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
 <span style="width: 48px; height: 48px; border-radius: 14px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c0-3 3-5 9-5s9 2 9 5v2H3z"></path><path d="M7 12V9a5 5 0 0 1 10 0v3"></path></svg></span>
 <h3 style="margin: 0; font-size: 17px; font-weight: 600">เบาะนอนและชามน้ำ</h3>
 <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #5E554C">ทุกห้องมีที่นอนสัตว์เลี้ยง ชามอาหาร และชามน้ำเตรียมไว้ให้</p>
 </div>
-<div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
-<span style="width: 48px; height: 48px; border-radius: 14px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4F7A52" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><path d="M7 20v-4M12 20v-7M17 20v-5"></path><path d="M12 13c-2-3-1-6 0-8 1 2 2 5 0 8z"></path></svg></span>
+<div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<span style="width: 48px; height: 48px; border-radius: 14px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><path d="M7 20v-4M12 20v-7M17 20v-5"></path><path d="M12 13c-2-3-1-6 0-8 1 2 2 5 0 8z"></path></svg></span>
 <h3 style="margin: 0; font-size: 17px; font-weight: 600">สนามหญ้าหน้าบ้าน</h3>
 <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #5E554C">ลานหญ้ากว้างให้น้องได้วิ่งเล่นยามเช้าและเย็น</p>
 </div>
-<div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
-<span style="width: 48px; height: 48px; border-radius: 14px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3E6A9E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10z"></path></svg></span>
+<div style="background: #F6F3EE; color: #3A352F; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<span style="width: 48px; height: 48px; border-radius: 14px; background: #EDE6D7; display: flex; align-items: center; justify-content: center" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10z"></path></svg></span>
 <h3 style="margin: 0; font-size: 17px; font-weight: 600">จุดอาบน้ำน้อง</h3>
 <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #5E554C">ล้างเท้าหลังเดินเล่น พร้อมผ้าเช็ดตัวสำหรับสัตว์เลี้ยง</p>
 </div>
-<div style="background: #DCC881; color: #3A352F; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px">
+<div style="background: #DCC881; color: #3A352F; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px">
 <p class="km-serif" style="margin: 0; font-size: 20px; font-weight: 600; line-height: 1.5">ทุกห้อง พาน้องมาด้วยได้</p>
 <a href="#pet-rules" style="color: #3A352F; font-size: 15px; font-weight: 600">ดูกติกาการพาสัตว์เลี้ยง ›</a>
 </div>
@@ -328,9 +329,9 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <section id="living" aria-labelledby="h-living" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 24px">
 <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
-<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1.5px">RECEPTION &amp; LIVING</p>
-<h2 id="h-living" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">ห้องนั่งเล่นที่ทุกคน<span style="white-space: nowrap">ใช้ร่วมกัน</span></h2>
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 0">พื้นที่ส่วนกลาง</p>
+<h2 id="h-living" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.3">ห้องนั่งเล่นที่ทุกคน<span style="white-space: nowrap">ใช้ร่วมกัน</span></h2>
 <p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.7; color: #5E554C">ครัวเคาน์เตอร์ไม้ มุมนั่งเล่นโซฟาผ้าลินิน และบล็อกแก้วที่ให้แสงธรรมชาติตลอดวัน</p>
 </div>
 <a href="#living" data-gallery="living" data-title="พื้นที่ส่วนกลาง" style="font-size: 15px; font-weight: 600; color: #7D6043">ดูรูปทั้งหมด {{livingCount}} รูป ›</a>
@@ -346,7 +347,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <section aria-label="คำพูดจากเจ้าของบ้าน" style="max-width: 1240px; margin: 72px auto 0; padding: 0 24px">
 <div class="km-quote-box" style="position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; display: flex; align-items: flex-end; background: #3A352F">
 <img src="{{home.quote}}" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.55">
-<div class="km-quote" style="position: relative; padding: 48px; max-width: 760px; color: #FFFDF9; display: flex; flex-direction: column; gap: 18px">
+<div class="km-quote" style="position: relative; padding: 48px; max-width: 760px; color: #FFFDF9; display: flex; flex-direction: column; gap: 20px">
 <p class="km-serif" style="margin: 0; font-size: 30px; font-weight: 600; line-height: 1.55">“เราอยากให้ที่นี่เป็นเหมือนบ้านต่างจังหวัดของเพื่อน ที่พาน้องมาด้วยได้โดยไม่ต้องขอโทษใคร”</p>
 <p style="margin: 0; font-size: 15px; color: #EDE6D7">คุณหมี, เจ้าของบ้าน</p>
 <a href="booking.html" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 9999px; background: #FFFDF9; color: #3A352F; text-decoration: none; font-size: 16px; font-weight: 600">เลือกวันเข้าพัก</a>
@@ -356,28 +357,28 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <section id="map" aria-labelledby="h-map" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 0">
 <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
-<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 1.5px">LOCATION</p>
-<h2 id="h-map" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 700; line-height: 1.3">การเดินทางมาที่พัก</h2>
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+<p style="margin: 0; font-size: 14px; font-weight: 500; color: #7D6043; letter-spacing: 0">การเดินทาง</p>
+<h2 id="h-map" class="km-serif km-h2" style="margin: 0; font-size: 40px; font-weight: 600; line-height: 1.3">การเดินทางมาที่พัก</h2>
 <p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.7; color: #5E554C">อยู่ในซอยหลังมอ ซอย 18 ใกล้ถนนโนนม่วง ขอนแก่น จอดรถที่ลานจอดฝั่งหลังมอ ซอย 19 แล้วเดินมาที่พักได้เลย</p>
 </div>
-<a href="https://www.google.com/maps/search/?api=1&amp;query=KhunMee+Hostel+%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%A1%E0%B8%AD+%E0%B8%8B%E0%B8%AD%E0%B8%A2+18+%E0%B8%82%E0%B8%AD%E0%B8%99%E0%B9%81%E0%B8%81%E0%B9%88%E0%B8%99" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 9999px; background: #3A352F; color: #F6F3EE; text-decoration: none; font-size: 15px; font-weight: 600">
+<a href="https://www.google.com/maps/search/?api=1&amp;query=KhunMee+Hostel+%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%A1%E0%B8%AD+%E0%B8%8B%E0%B8%AD%E0%B8%A2+18+%E0%B8%82%E0%B8%AD%E0%B8%99%E0%B9%81%E0%B8%81%E0%B9%88%E0%B8%99" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 24px; border-radius: 9999px; background: #3A352F; color: #F6F3EE; text-decoration: none; font-size: 15px; font-weight: 600">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>เปิดใน Google Maps</a>
 </div>
 <figure style="margin: 32px 0 0; background: #FFFDF9; border: 1px solid #E2D8C6; border-radius: 28px; padding: 16px; box-sizing: border-box">
 <a href="{{home.map}}" target="_blank" rel="noopener" data-gallery="one" data-src="{{home.map}}" data-title="แผนที่ Khun Mee" aria-label="ดูแผนที่ขนาดใหญ่" style="display: block; cursor: zoom-in"><img src="{{home.map}}" alt="แผนที่ KhunMee Hostel: ที่พักอยู่ระหว่างหลังมอ ซอย 18 และซอย 19 ติดถนนหลังมอ ใกล้ Doucu Cafe มีลานจอดรถฝั่งซอย 19 และอยู่ใต้ถนนโนนม่วง ใกล้โรงเรียนบ้านโนนม่วง" style="display: block; width: 100%; height: auto; border-radius: 18px"></a>
-<figcaption style="margin: 10px 4px 0; font-size: 13px; color: #7A6E63; text-align: center">แตะที่แผนที่เพื่อดูภาพขนาดใหญ่</figcaption>
+<figcaption style="margin: 12px 4px 0; font-size: 13px; color: #7A6E63; text-align: center">แตะที่แผนที่เพื่อดูภาพขนาดใหญ่</figcaption>
 </figure>
 <div class="km-swipe km-swipe-sm" style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
-<div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
+<div style="display: flex; gap: 16px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 20px 20px">
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">หลังมอ ซอย 18</span><span style="font-size: 13px; color: #5E554C">ถนนหลังมอ · ใกล้ถนนโนนม่วง ขอนแก่น</span></span>
 </div>
-<div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
+<div style="display: flex; gap: 16px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 20px 20px">
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M10 16V8h3a2.5 2.5 0 0 1 0 5h-3"></path></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">ลานจอดรถ</span><span style="font-size: 13px; color: #5E554C">ฝั่งหลังมอ ซอย 19 เดินถึงที่พักได้</span></span>
 </div>
-<div style="display: flex; gap: 14px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 18px 20px">
+<div style="display: flex; gap: 16px; align-items: center; background: #EDE6D7; border-radius: 18px; padding: 20px 20px">
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D6043" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h16v3a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6z"></path><path d="M20 11h1a2 2 0 0 1 0 4h-1.5"></path><path d="M9 3v3M13 3v3"></path></svg>
 <span style="display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">จุดสังเกต</span><span style="font-size: 13px; color: #5E554C">ข้าง Doucu Cafe (ดูซ) · ใกล้โรงเรียนบ้านโนนม่วง</span></span>
 </div>
@@ -388,25 +389,25 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 
 <footer id="contact" style="margin-top: 96px; background: #EDE6D7">
 <div class="km-foot" style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 32px; display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 32px">
-<div style="display: flex; flex-direction: column; gap: 10px">
-<span class="km-serif" style="font-size: 24px; font-weight: 700">Khun Mee</span>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span class="km-serif" style="font-size: 24px; font-weight: 600">Khun Mee</span>
 <span style="font-size: 14px; color: #5E554C">Pet Friendly House · ที่พักสไตล์ญี่ปุ่น</span>
 <span style="font-size: 14px; color: #5E554C">[ที่อยู่]</span>
 <span style="font-size: 14px; color: #5E554C">โทร [เบอร์โทรศัพท์]</span>
-<a href="https://lin.ee/9aJsfpw" target="_blank" rel="noopener" style="white-space: nowrap; align-self: flex-start; margin-top: 6px; display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 9999px; background: #06A84A; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600">แชทกับเราทาง LINE</a>
+<a href="https://lin.ee/9aJsfpw" target="_blank" rel="noopener" style="white-space: nowrap; align-self: flex-start; margin-top: 8px; display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 9999px; background: #06A84A; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600">แชทกับเราทาง LINE</a>
 </div>
-<div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px">
 <span style="font-weight: 600">ห้องพัก</span>
 <template data-sc="for" list="{{rooms}}" as="fr" hint-placeholder-count="4"><a href="#rooms" style="color: #5E554C; text-decoration: none">{{fr.name}}</a></template>
 </div>
-<div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px">
 <span style="font-weight: 600">การจอง</span>
 <a href="booking.html" style="color: #5E554C; text-decoration: none">จองห้องพัก</a>
 <a href="#lookup" onClick="{{lk.openNow}}" style="color: #5E554C; text-decoration: none">ตรวจสอบการจอง / ใบเสร็จ</a>
 <a href="reschedule.html" style="color: #5E554C; text-decoration: none">เลื่อนวันพัก</a>
 <a href="booking.html" style="color: #5E554C; text-decoration: none">ยกเลิกการจอง</a>
 </div>
-<div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px">
 <span style="font-weight: 600">ข้อมูลการเข้าพัก</span>
 <a href="checkin.html" style="color: #5E554C; text-decoration: none">เช็คอินด้วยตัวเอง</a>
 <a href="checkout.html" style="color: #5E554C; text-decoration: none">เช็คเอาท์ด้วยตัวเอง</a>
@@ -414,7 +415,8 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <a href="#living" style="color: #5E554C; text-decoration: none">พื้นที่ส่วนกลาง</a>
 </div>
 </div>
-<p style="margin: 0; padding: 0 24px 28px; text-align: center; font-size: 12px; color: #7A6E63">© 2026 Khun Mee · Pet Friendly House สงวนลิขสิทธิ์</p>
+<p style="margin: 0; padding: 0 24px 8px; text-align: center; font-size: 12px; color: #7A6E63">© 2026 Khun Mee · Pet Friendly House สงวนลิขสิทธิ์</p>
+<p class="km-credit" style="margin: 0; padding: 0 24px 28px; text-align: center; font-size: 11px; line-height: 1.6; color: #7A6E63">Based on "unslop" by Damir Sokolovsky (<a href="https://github.com/heydamir/unslop" target="_blank" rel="noopener" style="color: #7A6E63">https://github.com/heydamir/unslop</a>), licensed under CC BY 4.0 (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color: #7A6E63">https://creativecommons.org/licenses/by/4.0/</a>). Modified by Khun Mee.</p>
 </footer>
 <a class="km-fab" href="https://lin.ee/9aJsfpw" target="_blank" rel="noopener" aria-label="แชทกับเราทาง LINE (เปิดในแท็บใหม่)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.6 1.6 4.9 4 6.4V21l3.6-2.2c.8.1 1.6.2 2.4.2 5.5 0 10-3.6 10-8s-4.5-8-10-8z"></path></svg>LINE</a>
 </div>
@@ -424,7 +426,7 @@ html{scroll-behavior:smooth;scroll-padding-top:120px}
 <script src="js/beams.js?v=5"></script>
 <script src="js/config.js?v=2"></script>
 <script src="js/api.js"></script>
-<script src="js/gallery.js?v=3"></script>
+<script src="js/gallery.js?v=4"></script>
 <script>
 class Component extends DCLogic {
 componentDidMount() {
